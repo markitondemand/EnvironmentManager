@@ -8,12 +8,29 @@
 
 /* Begin PBXBuildFile section */
 		28AB95521E5E3062000EAEA9 /* MDEnvironmentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 28AB95501E5E3062000EAEA9 /* MDEnvironmentManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		28AB955F1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AB955E1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift */; };
+		28AB95611E5E3130000EAEA9 /* MDEnvironmentManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28AB954D1E5E3062000EAEA9 /* MDEnvironmentManager.framework */; };
+		28AB95691E5E4135000EAEA9 /* EnvironmentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AB95681E5E4135000EAEA9 /* EnvironmentManager.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		28AB95621E5E3130000EAEA9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 28AB95441E5E3062000EAEA9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 28AB954C1E5E3062000EAEA9;
+			remoteInfo = MDEnvironmentManager;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		28AB954D1E5E3062000EAEA9 /* MDEnvironmentManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MDEnvironmentManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		28AB95501E5E3062000EAEA9 /* MDEnvironmentManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MDEnvironmentManager.h; sourceTree = "<group>"; };
 		28AB95511E5E3062000EAEA9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		28AB955C1E5E3130000EAEA9 /* MDEnvironmentManagerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MDEnvironmentManagerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		28AB955E1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDEnvironmentManagerTests.swift; sourceTree = "<group>"; };
+		28AB95601E5E3130000EAEA9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		28AB95681E5E4135000EAEA9 /* EnvironmentManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnvironmentManager.swift; path = Source/EnvironmentManager.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -24,6 +41,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		28AB95591E5E3130000EAEA9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28AB95611E5E3130000EAEA9 /* MDEnvironmentManager.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -31,6 +56,7 @@
 			isa = PBXGroup;
 			children = (
 				28AB954F1E5E3062000EAEA9 /* MDEnvironmentManager */,
+				28AB955D1E5E3130000EAEA9 /* MDEnvironmentManagerTests */,
 				28AB954E1E5E3062000EAEA9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -39,6 +65,7 @@
 			isa = PBXGroup;
 			children = (
 				28AB954D1E5E3062000EAEA9 /* MDEnvironmentManager.framework */,
+				28AB955C1E5E3130000EAEA9 /* MDEnvironmentManagerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -46,10 +73,28 @@
 		28AB954F1E5E3062000EAEA9 /* MDEnvironmentManager */ = {
 			isa = PBXGroup;
 			children = (
+				28AB95671E5E40A4000EAEA9 /* source */,
 				28AB95501E5E3062000EAEA9 /* MDEnvironmentManager.h */,
 				28AB95511E5E3062000EAEA9 /* Info.plist */,
 			);
 			path = MDEnvironmentManager;
+			sourceTree = "<group>";
+		};
+		28AB955D1E5E3130000EAEA9 /* MDEnvironmentManagerTests */ = {
+			isa = PBXGroup;
+			children = (
+				28AB955E1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift */,
+				28AB95601E5E3130000EAEA9 /* Info.plist */,
+			);
+			path = MDEnvironmentManagerTests;
+			sourceTree = "<group>";
+		};
+		28AB95671E5E40A4000EAEA9 /* source */ = {
+			isa = PBXGroup;
+			children = (
+				28AB95681E5E4135000EAEA9 /* EnvironmentManager.swift */,
+			);
+			name = source;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -84,18 +129,42 @@
 			productReference = 28AB954D1E5E3062000EAEA9 /* MDEnvironmentManager.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		28AB955B1E5E3130000EAEA9 /* MDEnvironmentManagerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 28AB95641E5E3130000EAEA9 /* Build configuration list for PBXNativeTarget "MDEnvironmentManagerTests" */;
+			buildPhases = (
+				28AB95581E5E3130000EAEA9 /* Sources */,
+				28AB95591E5E3130000EAEA9 /* Frameworks */,
+				28AB955A1E5E3130000EAEA9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				28AB95631E5E3130000EAEA9 /* PBXTargetDependency */,
+			);
+			name = MDEnvironmentManagerTests;
+			productName = MDEnvironmentManagerTests;
+			productReference = 28AB955C1E5E3130000EAEA9 /* MDEnvironmentManagerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		28AB95441E5E3062000EAEA9 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0820;
 				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = Markit;
 				TargetAttributes = {
 					28AB954C1E5E3062000EAEA9 = {
 						CreatedOnToolsVersion = 8.2;
 						DevelopmentTeam = PM8Y4J45MK;
+						LastSwiftMigration = 0820;
+						ProvisioningStyle = Automatic;
+					};
+					28AB955B1E5E3130000EAEA9 = {
+						CreatedOnToolsVersion = 8.2;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -113,12 +182,20 @@
 			projectRoot = "";
 			targets = (
 				28AB954C1E5E3062000EAEA9 /* MDEnvironmentManager */,
+				28AB955B1E5E3130000EAEA9 /* MDEnvironmentManagerTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		28AB954B1E5E3062000EAEA9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		28AB955A1E5E3130000EAEA9 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -132,10 +209,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				28AB95691E5E4135000EAEA9 /* EnvironmentManager.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		28AB95581E5E3130000EAEA9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28AB955F1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		28AB95631E5E3130000EAEA9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 28AB954C1E5E3062000EAEA9 /* MDEnvironmentManager */;
+			targetProxy = 28AB95621E5E3130000EAEA9 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		28AB95531E5E3062000EAEA9 /* Debug */ = {
@@ -240,6 +334,28 @@
 		28AB95561E5E3062000EAEA9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = PM8Y4J45MK;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = MDEnvironmentManager/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.markit.MDEnvironmentManager;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		28AB95571E5E3062000EAEA9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = PM8Y4J45MK;
@@ -254,23 +370,32 @@
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
 			};
-			name = Debug;
+			name = Release;
 		};
-		28AB95571E5E3062000EAEA9 /* Release */ = {
+		28AB95651E5E3130000EAEA9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = PM8Y4J45MK;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = MDEnvironmentManager/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = MDEnvironmentManagerTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.markit.MDEnvironmentManager;
+				PRODUCT_BUNDLE_IDENTIFIER = com.markit.MDEnvironmentManagerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		28AB95661E5E3130000EAEA9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = MDEnvironmentManagerTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.markit.MDEnvironmentManagerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
@@ -292,6 +417,14 @@
 			buildConfigurations = (
 				28AB95561E5E3062000EAEA9 /* Debug */,
 				28AB95571E5E3062000EAEA9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		28AB95641E5E3130000EAEA9 /* Build configuration list for PBXNativeTarget "MDEnvironmentManagerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				28AB95651E5E3130000EAEA9 /* Debug */,
+				28AB95661E5E3130000EAEA9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};

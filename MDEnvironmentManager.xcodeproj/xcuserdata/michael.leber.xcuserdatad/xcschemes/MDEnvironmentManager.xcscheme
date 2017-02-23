@@ -28,7 +28,26 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "28AB955B1E5E3130000EAEA9"
+               BuildableName = "MDEnvironmentManagerTests.xctest"
+               BlueprintName = "MDEnvironmentManagerTests"
+               ReferencedContainer = "container:MDEnvironmentManager.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "28AB954C1E5E3062000EAEA9"
+            BuildableName = "MDEnvironmentManager.framework"
+            BlueprintName = "MDEnvironmentManager"
+            ReferencedContainer = "container:MDEnvironmentManager.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>

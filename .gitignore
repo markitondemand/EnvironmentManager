@@ -1,0 +1,58 @@
+# OS X
+.DS_Store
+*/.DS_Store
+
+# Xcode
+*.swp
+*~.nib
+*.pbxuser
+*.perspective
+*.perspectivev3
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+profile
+*.moved-aside
+.idea/
+*.hmap
+
+# XCWork Space
+*.xccheckout
+*.xcscmblueprint
+xcuserdata
+
+# Xcode Project
+*.xcodeproj/xcuserdata/*.xcuserdatad
+*.xcodeproj/project.xcworkspace/xcuserdata/*.xcuserdatad
+*/*.xcodeproj/xcuserdata/*.xcuserdatad
+*/*.xcodeproj/project.xcworkspace/xcuserdata/*.xcuserdatad
+
+# Documentation Related
+Documentation/Generated
+doxygenWarnings.txt
+
+# CocoaPods - Optionally you may want to include or not include the Pods directory.
+Pods/
+
+# Products and Build Related
+build
+Executables/*
+*/build/*
+*/Executables/*
+DerivedData
+
+# fastlane specific
+fastlane/report.xml
+
+# deliver temporary files
+fastlane/Preview.html
+
+# snapshot generated screenshots
+fastlane/screenshots
+
+# scan temporary files
+fastlane/test_output
