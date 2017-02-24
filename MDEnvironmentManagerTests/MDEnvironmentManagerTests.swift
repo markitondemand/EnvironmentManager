@@ -82,10 +82,16 @@ class MDEnvironmentManagerTests: XCTestCase {
     func testGetters() {
         let en = self.defaultEnvironmentManager()
         
+        // test return service name + default to using ascending sort
         XCTAssertEqual(en.apiNames(), ["service1"])
         en.add(apiName: "a", environmentUrls: [("acc", URL(string: "https://acc.other.api.com")!)])
-        
         XCTAssertEqual(en.apiNames(), ["a", "service1"])
+        
+        // test return base API
+        XCTAssertEqual(en.baseUrl(apiName: "service1"), URL(string: "http://acc.api.domain.com")!)
+        
+        en.select(environment: "prod", forAPI: "service1")
+        XCTAssertEqual(en.baseUrl(apiName: "service1"), URL(string: "http://prod.api.domain.com")!)
     }
     
     

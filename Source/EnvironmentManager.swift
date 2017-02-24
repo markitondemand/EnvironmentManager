@@ -31,6 +31,12 @@ public enum EnvironmentChangedKeys: String {
 public class EnvironmentManager {
     private var entries: [String: Entry] = [:]
     
+    public init() { }
+    
+    
+    /// Returns an ordered list of all of the API names currently managed. By default the list will be returned in ascending order but you can optionally sort them in another way (i.e. descending)
+    ///
+    /// - Returns: The names of all APIs currently managed
     public func apiNames(usingSortFunction function: (String, String) -> Bool = { $0 < $1}) -> [String] {
         return Array(self.entries.keys).sorted(by: function)
     }
@@ -49,13 +55,21 @@ public class EnvironmentManager {
     }
     
     
-    
     /// Gets the current selecterd environment for a given API as a string.
     ///
     /// - Parameter apiName: The name of the API to check what the currently selected environment is
     /// - Returns: The environment name, or nil if that API name is not registered with the manager
     public func currentEnvironmentFor(apiName: String) -> String? {
         return self.entries[apiName]?.currentEnvironment
+    }
+    
+    
+    /// Returns the current base URL of a given API.
+    ///
+    /// - Parameter apiName: The name of the API
+    /// - Returns: A base URL or nil if that API name cannot be found
+    public func baseUrl(apiName: String) -> URL? {
+        return self.entries[apiName]?.currentBaseUrl
     }
     
     

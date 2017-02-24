@@ -30,6 +30,15 @@ public struct Entry {
         }
     }
     
+    
+    /// Returns the base API for the currently selected environment
+    public var currentBaseUrl: URL {
+        get {
+            // We guarantee elsewhere that the currentEnvironment will always exist in the dictionary. There might be a way to use the "Dictionary.Index" stuff to access the value directly instead of force unwrapping the optional
+            return self.environments[self.currentEnvironment]!
+        }
+    }
+    
     /// The standard initializer for an Entry
     ///
     /// - Parameters:

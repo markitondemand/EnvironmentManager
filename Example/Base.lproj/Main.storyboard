@@ -1,14 +1,19 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11134" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11106"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -16,11 +21,86 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Service1 Environment" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hEd-G9-oLt">
+                                <rect key="frame" x="16" y="121" width="165" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Service2 Environment" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="unS-We-kDc">
+                                <rect key="frame" x="16" y="186" width="167" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Some Env" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rid-Sz-ead">
+                                <rect key="frame" x="283" y="121" width="76" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Some Env" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HX8-QQ-sHB">
+                                <rect key="frame" x="283" y="186" width="76" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WO7-u8-Dk3">
+                                <rect key="frame" x="109" y="558" width="156" height="30"/>
+                                <state key="normal" title="Manage environments!"/>
+                                <connections>
+                                    <segue destination="BYb-vo-Xmu" kind="presentation" customClass="EnvironmentManagerSegue" customModule="MDEnvironmentManager" id="is1-5x-zuL"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="api.some.com" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zej-Ki-8Q9">
+                                <rect key="frame" x="16" y="150" width="107" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="api.some.com" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N7g-4m-E24">
+                                <rect key="frame" x="16" y="215" width="107" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="WO7-u8-Dk3" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="C3V-Q4-pJ8"/>
+                            <constraint firstItem="zej-Ki-8Q9" firstAttribute="leading" secondItem="hEd-G9-oLt" secondAttribute="leading" id="Ged-9b-4Dr"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="WO7-u8-Dk3" secondAttribute="bottom" constant="79" id="Gqr-fT-jFO"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="unS-We-kDc" secondAttribute="leading" id="Hzh-SD-Bxq"/>
+                            <constraint firstItem="hEd-G9-oLt" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="Lcd-bL-Mdx"/>
+                            <constraint firstItem="N7g-4m-E24" firstAttribute="top" secondItem="unS-We-kDc" secondAttribute="bottom" constant="8" id="Oae-vA-niX"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="HX8-QQ-sHB" secondAttribute="trailing" id="Vp2-Ra-1UH"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Rid-Sz-ead" secondAttribute="trailing" id="dRm-QJ-2AE"/>
+                            <constraint firstItem="unS-We-kDc" firstAttribute="top" secondItem="zej-Ki-8Q9" secondAttribute="bottom" constant="15" id="mm7-vp-Pde"/>
+                            <constraint firstItem="HX8-QQ-sHB" firstAttribute="centerY" secondItem="unS-We-kDc" secondAttribute="centerY" id="pjm-LP-7eh"/>
+                            <constraint firstItem="Rid-Sz-ead" firstAttribute="centerY" secondItem="hEd-G9-oLt" secondAttribute="centerY" id="pq7-R7-6nz"/>
+                            <constraint firstItem="hEd-G9-oLt" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="101" id="qdI-Eg-eUA"/>
+                            <constraint firstItem="zej-Ki-8Q9" firstAttribute="top" secondItem="hEd-G9-oLt" secondAttribute="bottom" constant="8" id="xcf-Ao-QZU"/>
+                            <constraint firstItem="N7g-4m-E24" firstAttribute="leading" secondItem="unS-We-kDc" secondAttribute="leading" id="zgf-Jf-s75"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="serviceOneBaseAPILabel" destination="zej-Ki-8Q9" id="DLu-fn-RWa"/>
+                        <outlet property="serviceOneEnvLabel" destination="Rid-Sz-ead" id="ASW-VY-04a"/>
+                        <outlet property="serviceTwoBaseAPILabel" destination="N7g-4m-E24" id="AeU-EJ-3YW"/>
+                        <outlet property="serviceTwoEnvLabel" destination="HX8-QQ-sHB" id="Pgh-z5-aau"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+        </scene>
+        <!--EnvironmentManagerStoryboard-->
+        <scene sceneID="PRN-j2-eOQ">
+            <objects>
+                <viewControllerPlaceholder storyboardName="EnvironmentManagerStoryboard" bundleIdentifier="com.markit.MDEnvironmentManager" id="BYb-vo-Xmu" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8Q5-bU-nF2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="857" y="35"/>
         </scene>
     </scenes>
 </document>

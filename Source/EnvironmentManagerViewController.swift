@@ -24,21 +24,15 @@ class EnvironmentManagerViewController: UITableViewController {
     private struct CellIdentifiers {
         let APICellIdentifier = "APICellIdentifier"
     }
+    
     var environmentManager: EnvironmentManager!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
-    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return self.environmentManager.
         return self.environmentManager.apiNames().count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell")!
+        let cell = tableView.dequeueReusableCell(withIdentifier: "APICellIdentifier")!
         let allNames = self.environmentManager.apiNames()
         
         cell.textLabel?.text = allNames[indexPath.row]
@@ -54,4 +48,22 @@ class EnvironmentManagerViewController: UITableViewController {
 
 }
 
+
+public class EnvironmentManagerSegue: UIStoryboardSegue {
+    public func pass(environmentManager: EnvironmentManager) {
+        let destination = self.destination as! UINavigationController
+        destination.pass(environmentManager: environmentManager)
+    }
+}
+
+extension UINavigationController {
+    func pass(environmentManager:EnvironmentManager) {
+        guard let environmentController = self.viewControllers.first as? EnvironmentManagerViewController else {
+            return
+        }
+        
+        environmentController.environmentManager = environmentManager
+    }
+
+}
 // EnvironmentSelectionViewController
