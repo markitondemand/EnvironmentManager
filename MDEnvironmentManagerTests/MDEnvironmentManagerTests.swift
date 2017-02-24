@@ -7,7 +7,15 @@ import Foundation
 @testable import MDEnvironmentManager
 
 class MDEnvironmentManagerTests: XCTestCase {
-    func testEnvironmentChangingForASingleEntry() {
+    // Builders
+    func defaultEnvironmentManager() -> EnvironmentManager {
+        let en = EnvironmentManager()
+        en.add(apiName: "service1", environmentUrls: [("acc", URL(string: "http://acc.api.domain.com")!), ("prod", URL(string: "http://prod.api.domain.com")!)])
+        return en
+    }
+    
+    // Tests
+    func  testEnvironmentChangingForASingleEntry() {
         let path = "the/path/to/resource/"
         let expectedProdURL = URL(string: "http://prod.api.domain.com/the/path/to/resource/")!
         let expectedAccURL = URL(string: "http://acc.api.domain.com/the/path/to/resource/")!
@@ -71,6 +79,17 @@ class MDEnvironmentManagerTests: XCTestCase {
         XCTAssertEqual(observer.newEnv, expectedNewEnv)
     }
     
+    func testGetters() {
+        let en = self.defaultEnvironmentManager()
+        
+        XCTAssertEqual(en.apiNames(), ["service1"])
+        en.add(apiName: "a", environmentUrls: [("acc", URL(string: "https://acc.other.api.com")!)])
+        
+        XCTAssertEqual(en.apiNames(), ["a", "service1"])
+    }
+    
+    
+    // helper
     class TestEnvironmentObserver {
         var oldEnv: String!
         var newEnv: String!

@@ -31,6 +31,9 @@ public enum EnvironmentChangedKeys: String {
 public class EnvironmentManager {
     private var entries: [String: Entry] = [:]
     
+    public func apiNames(usingSortFunction function: (String, String) -> Bool = { $0 < $1}) -> [String] {
+        return Array(self.entries.keys).sorted(by: function)
+    }
     
     /// Builds a full URL for a given base API.
     ///
