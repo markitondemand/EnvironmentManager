@@ -54,9 +54,33 @@ class MDEnvironmentManagerTests: XCTestCase {
         XCTAssertNil(em.urlFor(apiName: "unknown-service", path: path))
     }
     
+    func testNotifications() {
+        let expectedOldEnv = "acc"
+        let expectedNewEnv = "prod"
+        
+        let em = EnvironmentManager()
+        em.add(apiName: "service1", environmentUrls: [("acc", URL(string: "http://acc.api.domain.com")!), ("prod", URL(string: "http://prod.api.domain.com")!)])
+        
+        let observer = TestEnvironmentObserver()
+        
+        // When
+        em.select(environment: "prod", forAPI: "service1")
+        
+        // Then
+        XCTAssertEqual(observer.oldEnv, expectedOldEnv)
+        XCTAssertEqual(observer.newEnv, expectedNewEnv)
+    }
     
     class TestEnvironmentObserver {
+        var oldEnv: String!
+        var newEnv: String!
         
+        init() {
+            NotificationCenter.default.addObserver(forName: Notification.Name.EnvironmentDidChange, object: nil, queue: nil) { (notification: Notification) in
+                self.oldEnv = notification.userInfo?[EnvironmentChangedKeys.OldEnvironment] as? String ?? ""
+                self.newEnv = notification.userInfo?[EnvironmentChangedKeys.NewEnvironment] as? String ?? ""
+            }
+        }
     }
 }
 

@@ -9,17 +9,21 @@
 import Foundation
 
 
-
-
-// TODO:
-// Notifications
-//  send the followng on environment change
-//  1. what was OLD env
-//  2. what is NEW env
-//  3. some context so that the watcher can grab the correct base URL (i.e. multiple URL entries for a single environment)
 public extension Notification.Name {
-    /// This notification is posted if the environment for an API changes. The old environment, new environment, and
+    /// This notification is posted if the environment for an API changes. The old environment, new environment, and the name of the environment. Please see EnvironmentChangedKeys for info on what is passed. The object that posts this will be the Entry item that was changed.
     static let EnvironmentDidChange = Notification.Name("EnvironmentDidChange")
+}
+
+
+/// Keys that can be accessed from the "userInfo" dictionary of the EnvironmentDidChange Notification
+///
+/// - APIName: The key to access what the name of the API that is changing
+/// - OldEnvironment: The key to access what the old environment was
+/// - NewEnvironment: The key to access what the new environment will be
+public enum EnvironmentChangedKeys: String {
+    case APIName
+    case OldEnvironment
+    case NewEnvironment
 }
 
 
@@ -35,11 +39,9 @@ public class EnvironmentManager {
     ///   - path: The path to the resource. This will be appended to the base URL
     /// - Returns: A new URL for use or nil if the URL could not be created or the API is not found in the manager
     public func urlFor(apiName: String, path: String) -> URL? {
-        
         guard let entry = entries[apiName] else {
             return nil
         }
-        
         return entry.buildURLWith(path: path)
     }
     
@@ -81,13 +83,12 @@ public class EnvironmentManager {
         self.add(entry: entry)
     }
     
-    //@TODO: notification broadcasting
     /// Attempts to select a new environment for a given API. If the environment succefully changes for an API a notification will be posted. Please see the "EnvironmentDidChange": notifcation
     ///
     /// - Parameters:
     ///   - environment: The environment to select
     ///   - apiName: The API to select the environment for
-    func select(environment: String, forAPI apiName: String) {
+    public func select(environment: String, forAPI apiName: String) {
         if (!self.entries.keys.contains(apiName)) {
             return
         }
@@ -97,69 +98,5 @@ public class EnvironmentManager {
         
         entry.currentEnvironment = environment
         self.entries[apiName] = entry
-    }
-}
-
-
-/// Simple datastructure represneting an API and its associated enviroments, as not all APIs will have the same number of enviromments (e.g. some may have a dev, where others wont, like client APIs)
-public struct Entry {
-    
-    /// The name of the API (e.g. MDQuoteService)
-    let name: String
-    private var environments: [String: URL]
-    
-    // This variable is needed to define a backing store variable because when you override the set or get on a property they lose their backing variable
-    private var backingCurrentEnvironment: String!
-    
-    /// Get and Set the current environment. If you attempt to set the environment to something this Entry does not know about nothing will change. (i.e. this guarantees that it will always be pointing to an environment that exists within this Entry)
-    public var currentEnvironment: String {
-        set (value) {
-            if (self.environments.keys.contains(value)) {
-                self.backingCurrentEnvironment = value
-            }
-        }
-        get {
-            return self.backingCurrentEnvironment
-        }
-    }
-    
-    
-    /// The standard initializer for an Entry
-    ///
-    /// - Parameters:
-    ///   - name: The name of the entry, this should be something like the name of your API, (e.g. "MDQuoteService")
-    ///   - initialEnvironment: The initial environment. (e.g. acc, prod, acceptance, test, etc.
-    init(name: String, initialEnvironment: (String, URL)) {
-        environments = [initialEnvironment.0 : initialEnvironment.1]
-        self.name = name
-        self.backingCurrentEnvironment = initialEnvironment.0
-    }
-    
-    
-    /// Builds a URL by appending a path to the currently selected environment's baseURL
-    ///
-    /// - Parameter path: The path to append
-    /// - Returns: The new URL or nil if the URL could not be formed
-    public func buildURLWith(path: String) -> URL? {
-        guard let baseURL = self.environments[self.currentEnvironment] else {
-            return nil
-        }
-        return baseURL.appendingPathComponent(path)
-    }
-    
-    /// Adds a new environment and corresponding baseURL to this entry
-    ///
-    /// - Parameters:
-    ///   - url: The base URL
-    ///   - environment: The environment it belongs to
-    public mutating func add(url: URL, forEnvironment environment:String) {
-        self.environments[environment] = url
-    }
-    
-    /// Adds a new envvironemt and base URL to this entry
-    ///
-    /// - Parameter pair: The tuple representing the environment and baseUR:
-    public mutating func add(pair: (environment: String, baseUrl: URL)) {
-        self.add(url: pair.baseUrl, forEnvironment: pair.environment)
     }
 }
