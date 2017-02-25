@@ -4,7 +4,7 @@
 import Foundation
 
 /// Simple datastructure represneting an API and its associated enviroments, as not all APIs will have the same number of enviromments (e.g. some may have a dev, where others wont, like client APIs)
-public struct Entry {
+public class Entry {
     /// The name of the API (e.g. MDQuoteService)
     public let name: String
     fileprivate var environments: [String: URL]
@@ -64,23 +64,44 @@ extension Entry {
         
         return baseURL.appendingPathComponent(path)
     }
-}
-
-// MARK: - Mutating functions
-extension Entry {
+    
     /// Adds a new environment and corresponding baseURL to this entry
     ///
     /// - Parameters:
     ///   - url: The base URL
     ///   - environment: The environment it belongs to
-    public mutating func add(url: URL, forEnvironment environment:String) {
+    public func add(url: URL, forEnvironment environment:String) {
         self.environments[environment] = url
     }
     
     /// Adds a new envvironemt and base URL to this entry
     ///
     /// - Parameter pair: The tuple representing the environment and baseUR:
-    public mutating func add(pair: (environment: String, baseUrl: URL)) {
+    public func add(pair: (environment: String, baseUrl: URL)) {
         self.add(url: pair.baseUrl, forEnvironment: pair.environment)
     }
+    
+    
+    /// Returns an array of all environments the current entry supports. This will by default sort the names in ascending order. Pass your own sort closure to change the sorting behavior
+    ///
+    /// - Returns: An array of all environments for this entry
+    public func environmentNames(usingSortFunction function: (String, String) -> Bool = { $0 < $1}) -> [String] {
+        return Array(self.environments.keys).sorted(by: function)
+    }
+    
+    //TOOD: do not assume ascending here... will cause issues with other functions. need to pass the sort function in or get it some other way
+    /// Selects an environment at a given index. This will sort in ascending order by default
+    ///
+    /// - Parameter index: The index
+    public func selectEnvironment(index: Int) {
+        self.currentEnvironment = self.environments.sorted(by: { $0.key < $1.key })[index].key
+    }
+    
+//    public func environmentFor(index: Int) -> String? {
+//
+//    }
+    
+//    public func baseURLForIndex(index: Int) -> URL? {
+//        
+//    }
 }

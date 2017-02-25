@@ -28,15 +28,17 @@ class ViewController: UIViewController {
         self.serviceOneBaseAPILabel.text = self.environmentManager.baseUrl(apiName: "Service1")?.absoluteString
         self.serviceTwoBaseAPILabel.text = self.environmentManager.baseUrl(apiName: "Service2")?.absoluteString
         
-        NotificationCenter.default.addObserver(forName: NSNotification.Name.EnvironmentDidChange, object: environmentManager, queue: nil) { (notif: Notification) in
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.EnvironmentDidChange, object: nil, queue: nil) { (notif: Notification) in
             let api = notif.userInfo?[EnvironmentChangedKeys.APIName] as! String
             let newEnv = notif.userInfo?[EnvironmentChangedKeys.NewEnvironment] as! String
             
             switch api {
             case "Service1":
                 self.serviceOneEnvLabel.text = newEnv
+                self.serviceOneBaseAPILabel.text = self.environmentManager.baseUrl(apiName: "Service1")?.absoluteString
             case "Service2":
                 self.serviceTwoEnvLabel.text = newEnv
+                self.serviceTwoBaseAPILabel.text = self.environmentManager.baseUrl(apiName: "Service2")?.absoluteString
             default:
                 print("unexpected")
             }

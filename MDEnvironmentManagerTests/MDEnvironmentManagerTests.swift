@@ -20,7 +20,7 @@ class MDEnvironmentManagerTests: XCTestCase {
         let expectedProdURL = URL(string: "http://prod.api.domain.com/the/path/to/resource/")!
         let expectedAccURL = URL(string: "http://acc.api.domain.com/the/path/to/resource/")!
         
-        var entry = Entry(name: "service1", initialEnvironment: ("prod", URL(string: "http://prod.api.domain.com")!))
+        let entry = Entry(name: "service1", initialEnvironment: ("prod", URL(string: "http://prod.api.domain.com")!))
         
         let prodURL = entry.buildURLWith(path: path)
         
@@ -84,7 +84,7 @@ class MDEnvironmentManagerTests: XCTestCase {
         
         // test return service name + default to using ascending sort
         XCTAssertEqual(en.apiNames(), ["service1"])
-        en.add(apiName: "a", environmentUrls: [("acc", URL(string: "https://acc.other.api.com")!)])
+        en.add(apiName: "a", environmentUrls: [("acc", URL(string: "https://acc.api.other.com")!)])
         XCTAssertEqual(en.apiNames(), ["a", "service1"])
         
         // test return base API
@@ -92,6 +92,11 @@ class MDEnvironmentManagerTests: XCTestCase {
         
         en.select(environment: "prod", forAPI: "service1")
         XCTAssertEqual(en.baseUrl(apiName: "service1"), URL(string: "http://prod.api.domain.com")!)
+        
+        let entry = Entry(name: "Service", initialEnvironment: ("acc", URL(string:"http://acc.api.service.com")!))
+        entry.add(url: URL(string:"http://prod.api.service.com")!, forEnvironment: "prod")
+        
+        XCTAssertEqual(entry.environmentNames(), ["acc", "prod"])
     }
     
     

@@ -29,7 +29,7 @@ public enum EnvironmentChangedKeys: String {
 
 /// This is the main class of the EnvironmentManager
 public class EnvironmentManager {
-    private var entries: [String: Entry] = [:]
+    fileprivate var entries: [String: Entry] = [:]
     
     public init() { }
     
@@ -109,11 +109,22 @@ public class EnvironmentManager {
         if (!self.entries.keys.contains(apiName)) {
             return
         }
-        guard var entry = self.entries[apiName] else {
+        guard let entry = self.entries[apiName] else {
             return
         }
         
         entry.currentEnvironment = environment
-        self.entries[apiName] = entry
+    }
+}
+
+//protocol IndexPathable {
+//    
+//}
+
+// MARK: - Index and IndexPath support
+extension EnvironmentManager {
+    func entryFor(index: Int) -> Entry? {
+        //TODO: safeify the accessor here
+        return self.entries[self.apiNames()[index]]
     }
 }

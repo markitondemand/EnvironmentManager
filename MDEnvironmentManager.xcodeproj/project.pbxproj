@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		286CFF991E60FB5A00AA2C39 /* MDEnvironmentManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28AB954D1E5E3062000EAEA9 /* MDEnvironmentManager.framework */; };
 		28AB95521E5E3062000EAEA9 /* MDEnvironmentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 28AB95501E5E3062000EAEA9 /* MDEnvironmentManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		28AB955F1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AB955E1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift */; };
 		28AB95611E5E3130000EAEA9 /* MDEnvironmentManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28AB954D1E5E3062000EAEA9 /* MDEnvironmentManager.framework */; };
@@ -71,6 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				286CFF991E60FB5A00AA2C39 /* MDEnvironmentManager.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -579,6 +581,7 @@
 				28AB95851E60DA39000EAEA9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
