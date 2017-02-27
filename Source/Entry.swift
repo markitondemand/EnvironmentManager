@@ -3,14 +3,15 @@
 
 import Foundation
 
+
 /// Simple datastructure represneting an API and its associated enviroments, as not all APIs will have the same number of enviromments (e.g. some may have a dev, where others wont, like client APIs)
-public class Entry {
+public class Entry{
     // Types
     public typealias SortSignature = (String, String) -> Bool
     public typealias Pair = (environment: String, baseUrl: URL)
     
     // Sort ascending by default
-    fileprivate static var DefaultSort: SortSignature = { $0 < $1 }
+    fileprivate static let DefaultSort: SortSignature = { $0 < $1 }
     
     /// The name of the API (e.g. MDQuoteService)
     public let name: String
@@ -56,7 +57,23 @@ public class Entry {
         self.name = name
         self.backingCurrentEnvironment = initialEnvironment.0
     }
+    
+    
+    /// Initializes a new Entry with a name and a list of environments and URLs.
+    ///
+    /// - Parameters:
+    ///   - name: The name of the Entry
+    ///   - environments: The list of environments and URLs. There must be at least one element in this or an assertion is raised. The first element is used as the initial current environment
+    public convenience init(name: String, environments: [(String, URL)]) {
+        precondition(environments.count > 0)
+        var environments = environments
+        self.init(name:name, initialEnvironment: environments.removeFirst())
+        for remaining in environments {
+            self.add(pair: remaining)
+        }
+    }
 }
+
 
 // MARK: - Operations
 extension Entry {

@@ -6,13 +6,20 @@ import Foundation
 
 @testable import MDEnvironmentManager
 
+
 class MDEnvironmentManagerTests: XCTestCase {
     let defaultAccURL = URL(string: "http://acc.api.domain.com")!
     let defaultProdURL = URL(string: "http://prod.api.domain.com")!
     
+    var backingStore: DictionaryStore!
+    
+    override func setUp() {
+        backingStore = DictionaryStore()
+    }
+    
     // Builders
     func defaultEnvironmentManager() -> EnvironmentManager {
-        let en = EnvironmentManager()
+        let en = EnvironmentManager(backingStore: self.backingStore)
         en.add(apiName: "service1", environmentUrls: [("acc", defaultAccURL), ("prod", defaultProdURL)])
         return en
     }
@@ -115,11 +122,25 @@ class MDEnvironmentManagerTests: XCTestCase {
         
         XCTAssertEqual(entry.environmentNames(), ["acc", "prod"])
     }
-    
-    func testEnvironmentBacksDataToStore() {
+
+    func testWriteData() {
+        let entry = Entry(name: "service1", environments: [("acc", defaultAccURL), ("prod", defaultProdURL)])
         
+        let en = EnvironmentManager()
+        en.add(entry: entry)
+        
+        let store = DictionaryStore()
+        en.save(usingStore: store)
+        
+        
+        XCTAssertNotNil(store["service1"])
+        XCTAssertEqual(store["service1"] as! String, "acc")
+        
+        en.select(environment: "prod", forAPI: "service1")
+        en.save(usingStore: store)
+        
+        XCTAssertEqual(store["service1"] as! String, "prod")
     }
-    
     
     // helper
     class TestEnvironmentObserver {

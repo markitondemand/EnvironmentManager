@@ -29,11 +29,28 @@ public enum EnvironmentChangedKeys: String {
 
 
 
+/// Simple class that implements the Store protocol using an in memory Dictionary
+public class DictionaryStore {
+    private var backingDictionary: [String:Any] = [:]
+    
+    subscript(key: String) -> Any? {
+        get {
+            return self.backingDictionary[key]
+        }
+        set(newValue) {
+            self.backingDictionary[key] = newValue
+        }
+    }
+}
+
 /// This is the main class of the EnvironmentManager
 public class EnvironmentManager {
     fileprivate var entries: [String: Entry] = [:]
+    private let backingStore: DictionaryStore
     
-    public init() { }
+    public init(backingStore: DictionaryStore = DictionaryStore()) {
+        self.backingStore = backingStore
+    }
     
     
     /// Returns an ordered list of all of the API names currently managed. By default the list will be returned in ascending order but you can optionally sort them in another way (i.e. descending)
@@ -117,15 +134,21 @@ public class EnvironmentManager {
         
         entry.currentEnvironment = environment
     }
+    
+    
+    /// Attempts to save the current environments to a given store.
+    ///
+    /// - Parameter store: The store to save the selected environments to
+    public func save(usingStore store: DictionaryStore) {
+        for entry in self.entries {
+            store[entry.key] = entry.value.currentEnvironment
+        }
+    }
 }
-
-//protocol IndexPathable {
-//    
-//}
 
 // MARK: - Index and IndexPath support
 extension EnvironmentManager {
-    func entry(forIndex index: Int) -> Entry? {
+    public func entry(forIndex index: Int) -> Entry? {
         //TODO: safeify the accessor here
         guard let environment = self.apiNames()[safe: index] else {
             return nil
