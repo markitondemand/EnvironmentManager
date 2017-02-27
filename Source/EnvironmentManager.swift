@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import MD_Extensions
 
 
 public extension Notification.Name {
@@ -126,7 +127,10 @@ public class EnvironmentManager {
 extension EnvironmentManager {
     func entry(forIndex index: Int) -> Entry? {
         //TODO: safeify the accessor here
-        return self.entries[self.apiNames()[index]]
+        guard let environment = self.apiNames()[safe: index] else {
+            return nil
+        }
+        return self.entries[environment]
     }
     
 //    func url(forIndexPath path: IndexPath) -> URL? {

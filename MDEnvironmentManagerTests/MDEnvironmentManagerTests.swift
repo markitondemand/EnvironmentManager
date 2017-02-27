@@ -116,6 +116,10 @@ class MDEnvironmentManagerTests: XCTestCase {
         XCTAssertEqual(entry.environmentNames(), ["acc", "prod"])
     }
     
+    func testEnvironmentBacksDataToStore() {
+        
+    }
+    
     
     // helper
     class TestEnvironmentObserver {

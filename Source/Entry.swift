@@ -108,11 +108,10 @@ extension Entry {
     ///
     /// - Parameter index: The index
     public func selectEnvironment(forIndex index: Int, usingSortFunction function: SortSignature = DefaultSort) {
-        guard index < self.environments.count else {
+        guard let environment = self.environments.keys.sorted(by: function)[safe: index] else {
             return
         }
-        
-        self.currentEnvironment = self.environments.keys.sorted(by: function)[index]
+        self.currentEnvironment = environment
     }
 }
 
@@ -127,10 +126,7 @@ extension Entry {
     ///   - function: Optional paramter to override the default sort. The default is ascending
     /// - Returns: The environment as a string or nil if the index was out of bounds
     public func environment(forIndex index: Int, usingSortFunction function: SortSignature = DefaultSort) -> String? {
-        guard index < self.environmentNames().count else {
-            return nil
-        }
-        return self.environmentNames(usingSortFunction: function)[index]
+        return self.environmentNames(usingSortFunction: function)[safe: index]
     }
     
     
@@ -142,9 +138,6 @@ extension Entry {
     ///   - function: Optional paramter to override the default sort. The default is ascending
     /// - Returns: The base URL as a URL or nil if the index was out of bounds
     public func baseURL(forIndex index: Int, usingSortFunction function: SortSignature = DefaultSort) -> URL? {
-        guard index < self.environmentNames().count else {
-            return nil
-        }
         guard let environment = self.environment(forIndex: index, usingSortFunction: function) else {
             return nil
         }

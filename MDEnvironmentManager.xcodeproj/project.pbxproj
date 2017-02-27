@@ -671,7 +671,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 68422CA4AC48A86B487D0C2D /* Pods-MDEnvironmentManagerTests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = MDEnvironmentManagerTests/Info.plist;
@@ -686,7 +685,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E7D67A6FA39195507F1EFE33 /* Pods-MDEnvironmentManagerTests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = MDEnvironmentManagerTests/Info.plist;
