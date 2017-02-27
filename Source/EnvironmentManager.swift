@@ -27,6 +27,7 @@ public enum EnvironmentChangedKeys: String {
 }
 
 
+
 /// This is the main class of the EnvironmentManager
 public class EnvironmentManager {
     fileprivate var entries: [String: Entry] = [:]
@@ -123,8 +124,15 @@ public class EnvironmentManager {
 
 // MARK: - Index and IndexPath support
 extension EnvironmentManager {
-    func entryFor(index: Int) -> Entry? {
+    func entry(forIndex index: Int) -> Entry? {
         //TODO: safeify the accessor here
         return self.entries[self.apiNames()[index]]
     }
+    
+//    func url(forIndexPath path: IndexPath) -> URL? {
+//        
+//    }
+//    func environment(forIndexPath path: IndexPath) -> URL? {
+//        
+//    }
 }

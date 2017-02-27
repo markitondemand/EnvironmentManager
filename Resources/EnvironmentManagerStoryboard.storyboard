@@ -54,12 +54,14 @@
                     <navigationItem key="navigationItem" title="Environment Manager" id="bHH-na-gNG">
                         <barButtonItem key="rightBarButtonItem" systemItem="done" id="cs3-gy-vrU">
                             <connections>
-                                <action selector="doneTappedWithSender:" destination="hZ7-PX-gsd" id="4f2-Y8-9xf"/>
+                                <action selector="doneTappedWithSender:" destination="hZ7-PX-gsd" id="x7r-Nl-lBY"/>
+                                <segue destination="WGV-gm-Wlp" kind="unwind" unwindAction="unwindToExit:" id="ql4-PU-cDS"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YE2-ET-gWe" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="WGV-gm-Wlp" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-836" y="-18"/>
         </scene>
@@ -104,7 +106,6 @@
         <!--Navigation Controller-->
         <scene sceneID="E5Y-Fg-xJG">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="bPN-Al-wMF" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController id="bti-Zt-Fvs" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="ElO-YR-WYr">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -114,6 +115,7 @@
                         <segue destination="hZ7-PX-gsd" kind="relationship" relationship="rootViewController" id="PRH-Ct-uiY"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bPN-Al-wMF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1583" y="-18"/>
         </scene>

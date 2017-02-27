@@ -5,6 +5,13 @@ import Foundation
 
 /// Simple datastructure represneting an API and its associated enviroments, as not all APIs will have the same number of enviromments (e.g. some may have a dev, where others wont, like client APIs)
 public class Entry {
+    // Types
+    public typealias SortSignature = (String, String) -> Bool
+    public typealias Pair = (environment: String, baseUrl: URL)
+    
+    // Sort ascending by default
+    fileprivate static var DefaultSort: SortSignature = { $0 < $1 }
+    
     /// The name of the API (e.g. MDQuoteService)
     public let name: String
     fileprivate var environments: [String: URL]
@@ -77,7 +84,7 @@ extension Entry {
     /// Adds a new envvironemt and base URL to this entry
     ///
     /// - Parameter pair: The tuple representing the environment and baseUR:
-    public func add(pair: (environment: String, baseUrl: URL)) {
+    public func add(pair: Pair) {
         self.add(url: pair.baseUrl, forEnvironment: pair.environment)
     }
     
@@ -85,23 +92,62 @@ extension Entry {
     /// Returns an array of all environments the current entry supports. This will by default sort the names in ascending order. Pass your own sort closure to change the sorting behavior
     ///
     /// - Returns: An array of all environments for this entry
-    public func environmentNames(usingSortFunction function: (String, String) -> Bool = { $0 < $1}) -> [String] {
+    public func environmentNames(usingSortFunction function: SortSignature = DefaultSort) -> [String] {
         return Array(self.environments.keys).sorted(by: function)
     }
     
-    //TOOD: do not assume ascending here... will cause issues with other functions. need to pass the sort function in or get it some other way
-    /// Selects an environment at a given index. This will sort in ascending order by default
+    
+    /// Attempts to select a new environment. If the environment is not currently known, or already selected no operation is performed. This does the same as setting the "currentEnvironment" variable directly
     ///
-    /// - Parameter index: The index
-    public func selectEnvironment(index: Int) {
-        self.currentEnvironment = self.environments.sorted(by: { $0.key < $1.key })[index].key
+    /// - Parameter environment: The environment to try adn aselect
+    public func select(environment: String) {
+        self.currentEnvironment = environment
     }
     
-//    public func environmentFor(index: Int) -> String? {
-//
-//    }
+    /// Selects an environment at a given index. This will sort the environment by there name for selecting an index. The default sort is in ascending order
+    ///
+    /// - Parameter index: The index
+    public func selectEnvironment(forIndex index: Int, usingSortFunction function: SortSignature = DefaultSort) {
+        guard index < self.environments.count else {
+            return
+        }
+        
+        self.currentEnvironment = self.environments.keys.sorted(by: function)[index]
+    }
+}
+
+
+// MARK: - Index and IndexPath support
+extension Entry {
     
-//    public func baseURLForIndex(index: Int) -> URL? {
-//        
-//    }
+    /// Returns the environment for a given index. The environemnts are put into a sorted order using a function. The default function is ascending.
+    ///
+    /// - Parameters:
+    ///   - index: The index to search
+    ///   - function: Optional paramter to override the default sort. The default is ascending
+    /// - Returns: The environment as a string or nil if the index was out of bounds
+    public func environment(forIndex index: Int, usingSortFunction function: SortSignature = DefaultSort) -> String? {
+        guard index < self.environmentNames().count else {
+            return nil
+        }
+        return self.environmentNames(usingSortFunction: function)[index]
+    }
+    
+    
+    /// Returns the baseURL for a given index. The baseURLs are put into a sorted order using a function. The default function is ascending.
+
+    ///
+    /// - Parameters:
+    ///   - index: The index to search
+    ///   - function: Optional paramter to override the default sort. The default is ascending
+    /// - Returns: The base URL as a URL or nil if the index was out of bounds
+    public func baseURL(forIndex index: Int, usingSortFunction function: SortSignature = DefaultSort) -> URL? {
+        guard index < self.environmentNames().count else {
+            return nil
+        }
+        guard let environment = self.environment(forIndex: index, usingSortFunction: function) else {
+            return nil
+        }
+        return self.environments[environment]
+    }
 }
