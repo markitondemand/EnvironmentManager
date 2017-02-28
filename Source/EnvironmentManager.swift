@@ -182,7 +182,7 @@ extension EnvironmentManager {
 
 
 // MARK: - Convenience extension for accessing our data from the DataStore
-extension DataStore {
+internal extension DataStore {
     func environment(forService service: String) -> String? {
         return self.readEnvironments()[service]
     }

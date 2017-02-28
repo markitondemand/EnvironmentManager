@@ -5,7 +5,7 @@ import Foundation
 
 
 /// Simple datastructure represneting an API and its associated enviroments, as not all APIs will have the same number of enviromments (e.g. some may have a dev, where others wont, like client APIs)
-public class Entry{
+public class Entry {
     // Types
     public typealias SortSignature = (String, String) -> Bool
     public typealias Pair = (environment: String, baseUrl: URL)
@@ -40,7 +40,6 @@ public class Entry{
         }
     }
     
-    
     /// Returns the base API for the currently selected environment
     public var currentBaseUrl: URL {
         get {
@@ -53,7 +52,7 @@ public class Entry{
     ///
     /// - Parameters:
     ///   - name: The name of the entry, this should be something like the name of your API, (e.g. "MDQuoteService")
-    ///   - initialEnvironment: The initial environment. (e.g. acc, prod, acceptance, test, etc.
+    ///   - initialEnvironment: The initial environment as a tuple. (e.g. acc, prod, acceptance, test, etc.) The URL should be the base URL to your service
     public init(name: String, initialEnvironment: (String, URL)) {
         environments = [initialEnvironment.0 : initialEnvironment.1]
         self.name = name
@@ -67,7 +66,7 @@ public class Entry{
     ///   - name: The name of the Entry
     ///   - environments: The list of environments and URLs. There must be at least one element in this or an assertion is raised. The first element is used as the initial current environment
     public convenience init(name: String, environments: [(String, URL)]) {
-        precondition(environments.count > 0)
+        precondition(environments.count > 0, "You must pass at least one environment par.")
         var environments = environments
         self.init(name:name, initialEnvironment: environments.removeFirst())
         for remaining in environments {

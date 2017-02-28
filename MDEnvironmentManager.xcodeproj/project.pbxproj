@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		283EB6751E65FE140004C1A3 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 283EB6741E65FE140004C1A3 /* DataStore.swift */; };
-		286CFF991E60FB5A00AA2C39 /* MDEnvironmentManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28AB954D1E5E3062000EAEA9 /* MDEnvironmentManager.framework */; };
 		286CFFA11E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286CFFA01E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift */; };
 		28AB95521E5E3062000EAEA9 /* MDEnvironmentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 28AB95501E5E3062000EAEA9 /* MDEnvironmentManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		28AB955F1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AB955E1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift */; };
@@ -90,7 +89,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				286CFF991E60FB5A00AA2C39 /* MDEnvironmentManager.framework in Frameworks */,
 				AF7AB28BCEF09D466879C5D7 /* Pods_Example.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

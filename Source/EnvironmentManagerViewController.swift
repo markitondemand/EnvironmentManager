@@ -5,12 +5,13 @@ import UIKit
 
 
 
+
 extension UIStoryboard {
-    /// The name of the storyboard this belong to
+    /// The name of the storyboard this belong to. you can segue to a Storyboad using this identifier
     public static let StoryboardName = "EnvironmentManagerStoryboard"
 }
 
-/// Custom segue used to pass the Environment manager into the view controller via a Storyboard Segue
+/// Custom segue used to pass the Environment manager into the view controller via a Storyboard Segue. This is passed into your prepareForSegue:sender: method. You should use this to pass your environment maanager into the UI
 public class EnvironmentManagerSegue: UIStoryboardSegue {
     public func pass(environmentManager: EnvironmentManager) {
         guard let destination = self.destination as? EntryEnvironmentManagerController else {
@@ -18,12 +19,6 @@ public class EnvironmentManagerSegue: UIStoryboardSegue {
         }
         destination.pass(environmentManager: environmentManager)
     }
-}
-
-
-/// Protocol that defines the entry point for passing a pre created EnvironmentManager to the UI
-protocol EntryEnvironmentManagerController {
-    func pass(environmentManager: EnvironmentManager)
 }
 
 /// This class manages a default UI for selecting environment
@@ -87,10 +82,15 @@ class EnvironmentManagerViewController: UITableViewController, EntryEnvironmentM
     }
 }
 
-
 /// Implement this protocol method somewhere in your application where you presented this UI from to allow the environment manager to unwind. This function will be called when the presented viewcontroller unwinds
 public protocol Unwindable {
     func unwind(toExit segue:UIStoryboardSegue)
+}
+
+
+/// Protocol that defines the entry point for passing a pre created EnvironmentManager to the UI
+protocol EntryEnvironmentManagerController {
+    func pass(environmentManager: EnvironmentManager)
 }
 
 extension UINavigationController: EntryEnvironmentManagerController {

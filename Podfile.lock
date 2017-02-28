@@ -1,12 +1,19 @@
 PODS:
   - MD-Extensions (0.3)
+  - MDEnvironmentManager (0.1.0):
+    - MD-Extensions
 
 DEPENDENCIES:
-  - MD-Extensions
+  - MDEnvironmentManager (from `./MDEnvironmentManager.podspec`)
+
+EXTERNAL SOURCES:
+  MDEnvironmentManager:
+    :path: "./MDEnvironmentManager.podspec"
 
 SPEC CHECKSUMS:
   MD-Extensions: 2581966459488b28bfde69897052d5d29ca274fe
+  MDEnvironmentManager: cdd489eb6010380d188505aaf3c082fa56ec5795
 
-PODFILE CHECKSUM: 9d7ddd2b26b384a9c1d7ba7ffbf8268884ed3209
+PODFILE CHECKSUM: c2255b0b57bbd5d8fc6e23c4e97722555562b996
 
 COCOAPODS: 1.2.0
