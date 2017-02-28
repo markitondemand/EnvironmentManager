@@ -10,15 +10,17 @@ public class Entry{
     public typealias SortSignature = (String, String) -> Bool
     public typealias Pair = (environment: String, baseUrl: URL)
     
+    /// The name of the API (e.g. MDQuoteService)
+    public let name: String
+    
     // Sort ascending by default
     fileprivate static let DefaultSort: SortSignature = { $0 < $1 }
     
-    /// The name of the API (e.g. MDQuoteService)
-    public let name: String
+    // Datastructure to hold the environments for this Entry
     fileprivate var environments: [String: URL]
     
-    // This variable is needed to define a backing store variable because when you override the set or get on a property they lose their backing variable
-    private var backingCurrentEnvironment: String
+    /// This variable is needed to define a backing store variable because when you override the set or get on a property they lose their backing variable
+    internal var backingCurrentEnvironment: String
     
     /// Get and Set the current environment. If you attempt to set the environment to something this Entry does not know about nothing will change. (i.e. this guarantees that it will always be pointing to an environment that exists within this Entry)
     public var currentEnvironment: String {

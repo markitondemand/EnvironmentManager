@@ -28,12 +28,14 @@ public enum EnvironmentChangedKeys: String {
 }
 
 
-
+public protocol DataStore {
+    subscript(key: String) -> Any? { get set }
+}
 /// Simple class that implements the Store protocol using an in memory Dictionary
-public class DictionaryStore {
+public class DictionaryStore: DataStore {
     private var backingDictionary: [String:Any] = [:]
     
-    subscript(key: String) -> Any? {
+    public subscript(key: String) -> Any? {
         get {
             return self.backingDictionary[key]
         }
@@ -43,13 +45,81 @@ public class DictionaryStore {
     }
 }
 
+public class UserDefaultsStore: DataStore {
+    private var backingDefaults: UserDefaults
+    init(defaults: UserDefaults = UserDefaults.standard) {
+        self.backingDefaults = defaults
+    }
+    
+    public subscript(key: String) -> Any? {
+        get {
+            return self.backingDefaults.object(forKey: key)
+        }
+        set(newValue) {
+            self.backingDefaults.set(newValue, forKey: key)
+        }
+    }
+}
+
 /// This is the main class of the EnvironmentManager
 public class EnvironmentManager {
-    fileprivate var entries: [String: Entry] = [:]
-    private let backingStore: DictionaryStore
     
-    public init(backingStore: DictionaryStore = DictionaryStore()) {
-        self.backingStore = backingStore
+    /// Helper class used to serialize the seleced environments
+    internal class SavedEnvironments: NSObject, NSCoding {
+        private var currentEnvironments: [String:String]
+        
+        override required init() {
+            currentEnvironments = [:]
+        }
+        required init?(coder: NSCoder) {
+            guard let currentEnvironments = coder.decodeObject(forKey: "Environments") as? Dictionary<String,String> else {
+                return nil
+            }
+            self.currentEnvironments = currentEnvironments
+        }
+        
+        func encode(with coder: NSCoder) {
+            coder.encode(self.currentEnvironments, forKey:"Environments")
+        }
+        
+        internal func store(service: String, forEnvironment environment: String) {
+            self.currentEnvironments[service] = environment
+        }
+        
+        internal func environment(forService service: String) -> String? {
+            return self.currentEnvironments[service]
+        }
+    }
+    
+    internal static let privateStoreKey = "com.markit.EnvironmentMenanager"
+    fileprivate var entries: [String: Entry] = [:]
+    fileprivate let store: DictionaryStore
+    
+    /// Createsa  new EnvironmentManager using a 
+    ///
+    /// - Parameters:
+    ///   - initialEntries: <#initialEntries description#>
+    ///   - backingStore: <#backingStore description#>
+    public init(initialEntries: [Entry] = [], backingStore: DictionaryStore = DictionaryStore()) {
+        self.store = backingStore
+        let savedEnvironments = backingStore[EnvironmentManager.privateStoreKey] as? SavedEnvironments ?? SavedEnvironments()
+        
+        for entry in initialEntries {
+            let environment = savedEnvironments.environment(forService: entry.name) ?? entry.currentEnvironment
+            entry.backingCurrentEnvironment = environment
+            self.add(entry: entry)
+        }
+    }
+    
+    /// Attempts to save the current environments to a given store.
+    ///
+    /// - Parameter store: The store to save the selected environments to
+    public func save(usingStore store: DictionaryStore) {
+        let savedEnv = SavedEnvironments()
+        for entry in self.entries {
+            savedEnv.store(service: entry.key, forEnvironment: entry.value.currentEnvironment)
+        }
+        store[EnvironmentManager.privateStoreKey] = savedEnv
     }
     
     
@@ -92,10 +162,14 @@ public class EnvironmentManager {
     }
     
     
-    /// Adds a single Entry to the environment manager
+    /// Adds a single Entry to the environment manager. If the entry was persisted to the store that was passed on creation, it will update the current environment to match what the store has.
     ///
     /// - Parameter entry: The entry to add
     public func add(entry: Entry) {
+        // check if the entry was saved previously
+        if let environment = self.store.environment(forService: entry.name) {
+            entry.backingCurrentEnvironment = environment
+        }
         self.entries[entry.name] = entry
     }
     
@@ -136,20 +210,18 @@ public class EnvironmentManager {
     }
     
     
-    /// Attempts to save the current environments to a given store.
+    /// Attempts to return the Entry instasnce for a given service name. Nil is returned if the service does not exist in the manager
     ///
-    /// - Parameter store: The store to save the selected environments to
-    public func save(usingStore store: DictionaryStore) {
-        for entry in self.entries {
-            store[entry.key] = entry.value.currentEnvironment
-        }
+    /// - Parameter service: The name of the service
+    /// - Returns: The corresponding Entry or nil
+    public func entry(forService service: String) -> Entry? {
+        return self.entries[service]
     }
 }
 
 // MARK: - Index and IndexPath support
 extension EnvironmentManager {
     public func entry(forIndex index: Int) -> Entry? {
-        //TODO: safeify the accessor here
         guard let environment = self.apiNames()[safe: index] else {
             return nil
         }
@@ -162,4 +234,11 @@ extension EnvironmentManager {
 //    func environment(forIndexPath path: IndexPath) -> URL? {
 //        
 //    }
+}
+
+extension DictionaryStore {
+    func environment(forService service: String) -> String? {
+        let savedEnvironment = self[EnvironmentManager.privateStoreKey] as? EnvironmentManager.SavedEnvironments
+        return savedEnvironment?.environment(forService: service)
+    }
 }

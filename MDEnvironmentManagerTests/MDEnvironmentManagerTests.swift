@@ -123,23 +123,25 @@ class MDEnvironmentManagerTests: XCTestCase {
         XCTAssertEqual(entry.environmentNames(), ["acc", "prod"])
     }
 
-    func testWriteData() {
-        let entry = Entry(name: "service1", environments: [("acc", defaultAccURL), ("prod", defaultProdURL)])
+    func testReadWriteData() {
+        let environments = [("acc", defaultAccURL), ("prod", defaultProdURL)]
+        let entry = Entry(name: "service1", environments: environments)
         
         let en = EnvironmentManager()
         en.add(entry: entry)
+        en.select(environment: "prod", forAPI: "service1")
         
         let store = DictionaryStore()
         en.save(usingStore: store)
         
         
-        XCTAssertNotNil(store["service1"])
-        XCTAssertEqual(store["service1"] as! String, "acc")
+        let en2 = EnvironmentManager(backingStore: store)
+        en2.add(apiName: "service1", environmentUrls: environments)
+        XCTAssertEqual(en2.currentEnvironmentFor(apiName: "service1"), "prod")
+    }
+    
+    func testUserDefaultSerialization() {
         
-        en.select(environment: "prod", forAPI: "service1")
-        en.save(usingStore: store)
-        
-        XCTAssertEqual(store["service1"] as! String, "prod")
     }
     
     // helper
