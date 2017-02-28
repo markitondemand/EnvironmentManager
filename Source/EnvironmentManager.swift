@@ -30,35 +30,8 @@ public enum EnvironmentChangedKeys: String {
 /// This is the main class of the EnvironmentManager
 public class EnvironmentManager {
     public let store: DataStore
-    
-    /// Helper class used to serialize the seleced environments
-    internal class SavedEnvironments: NSObject, NSCoding {
-        private var currentEnvironments: [String:String]
-        
-        override required init() {
-            currentEnvironments = [:]
-        }
-        required init?(coder: NSCoder) {
-            guard let currentEnvironments = coder.decodeObject(forKey: "Environments") as? Dictionary<String,String> else {
-                return nil
-            }
-            self.currentEnvironments = currentEnvironments
-        }
-        
-        func encode(with coder: NSCoder) {
-            coder.encode(self.currentEnvironments, forKey:"Environments")
-        }
-        
-        internal func store(service: String, forEnvironment environment: String) {
-            self.currentEnvironments[service] = environment
-        }
-        
-        internal func environment(forService service: String) -> String? {
-            return self.currentEnvironments[service]
-        }
-    }
-    
     internal static let privateStoreKey = "com.markit.EnvironmentMenanager"
+    
     fileprivate var entries: [String: Entry] = [:]
     
     
@@ -69,17 +42,9 @@ public class EnvironmentManager {
     ///   - backingStore: The store to load persisted environment from (if applicable). The user defualts will be checked by default
     public init(initialEntries: [Entry] = [], backingStore: DataStore = UserDefaultsStore()) {
         self.store = backingStore
-        let savedEnvironments: SavedEnvironments
-        if let data = backingStore[EnvironmentManager.privateStoreKey] as? Data {
-            NSKeyedUnarchiver.setClass(SavedEnvironments.self, forClassName: "SavedEnvironments")
-            savedEnvironments = NSKeyedUnarchiver.unarchiveObject(with: data) as? SavedEnvironments ?? SavedEnvironments()
-        }
-        else {
-            savedEnvironments = SavedEnvironments()
-        }
-        
+        let environments = self.store.readEnvironments()
         for entry in initialEntries {
-            let environment = savedEnvironments.environment(forService: entry.name) ?? entry.currentEnvironment
+            let environment = environments[entry.name] ?? entry.currentEnvironment
             entry.backingCurrentEnvironment = environment
             self.add(entry: entry)
         }
@@ -90,12 +55,15 @@ public class EnvironmentManager {
     /// - Parameter store: The store to save the selected environments to
     public func save(usingStore store: DataStore? = nil) {
         var store = store ?? self.store
-        let savedEnv = SavedEnvironments()
-        for entry in self.entries {
-            savedEnv.store(service: entry.key, forEnvironment: entry.value.currentEnvironment)
+
+        // Reduce our entries to a dictionary of service names -> current environment
+        let reduced = self.entries.reduce([:]) { (dict, pair: (key: String, value: Entry)) -> [String: String] in
+            var dict = dict
+            dict[pair.value.name] = pair.value.currentEnvironment
+            return dict
         }
         
-        store[EnvironmentManager.privateStoreKey] = NSKeyedArchiver.archivedData(withRootObject: savedEnv)
+        store.write(environments:reduced)
     }
     
     
@@ -213,13 +181,20 @@ extension EnvironmentManager {
 }
 
 
-// MARK: - Convenience extension for access the our data from the DataStore
+// MARK: - Convenience extension for accessing our data from the DataStore
 extension DataStore {
     func environment(forService service: String) -> String? {
-        guard let data = self[EnvironmentManager.privateStoreKey] as? Data else {
-            return nil
+        return self.readEnvironments()[service]
+    }
+    
+    mutating func write(environments: [String: String]) {
+        self[EnvironmentManager.privateStoreKey] = environments
+    }
+    
+    func readEnvironments() -> [String: String] {
+        guard let environmentsDictionary = self[EnvironmentManager.privateStoreKey] as? [String: String] else {
+            return [:]
         }
-        let savedEnvironment = NSKeyedUnarchiver.unarchiveObject(with: data) as? EnvironmentManager.SavedEnvironments
-        return savedEnvironment?.environment(forService: service)
+        return environmentsDictionary
     }
 }
