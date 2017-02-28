@@ -28,6 +28,10 @@ protocol EntryEnvironmentManagerController {
 
 /// This class manages a default UI for selecting environment
 class EnvironmentManagerViewController: UITableViewController, EntryEnvironmentManagerController {
+    private enum SegueIdentifiers: String {
+        case Exit
+        case EnvironmentDetails
+    }
     private struct CellIdentifiers {
         let APICellIdentifier = "APICellIdentifier"
     }
@@ -58,16 +62,28 @@ class EnvironmentManagerViewController: UITableViewController, EntryEnvironmentM
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let controller = segue.destination as? EnvironmentEntryDetailViewController else {
+        guard let identifier = segue.identifier else {
             return
         }
         
-        guard let cell = sender as? UITableViewCell else {
+        switch identifier {
+        case SegueIdentifiers.EnvironmentDetails.rawValue:
+            guard let controller = segue.destination as? EnvironmentEntryDetailViewController else {
+                return
+            }
+            
+            guard let cell = sender as? UITableViewCell else {
+                return
+            }
+            
+            let index = self.tableView.indexPath(for: cell)!.row
+            controller.entry = self.environmentManager.entry(forIndex: index)
+        case SegueIdentifiers.Exit.rawValue:
+            self.environmentManager.save(usingStore: UserDefaultsStore())
+        default:
             return
         }
-        
-        let index = self.tableView.indexPath(for: cell)!.row
-        controller.entry = self.environmentManager.entry(forIndex: index)
+
     }
 }
 

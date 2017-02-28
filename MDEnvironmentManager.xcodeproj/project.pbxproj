@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		283EB6751E65FE140004C1A3 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 283EB6741E65FE140004C1A3 /* DataStore.swift */; };
 		286CFF991E60FB5A00AA2C39 /* MDEnvironmentManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28AB954D1E5E3062000EAEA9 /* MDEnvironmentManager.framework */; };
 		286CFFA11E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286CFFA01E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift */; };
 		28AB95521E5E3062000EAEA9 /* MDEnvironmentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 28AB95501E5E3062000EAEA9 /* MDEnvironmentManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -39,6 +40,7 @@
 /* Begin PBXFileReference section */
 		02ADF07F38CF7C1946C57620 /* Pods-MDEnvironmentManager.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MDEnvironmentManager.release.xcconfig"; path = "Pods/Target Support Files/Pods-MDEnvironmentManager/Pods-MDEnvironmentManager.release.xcconfig"; sourceTree = "<group>"; };
 		18B4DE39BA1B428233046F14 /* Pods_MDEnvironmentManagerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MDEnvironmentManagerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		283EB6741E65FE140004C1A3 /* DataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataStore.swift; path = Source/DataStore.swift; sourceTree = SOURCE_ROOT; };
 		286CFFA01E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnvironmentEntryDetailViewController.swift; path = Source/EnvironmentEntryDetailViewController.swift; sourceTree = SOURCE_ROOT; };
 		28AB954D1E5E3062000EAEA9 /* MDEnvironmentManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MDEnvironmentManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		28AB95501E5E3062000EAEA9 /* MDEnvironmentManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MDEnvironmentManager.h; sourceTree = "<group>"; };
@@ -145,6 +147,7 @@
 				28AB956A1E60B2EB000EAEA9 /* Entry.swift */,
 				28AB956C1E60B5F8000EAEA9 /* EnvironmentManagerViewController.swift */,
 				286CFFA01E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift */,
+				283EB6741E65FE140004C1A3 /* DataStore.swift */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -474,6 +477,7 @@
 				28AB956D1E60B5F8000EAEA9 /* EnvironmentManagerViewController.swift in Sources */,
 				28AB95691E5E4135000EAEA9 /* EnvironmentManager.swift in Sources */,
 				286CFFA11E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift in Sources */,
+				283EB6751E65FE140004C1A3 /* DataStore.swift in Sources */,
 				28AB956B1E60B2EB000EAEA9 /* Entry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

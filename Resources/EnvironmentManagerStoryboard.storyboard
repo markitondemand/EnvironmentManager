@@ -22,18 +22,18 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Hjj-LN-BYo" id="iE4-FG-GB7">
-                                    <rect key="frame" x="0.0" y="0.0" width="342" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="342" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Name Of API" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="N1i-Bi-xik">
-                                            <rect key="frame" x="15" y="11" width="98" height="21"/>
+                                            <rect key="frame" x="15" y="12" width="98" height="20.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Selected Environment" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9zo-a9-hfd">
-                                            <rect key="frame" x="172" y="11" width="168" height="21"/>
+                                            <rect key="frame" x="172.5" y="12" width="167.5" height="20.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
@@ -42,7 +42,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="ILK-DK-GZ9" kind="show" id="SVY-SE-5vo"/>
+                                    <segue destination="ILK-DK-GZ9" kind="show" identifier="EnvironmentDetails" id="SVY-SE-5vo"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -55,7 +55,7 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="done" id="cs3-gy-vrU">
                             <connections>
                                 <action selector="doneTappedWithSender:" destination="hZ7-PX-gsd" id="x7r-Nl-lBY"/>
-                                <segue destination="WGV-gm-Wlp" kind="unwind" unwindAction="unwindToExit:" id="ql4-PU-cDS"/>
+                                <segue destination="WGV-gm-Wlp" kind="unwind" identifier="Exit" unwindAction="unwindToExit:" id="ql4-PU-cDS"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -78,11 +78,11 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Y5Q-if-jUu" id="J00-1I-lx5">
-                                    <rect key="frame" x="0.0" y="0.0" width="336" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="336" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Environment1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="EO3-NF-D4Z">
-                                            <rect key="frame" x="15" y="0.0" width="321" height="43"/>
+                                            <rect key="frame" x="15" y="0.0" width="321" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>

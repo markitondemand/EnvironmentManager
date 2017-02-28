@@ -15,6 +15,9 @@ class MDEnvironmentManagerTests: XCTestCase {
     
     override func setUp() {
         backingStore = DictionaryStore()
+        if let bundle = Bundle.main.bundleIdentifier {
+            UserDefaults.standard.removePersistentDomain(forName: bundle)
+        }
     }
     
     // Builders
@@ -138,10 +141,6 @@ class MDEnvironmentManagerTests: XCTestCase {
         let en2 = EnvironmentManager(backingStore: store)
         en2.add(apiName: "service1", environmentUrls: environments)
         XCTAssertEqual(en2.currentEnvironmentFor(apiName: "service1"), "prod")
-    }
-    
-    func testUserDefaultSerialization() {
-        
     }
     
     // helper
