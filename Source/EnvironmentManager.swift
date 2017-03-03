@@ -50,7 +50,7 @@ public class EnvironmentManager {
         }
     }
     
-    /// Attempts to save the current environments to a given store. If no store is provided the one used when creating this instance will be used instead
+    /// Attempts to save the current environments to a given store. If no store is provided the one passed when creating this instance will be used instead
     ///
     /// - Parameter store: The store to save the selected environments to
     public func save(usingStore store: DataStore? = nil) {
@@ -124,15 +124,13 @@ public class EnvironmentManager {
     ///   - environmentUrls: An array of tuples that match an environment string to a given URL. The first element in the array will become the current environment for that API. This must be an array with more than 0 eleemnts
     public func add(apiName: String, environmentUrls:[(environment: String, baseUrl: URL)]) {
         precondition(!environmentUrls.isEmpty, "Error, input URLs for given entry was empty! Plesae provide at least one environment and corresponding url")
+        var environmentUrls = environmentUrls
         
-        var entry: Entry!
+        // Bad logic
+        let entry = self.entry(forService: apiName) ?? Entry(name: apiName, initialEnvironment: environmentUrls.removeFirst())
+        
         for pair in environmentUrls {
-            if (entry == nil) {
-                entry = Entry(name: apiName, initialEnvironment: pair)
-            }
-            else {
-                entry.add(pair: pair)
-            }
+            entry.add(pair: pair)
         }
         self.add(entry: entry)
     }

@@ -143,6 +143,15 @@ class MDEnvironmentManagerTests: XCTestCase {
         XCTAssertEqual(en2.currentEnvironmentFor(apiName: "service1"), "prod")
     }
     
+    func testEntryEquatable() {
+        let entry1 = Entry(name: "Service1", initialEnvironment: ("acc", self.defaultAccURL))
+        let entry2 = Entry(name: "Service1", initialEnvironment: ("acc", self.defaultAccURL))
+        
+        XCTAssertEqual(entry1, entry2)
+        entry2.add(pair: ("prod", self.defaultProdURL))
+        XCTAssertNotEqual(entry1, entry2)
+    }
+    
     // helper
     class TestEnvironmentObserver {
         var oldEnv: String!

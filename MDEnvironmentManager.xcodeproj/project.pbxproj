@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		283EB6751E65FE140004C1A3 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 283EB6741E65FE140004C1A3 /* DataStore.swift */; };
 		286CFFA11E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286CFFA01E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift */; };
+		288C829A1E69E0CD001E70F4 /* CSV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288C82991E69E0CD001E70F4 /* CSV.swift */; };
+		288C829C1E69E0E6001E70F4 /* CSVTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288C829B1E69E0E6001E70F4 /* CSVTests.swift */; };
 		28AB95521E5E3062000EAEA9 /* MDEnvironmentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 28AB95501E5E3062000EAEA9 /* MDEnvironmentManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		28AB955F1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AB955E1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift */; };
 		28AB95611E5E3130000EAEA9 /* MDEnvironmentManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28AB954D1E5E3062000EAEA9 /* MDEnvironmentManager.framework */; };
@@ -41,6 +43,8 @@
 		18B4DE39BA1B428233046F14 /* Pods_MDEnvironmentManagerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MDEnvironmentManagerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		283EB6741E65FE140004C1A3 /* DataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataStore.swift; path = Source/DataStore.swift; sourceTree = SOURCE_ROOT; };
 		286CFFA01E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnvironmentEntryDetailViewController.swift; path = Source/EnvironmentEntryDetailViewController.swift; sourceTree = SOURCE_ROOT; };
+		288C82991E69E0CD001E70F4 /* CSV.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CSV.swift; path = Source/CSV.swift; sourceTree = SOURCE_ROOT; };
+		288C829B1E69E0E6001E70F4 /* CSVTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSVTests.swift; sourceTree = "<group>"; };
 		28AB954D1E5E3062000EAEA9 /* MDEnvironmentManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MDEnvironmentManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		28AB95501E5E3062000EAEA9 /* MDEnvironmentManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MDEnvironmentManager.h; sourceTree = "<group>"; };
 		28AB95511E5E3062000EAEA9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -132,8 +136,9 @@
 		28AB955D1E5E3130000EAEA9 /* MDEnvironmentManagerTests */ = {
 			isa = PBXGroup;
 			children = (
-				28AB955E1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift */,
 				28AB95601E5E3130000EAEA9 /* Info.plist */,
+				288C829B1E69E0E6001E70F4 /* CSVTests.swift */,
+				28AB955E1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift */,
 			);
 			path = MDEnvironmentManagerTests;
 			sourceTree = "<group>";
@@ -146,6 +151,7 @@
 				28AB956C1E60B5F8000EAEA9 /* EnvironmentManagerViewController.swift */,
 				286CFFA01E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift */,
 				283EB6741E65FE140004C1A3 /* DataStore.swift */,
+				288C82991E69E0CD001E70F4 /* CSV.swift */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -474,6 +480,7 @@
 			files = (
 				28AB956D1E60B5F8000EAEA9 /* EnvironmentManagerViewController.swift in Sources */,
 				28AB95691E5E4135000EAEA9 /* EnvironmentManager.swift in Sources */,
+				288C829A1E69E0CD001E70F4 /* CSV.swift in Sources */,
 				286CFFA11E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift in Sources */,
 				283EB6751E65FE140004C1A3 /* DataStore.swift in Sources */,
 				28AB956B1E60B2EB000EAEA9 /* Entry.swift in Sources */,
@@ -484,6 +491,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				288C829C1E69E0E6001E70F4 /* CSVTests.swift in Sources */,
 				28AB955F1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -17,4 +17,5 @@ Pod::Spec.new do |s|
   }
 
   s.dependency 'MD-Extensions'
+  s.dependency 'CSV.swift' ~> '1.1'
 end

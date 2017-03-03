@@ -46,15 +46,3 @@ public class UserDefaultsStore: DataStore {
         }
     }
 }
-
-
-// MARK: - Factory methods
-extension DataStore {
-    static func userDefaultsStore(userDefaults: UserDefaults = UserDefaults.standard) -> DataStore {
-        return UserDefaultsStore()
-    }
-    
-    static func dictionaryStore() -> DataStore {
-        return DictionaryStore()
-    }
-}

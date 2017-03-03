@@ -6,15 +6,10 @@ import Foundation
 
 /// Simple datastructure represneting an API and its associated enviroments, as not all APIs will have the same number of enviromments (e.g. some may have a dev, where others wont, like client APIs)
 public class Entry {
-    // Types
-    public typealias SortSignature = (String, String) -> Bool
     public typealias Pair = (environment: String, baseUrl: URL)
     
     /// The name of the API (e.g. MDQuoteService)
     public let name: String
-    
-    // Sort ascending by default
-    fileprivate static let DefaultSort: SortSignature = { $0 < $1 }
     
     // Datastructure to hold the environments for this Entry
     fileprivate var environments: [String: URL]
@@ -76,6 +71,18 @@ public class Entry {
 }
 
 
+
+// MARK: - Equatable
+extension Entry: Equatable {
+    public static func ==(lhs: Entry, rhs: Entry) -> Bool {
+        return lhs.environments == rhs.environments &&
+            lhs.backingCurrentEnvironment == rhs.backingCurrentEnvironment &&
+            lhs.name == rhs.name
+    }
+
+}
+
+
 // MARK: - Operations
 extension Entry {
     /// Builds a URL by appending a path to the currently selected environment's baseURL
@@ -107,12 +114,13 @@ extension Entry {
     }
     
     
-    /// Returns an array of all environments the current entry supports. This will by default sort the names in ascending order. Pass your own sort closure to change the sorting behavior
+    /// Returns an unordered array of all of the current environments this manager is managing
     ///
-    /// - Returns: An array of all environments for this entry
-    public func environmentNames(usingSortFunction function: SortSignature = DefaultSort) -> [String] {
-        return Array(self.environments.keys).sorted(by: function)
+    /// - Returns: An unordered array of environment names.
+    public func environmentNames() -> [String] {
+        return Array(self.environments.keys)
     }
+
     
     
     /// Attempts to select a new environment. If the environment is not currently known, or already selected no operation is performed. This does the same as setting the "currentEnvironment" variable directly
@@ -121,21 +129,25 @@ extension Entry {
     public func select(environment: String) {
         self.currentEnvironment = environment
     }
-    
-    /// Selects an environment at a given index. This will sort the environment by there name for selecting an index. The default sort is in ascending order
-    ///
-    /// - Parameter index: The index
-    public func selectEnvironment(forIndex index: Int, usingSortFunction function: SortSignature = DefaultSort) {
-        guard let environment = self.environments.keys.sorted(by: function)[safe: index] else {
-            return
-        }
-        self.currentEnvironment = environment
-    }
 }
 
 
 // MARK: - Index and IndexPath support
 extension Entry {
+    
+    /// This type represnts the sorting function signature used by many of the "forIndex" methods
+    public typealias SortSignature = (String, String) -> Bool
+    
+    // Sort ascending by default
+    private static let DefaultSort: SortSignature = { $0 < $1 }
+    
+    /// Returns an array of all environments the current entry supports. This will by default sort the names in ascending order. Pass your own sort closure to change the sorting behavior
+    ///
+    /// - Returns: An array of all environments for this entry
+    public func environmentNames(usingSortFunction function: SortSignature = DefaultSort ) -> [String] {
+        return Array(self.environments.keys).sorted(by: function)
+    }
+
     
     /// Returns the environment for a given index. The environemnts are put into a sorted order using a function. The default function is ascending.
     ///
@@ -160,5 +172,15 @@ extension Entry {
             return nil
         }
         return self.environments[environment]
+    }
+    
+    /// Selects an environment at a given index. This will sort the environment by there name for selecting an index. The default sort is in ascending order
+    ///
+    /// - Parameter index: The index
+    public func selectEnvironment(forIndex index: Int, usingSortFunction function: SortSignature = DefaultSort) {
+        guard let environment = self.environments.keys.sorted(by: function)[safe: index] else {
+            return
+        }
+        self.currentEnvironment = environment
     }
 }
