@@ -20,14 +20,17 @@ class EnvironmentEntryDetailViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifiers.EnvironmentCellIdentifier)!
-        cell.textLabel?.text = self.entry.environmentNames()[indexPath.row]
-        cell.accessoryType = self.entry.currentEnvironment == self.entry.environmentNames()[indexPath.row] ? .checkmark : .none
+        let sortedEnvironmentNames = self.entry.sortedEnvironmentNames()
+        cell.textLabel?.text = sortedEnvironmentNames[indexPath.row]
+        cell.accessoryType = self.entry.currentEnvironment == sortedEnvironmentNames[indexPath.row] ? .checkmark : .none
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.entry.selectEnvironment(forIndex: indexPath.row)
+        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         tableView.deselectRow(at: indexPath, animated: true)
+        tableView.reloadRows(at: [indexPath], with: .automatic)
         tableView.reloadData()
     }
 }

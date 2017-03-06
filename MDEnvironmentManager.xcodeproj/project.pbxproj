@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		283EB6751E65FE140004C1A3 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 283EB6741E65FE140004C1A3 /* DataStore.swift */; };
 		286CFFA11E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286CFFA01E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift */; };
+		288C829A1E69E0CD001E70F4 /* CSV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288C82991E69E0CD001E70F4 /* CSV.swift */; };
+		288C829C1E69E0E6001E70F4 /* CSVTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288C829B1E69E0E6001E70F4 /* CSVTests.swift */; };
 		28AB95521E5E3062000EAEA9 /* MDEnvironmentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 28AB95501E5E3062000EAEA9 /* MDEnvironmentManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		28AB955F1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AB955E1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift */; };
 		28AB95611E5E3130000EAEA9 /* MDEnvironmentManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28AB954D1E5E3062000EAEA9 /* MDEnvironmentManager.framework */; };
@@ -21,6 +23,7 @@
 		28AB957D1E60DA39000EAEA9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28AB957B1E60DA39000EAEA9 /* Main.storyboard */; };
 		28AB957F1E60DA39000EAEA9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 28AB957E1E60DA39000EAEA9 /* Assets.xcassets */; };
 		28AB95821E60DA39000EAEA9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28AB95801E60DA39000EAEA9 /* LaunchScreen.storyboard */; };
+		28C57AFD1E6E105B000F6B32 /* Environments.csv in Resources */ = {isa = PBXBuildFile; fileRef = 28C57AFC1E6E105B000F6B32 /* Environments.csv */; };
 		32CCB3FA3F9C78D6EA5F4980 /* Pods_MDEnvironmentManagerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18B4DE39BA1B428233046F14 /* Pods_MDEnvironmentManagerTests.framework */; };
 		6624D10110EE3A68DF54E23E /* Pods_MDEnvironmentManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACBD0674CFE686507D536FF3 /* Pods_MDEnvironmentManager.framework */; };
 		AF7AB28BCEF09D466879C5D7 /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFE1E76DDD7EC314A8E0DFD5 /* Pods_Example.framework */; };
@@ -41,6 +44,8 @@
 		18B4DE39BA1B428233046F14 /* Pods_MDEnvironmentManagerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MDEnvironmentManagerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		283EB6741E65FE140004C1A3 /* DataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataStore.swift; path = Source/DataStore.swift; sourceTree = SOURCE_ROOT; };
 		286CFFA01E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnvironmentEntryDetailViewController.swift; path = Source/EnvironmentEntryDetailViewController.swift; sourceTree = SOURCE_ROOT; };
+		288C82991E69E0CD001E70F4 /* CSV.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CSV.swift; path = Source/CSV.swift; sourceTree = SOURCE_ROOT; };
+		288C829B1E69E0E6001E70F4 /* CSVTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSVTests.swift; sourceTree = "<group>"; };
 		28AB954D1E5E3062000EAEA9 /* MDEnvironmentManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MDEnvironmentManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		28AB95501E5E3062000EAEA9 /* MDEnvironmentManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MDEnvironmentManager.h; sourceTree = "<group>"; };
 		28AB95511E5E3062000EAEA9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -58,6 +63,7 @@
 		28AB957E1E60DA39000EAEA9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		28AB95811E60DA39000EAEA9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		28AB95831E60DA39000EAEA9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		28C57AFC1E6E105B000F6B32 /* Environments.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Environments.csv; sourceTree = "<group>"; };
 		68422CA4AC48A86B487D0C2D /* Pods-MDEnvironmentManagerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MDEnvironmentManagerTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MDEnvironmentManagerTests/Pods-MDEnvironmentManagerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		813C61D7659D654AFB827347 /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
 		ACBD0674CFE686507D536FF3 /* Pods_MDEnvironmentManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MDEnvironmentManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -132,8 +138,9 @@
 		28AB955D1E5E3130000EAEA9 /* MDEnvironmentManagerTests */ = {
 			isa = PBXGroup;
 			children = (
-				28AB955E1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift */,
 				28AB95601E5E3130000EAEA9 /* Info.plist */,
+				288C829B1E69E0E6001E70F4 /* CSVTests.swift */,
+				28AB955E1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift */,
 			);
 			path = MDEnvironmentManagerTests;
 			sourceTree = "<group>";
@@ -146,6 +153,7 @@
 				28AB956C1E60B5F8000EAEA9 /* EnvironmentManagerViewController.swift */,
 				286CFFA01E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift */,
 				283EB6741E65FE140004C1A3 /* DataStore.swift */,
+				288C82991E69E0CD001E70F4 /* CSV.swift */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -163,6 +171,7 @@
 			children = (
 				28AB95771E60DA39000EAEA9 /* AppDelegate.swift */,
 				28AB95791E60DA39000EAEA9 /* ViewController.swift */,
+				28C57AFC1E6E105B000F6B32 /* Environments.csv */,
 				28AB957B1E60DA39000EAEA9 /* Main.storyboard */,
 				28AB957E1E60DA39000EAEA9 /* Assets.xcassets */,
 				28AB95801E60DA39000EAEA9 /* LaunchScreen.storyboard */,
@@ -338,6 +347,7 @@
 			files = (
 				28AB95821E60DA39000EAEA9 /* LaunchScreen.storyboard in Resources */,
 				28AB957F1E60DA39000EAEA9 /* Assets.xcassets in Resources */,
+				28C57AFD1E6E105B000F6B32 /* Environments.csv in Resources */,
 				28AB957D1E60DA39000EAEA9 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -474,6 +484,7 @@
 			files = (
 				28AB956D1E60B5F8000EAEA9 /* EnvironmentManagerViewController.swift in Sources */,
 				28AB95691E5E4135000EAEA9 /* EnvironmentManager.swift in Sources */,
+				288C829A1E69E0CD001E70F4 /* CSV.swift in Sources */,
 				286CFFA11E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift in Sources */,
 				283EB6751E65FE140004C1A3 /* DataStore.swift in Sources */,
 				28AB956B1E60B2EB000EAEA9 /* Entry.swift in Sources */,
@@ -484,6 +495,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				288C829C1E69E0E6001E70F4 /* CSVTests.swift in Sources */,
 				28AB955F1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
