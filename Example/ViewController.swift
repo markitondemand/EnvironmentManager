@@ -10,35 +10,43 @@ import UIKit
 import MDEnvironmentManager
 
 class ViewController: UIViewController {
-    let environmentManager = EnvironmentManager()
+    var environmentManager: EnvironmentManager!
     @IBOutlet var serviceOneEnvLabel: UILabel!
     @IBOutlet var serviceTwoEnvLabel: UILabel!
+    @IBOutlet var serviceThreeEnvLabel: UILabel!
     
     @IBOutlet var serviceOneBaseAPILabel: UILabel!
     @IBOutlet var serviceTwoBaseAPILabel: UILabel!
+    @IBOutlet var serviceThreeBaseAPILabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        self.environmentManager.add(apiName: "Service1", environmentUrls: [("acc", URL(string: "acc.api.serv1.com")!), ("preprod", URL(string: "preprod.api.serv2.com")!), ("prod", URL(string: "prod.api.serv1.com")!)])
-        self.environmentManager.add(apiName: "Service2", environmentUrls: [("acc", URL(string: "acc.api.serv2.com")!), ("preprod", URL(string: "preprod.api.serv2.com")!), ("prod", URL(string: "prod.api.serv2.com")!)])
         
-        self.serviceOneEnvLabel.text = self.environmentManager.currentEnvironmentFor(apiName: "Service1")
-        self.serviceTwoEnvLabel.text = self.environmentManager.currentEnvironmentFor(apiName: "Service2")
-        self.serviceOneBaseAPILabel.text = self.environmentManager.baseUrl(apiName: "Service1")?.absoluteString
-        self.serviceTwoBaseAPILabel.text = self.environmentManager.baseUrl(apiName: "Service2")?.absoluteString
+        let stream = InputStream(url: Bundle.main.url(forResource: "Environments", withExtension: "csv")!)!
+        environmentManager = EnvironmentManager(stream)
+        
+        self.serviceOneEnvLabel.text = self.environmentManager.currentEnvironmentFor(apiName: "LoginAPI")
+        self.serviceTwoEnvLabel.text = self.environmentManager.currentEnvironmentFor(apiName: "QuoteAPI")
+        self.serviceThreeEnvLabel.text = self.environmentManager.currentEnvironmentFor(apiName: "NewsAPI")
+        self.serviceOneBaseAPILabel.text = self.environmentManager.baseUrl(apiName: "LoginAPI")?.absoluteString
+        self.serviceTwoBaseAPILabel.text = self.environmentManager.baseUrl(apiName: "QuoteAPI")?.absoluteString
+        self.serviceThreeBaseAPILabel.text = self.environmentManager.baseUrl(apiName: "NewsAPI")?.absoluteString
         
         NotificationCenter.default.addObserver(forName: NSNotification.Name.EnvironmentDidChange, object: nil, queue: nil) { (notif: Notification) in
             let api = notif.userInfo?[EnvironmentChangedKeys.APIName] as! String
             let newEnv = notif.userInfo?[EnvironmentChangedKeys.NewEnvironment] as! String
             
             switch api {
-            case "Service1":
+            case "LoginAPI":
                 self.serviceOneEnvLabel.text = newEnv
-                self.serviceOneBaseAPILabel.text = self.environmentManager.baseUrl(apiName: "Service1")?.absoluteString
-            case "Service2":
+                self.serviceOneBaseAPILabel.text = self.environmentManager.baseUrl(apiName: "LoginAPI")?.absoluteString
+            case "QuoteAPI":
                 self.serviceTwoEnvLabel.text = newEnv
-                self.serviceTwoBaseAPILabel.text = self.environmentManager.baseUrl(apiName: "Service2")?.absoluteString
+                self.serviceTwoBaseAPILabel.text = self.environmentManager.baseUrl(apiName: "QuoteAPI")?.absoluteString
+            case "NewsAPI":
+                self.serviceThreeEnvLabel.text = newEnv
+                self.serviceThreeBaseAPILabel.text = self.environmentManager.baseUrl(apiName: "NewsAPI")?.absoluteString
             default:
                 print("unexpected")
             }
@@ -62,6 +70,6 @@ class ViewController: UIViewController {
 
 extension ViewController: Unwindable {
     @IBAction func unwind(toExit segue: UIStoryboardSegue) {
-        print("Implement this protocol to unwind")
+        print("Implement this protocol on your presenting view controller to unwind")
     }
 }

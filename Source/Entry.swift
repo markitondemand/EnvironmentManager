@@ -144,7 +144,7 @@ extension Entry {
     /// Returns an array of all environments the current entry supports. This will by default sort the names in ascending order. Pass your own sort closure to change the sorting behavior
     ///
     /// - Returns: An array of all environments for this entry
-    public func environmentNames(usingSortFunction function: SortSignature = DefaultSort ) -> [String] {
+    public func sortedEnvironmentNames(usingSortFunction function: SortSignature = DefaultSort ) -> [String] {
         return Array(self.environments.keys).sorted(by: function)
     }
 
@@ -156,7 +156,7 @@ extension Entry {
     ///   - function: Optional paramter to override the default sort. The default is ascending
     /// - Returns: The environment as a string or nil if the index was out of bounds
     public func environment(forIndex index: Int, usingSortFunction function: SortSignature = DefaultSort) -> String? {
-        return self.environmentNames(usingSortFunction: function)[safe: index]
+        return self.sortedEnvironmentNames(usingSortFunction: function)[safe: index]
     }
     
     
@@ -182,5 +182,14 @@ extension Entry {
             return
         }
         self.currentEnvironment = environment
+    }
+    
+    
+    /// TODO
+    ///
+    /// - Parameter function: <#function description#>
+    /// - Returns: <#return value description#>
+    public func indexForSelectedEnvironment(usingSortFunction function: SortSignature = DefaultSort) -> Int? {
+        return self.environments.keys.sorted(by: function).index(of: self.currentEnvironment)
     }
 }
