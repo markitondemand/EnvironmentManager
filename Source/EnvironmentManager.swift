@@ -35,11 +35,11 @@ public class EnvironmentManager {
     fileprivate var entries: [String: Entry] = [:]
     
     
-    /// Createsa a new EnvironmentManager using a
+    /// Createsa a new EnvironmentManager using an array of pre created Entry objects.
     ///
     /// - Parameters:
     ///   - initialEntries: The initial entries to use
-    ///   - backingStore: The store to load persisted environment from (if applicable). The user defualts will be checked by default
+    ///   - backingStore: The store to load persisted environment from (if applicable). The user defaults will be used to read and write environment information to by default
     public init(initialEntries: [Entry] = [], backingStore: DataStore = UserDefaultsStore()) {
         self.store = backingStore
         let environments = self.store.readEnvironments()
@@ -52,7 +52,7 @@ public class EnvironmentManager {
     
     /// Attempts to save the current environments to a given store. If no store is provided the one passed when creating this instance will be used instead
     ///
-    /// - Parameter store: The store to save the selected environments to
+    /// - Parameter store: The store to save the selected environments to. Defaults to the store that was used when the instance was created
     public func save(usingStore store: DataStore? = nil) {
         var store = store ?? self.store
 
