@@ -66,4 +66,8 @@ extension EnvironmentManager {
             self.add(apiName: serviceName, environmentUrls: [(environment, baseURL)])
         }
     }
+    
+    public func addEntries(fromCsv csv: String) {
+        
+    }
 }
