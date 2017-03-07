@@ -28,7 +28,7 @@ class MDEnvironmentManagerTests: XCTestCase {
     }
     
     // Tests
-    func  testEnvironmentChangingForASingleEntry() {
+    func  testEnvironmentChangingForAnEntry() {
         let path = "the/path/to/resource/"
         let expectedProdURL = URL(string: "http://prod.api.domain.com/the/path/to/resource/")!
         let expectedAccURL = URL(string: "http://acc.api.domain.com/the/path/to/resource/")!
@@ -64,8 +64,8 @@ class MDEnvironmentManagerTests: XCTestCase {
         XCTAssertEqual(entry.environment(forIndex: 0), "acc")
         XCTAssertEqual(entry.environment(forIndex: 0, usingSortFunction: >), "prod")
         
-        XCTAssertEqual(entry.baseURL(forIndex: 0), defaultAccURL)
-        XCTAssertEqual(entry.baseURL(forIndex: 0, usingSortFunction: >), defaultProdURL)
+        XCTAssertEqual(entry.baseUrl(forIndex: 0), defaultAccURL)
+        XCTAssertEqual(entry.baseUrl(forIndex: 0, usingSortFunction: >), defaultProdURL)
     }
     
     func testEnvironmentManagerCreatesURL() {
