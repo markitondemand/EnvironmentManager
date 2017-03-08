@@ -4,12 +4,15 @@
 import Foundation
 import CSV
 
-
-public class Builder {
-    internal var dataStore: DataStore = UserDefaultsStore()
-    internal var entries: [String:[(String, String)]] = [:]
-    internal var productionEnvironmentMap: [String:String] = [:]
-    internal var productionEnabled: Bool = false
+// TOOD: Error handle CSV parsing better. Wrap the CSV.swift error with our own error
+// TOOD: builder with input stream for csv parsing
+// TODO: clean up access mutators for Entry and EnvironmentManager since we now use Builder
+// TOOD: update example... it is probably not compiling
+class Builder {
+    var dataStore: DataStore = UserDefaultsStore()
+    var entries: [String:[(String, String)]] = [:]
+    var productionEnvironmentMap: [String:String] = [:]
+    var productionEnabled: Bool = false
     
     
     /// List of erors that may occur when building the EnvironmentManager
@@ -31,9 +34,20 @@ public class Builder {
     }
     
     
+    /// Adds a new entry, or updates an existing entry (if already added) with environments
+    ///
+    /// - Parameters:
+    ///   - name: The name of the entry, this would be the API or service name
+    ///   - environments: The tuple of envirnments to URL Strings
+    /// - Returns: The current builder
     public func add(entry name: String, environments:[(String, String)]) -> Self {
         precondition(environments.count > 0, "Must pass at least one environment")
-        entries[name] = environments
+        guard var currentEnvironments = entries[name] else {
+            entries[name] = environments
+            return self
+        }
+        currentEnvironments.append(contentsOf: environments)
+        entries[name] = currentEnvironments
         return self
     }
     
@@ -43,6 +57,11 @@ public class Builder {
         return self
     }
     
+    
+    /// Override the default data store with your own
+    ///
+    /// - Parameter store: The store to use
+    /// - Returns: The current builder
     public func setDataStore(store: DataStore) -> Self {
         dataStore = store
         return self
