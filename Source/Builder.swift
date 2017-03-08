@@ -29,13 +29,12 @@ class Builder {
     }
     
     
-    public init() {
-        
-    }
+    public init() { }
     
     
     /// Adds a new entry, or updates an existing entry (if already added) with environments
     ///
+    /// - Note: The number of enviromments must be greater than zero
     /// - Parameters:
     ///   - name: The name of the entry, this would be the API or service name
     ///   - environments: The tuple of envirnments to URL Strings
@@ -52,12 +51,6 @@ class Builder {
     }
     
     
-    public func add(_ entries: [String:[(String, String)]]) -> Self {
-        self.entries += entries
-        return self
-    }
-    
-    
     /// Override the default data store with your own
     ///
     /// - Parameter store: The store to use
@@ -66,18 +59,26 @@ class Builder {
         dataStore = store
         return self
     }
-    
- 
 }
 
 
 // MARK: - Production support
 extension Builder {
+    
+    /// Sets up the production environment mapping required for the builder to know which environments are production. This is not optional.
+    /// You provide a mapping of your service name and its associated production environment. If you do not provide a complete list than .build() will throw an error
+    ///
+    /// - Parameter map: The map of API Entry names to envirnments.
+    /// - Returns: The current builder
     public func productionEnvironments(map: [String: String]) -> Self {
         productionEnvironmentMap += map
         return self
     }
     
+    
+    /// Sets the builder to production mode. This will cause it to use the associated productionEnvironmentMap you provide to only set up the environments for production. (I.e. Only the production environments will  end up in the produced EnvironmentManager)
+    ///
+    /// - Returns: The current builder
     public func production() -> Self {
         productionEnabled = true
         return self

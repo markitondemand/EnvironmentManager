@@ -11,24 +11,14 @@ extension UIStoryboard {
     public static let StoryboardName = "EnvironmentManagerStoryboard"
 }
 
-/// Custom segue used to pass the Environment manager into the view controller via a Storyboard Segue. This is passed into your prepareForSegue:sender: method. You should use this to pass your environment maanager into the UI
-public class EnvironmentManagerSegue: UIStoryboardSegue {
-    public func pass(environmentManager: EnvironmentManager) {
-        guard let destination = self.destination as? EntryEnvironmentManagerController else {
-            return
-        }
-        destination.pass(environmentManager: environmentManager)
-    }
-}
-
 /// This class manages a default UI for selecting environment
-class EnvironmentManagerViewController: UITableViewController, EntryEnvironmentManagerController {
-    private enum SegueIdentifiers: String {
-        case Exit
-        case EnvironmentDetails
+class EnvironmentManagerViewController: UITableViewController, DataPassable {
+    private enum SegueIdentifiers {
+        static let Exit = "Exit"
+        static let EnvironmentDetails = "EnvironmentDetails"
     }
-    private struct CellIdentifiers {
-        let APICellIdentifier = "APICellIdentifier"
+    private enum CellIdentifiers {
+        static let APICellIdentifier = "APICellIdentifier"
     }
     
     var environmentManager: EnvironmentManager!
@@ -42,7 +32,7 @@ class EnvironmentManagerViewController: UITableViewController, EntryEnvironmentM
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "APICellIdentifier")!
+        let cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifiers.APICellIdentifier)!
         
         let apiName = self.environmentManager.apiNames()[indexPath.row]
         cell.textLabel?.text = apiName
@@ -52,7 +42,7 @@ class EnvironmentManagerViewController: UITableViewController, EntryEnvironmentM
         return cell
     }
     
-    func pass(environmentManager: EnvironmentManager) {
+    func inject(_ environmentManager: EnvironmentManager) {
         self.environmentManager = environmentManager
     }
     
@@ -62,7 +52,7 @@ class EnvironmentManagerViewController: UITableViewController, EntryEnvironmentM
         }
         
         switch identifier {
-        case SegueIdentifiers.EnvironmentDetails.rawValue:
+        case SegueIdentifiers.EnvironmentDetails:
             guard let controller = segue.destination as? EnvironmentEntryDetailViewController else {
                 return
             }
@@ -73,7 +63,7 @@ class EnvironmentManagerViewController: UITableViewController, EntryEnvironmentM
             
             let index = self.tableView.indexPath(for: cell)!.row
             controller.entry = self.environmentManager.entry(forIndex: index)
-        case SegueIdentifiers.Exit.rawValue:
+        case SegueIdentifiers.Exit:
             self.environmentManager.save(usingStore: UserDefaultsStore())
         default:
             return
@@ -82,19 +72,36 @@ class EnvironmentManagerViewController: UITableViewController, EntryEnvironmentM
     }
 }
 
+// @TOOD: move to its own framework for generic storyboard support
+/// Custom segue used to pass the Environment manager into the view controller via a Storyboard Segue. This is passed into your prepareForSegue:sender: method. You should use this to pass your environment maanager into the UI
+class DataPassableSegue<T: DataPassable>: UIStoryboardSegue {
+    public func inject(_ data: T.ModelType) {
+        guard let destination = self.destination as? T else {
+            return
+        }
+        destination.inject(data)
+    }
+}
+
+
+/// Protocol implemented
+protocol DataPassable {
+    associatedtype ModelType
+    func inject(_ data: ModelType)
+}
+
+
+
+
+
 /// Implement this protocol method somewhere in your application where you presented this UI from to allow the environment manager to unwind. This function will be called when the presented viewcontroller unwinds
 public protocol Unwindable {
     func unwind(toExit segue:UIStoryboardSegue)
 }
 
 
-/// Protocol that defines the entry point for passing a pre created EnvironmentManager to the UI
-protocol EntryEnvironmentManagerController {
-    func pass(environmentManager: EnvironmentManager)
-}
-
-extension UINavigationController: EntryEnvironmentManagerController {
-    func pass(environmentManager:EnvironmentManager) {
+extension UINavigationController: DataPassable {
+    public func inject(_ environmentManager:EnvironmentManager) {
         guard let environmentController = self.viewControllers.first as? EnvironmentManagerViewController else {
             return
         }

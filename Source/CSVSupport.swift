@@ -13,57 +13,60 @@ extension Builder {
         static let Delimiter: UnicodeScalar = "|"
     }
     
-    public func add(_ csv:String) throws -> Self {
-        var parsed = try CSV(string: csv, hasHeaderRow: true, trimFields: true, delimiter: Token.Delimiter)
-        while let _ = parsed.next() {
-            guard let serviceName = parsed[Token.Name],
-                let environment = parsed[Token.Environment],
-                let baseUrlString = parsed[Token.BaseURL] else {
+    
+    /// Attempts to add a string of CSV data to the builder
+    ///
+    /// This should be in the following form
+    /// ```
+    /// Name|Environment|BaseURL
+    /// ApiName|Env|http://base.url.com
+    /// ```
+    ///
+    /// - Parameter csv: The csv string
+    /// - Returns: The current builder
+    /// - Throws: <#throws value description#>
+    public func add(_ csv: String) throws -> Self {
+        do {
+            let parsed = try CSV(string: csv, hasHeaderRow: true, trimFields: true, delimiter: Token.Delimiter)
+            return add(parsed)
+        } catch let csvError as CSVError {
+            throw BuildError.CSVParsingError(error: csvError)
+        }
+    }
+    
+    
+    /// Attempts to add the contents of a InputStream of a CSV file
+    ///
+    /// This should be in the following form
+    /// ```
+    /// Name|Environment|BaseURL
+    /// ApiName|Env|http://base.url.com
+    /// ```
+    ///
+    /// - Parameter csvStream: The stream to use
+    /// - Returns: The current builder
+    /// - Throws: If there is a parse error
+    public func add(_ csvStream: InputStream) throws -> Self {
+        do {
+            let parsed = try CSV(stream: csvStream, hasHeaderRow: true, trimFields: true, delimiter: Token.Delimiter)
+            return add(parsed)
+        } catch let csvError as CSVError {
+            throw BuildError.CSVParsingError(error: csvError)
+        }
+    }
+    
+    // Helper method that coalesces the above two methods
+    private func add(_ csv:CSV) -> Self {
+        var csv = csv
+        while let _ = csv.next() {
+            guard let serviceName = csv[Token.Name],
+                let environment = csv[Token.Environment],
+                let baseUrlString = csv[Token.BaseURL] else {
                     continue // possibly throw error here for invalid csv scheme
             }
             
             _ = self.add(entry: serviceName, environments: [(environment, baseUrlString)])
         }
         return self
-        
     }
-}
-
-extension EnvironmentManager {
-    
-    
-    
-    //    /// Createsa a new EnvironmentManager from a CSV File. The file should use "|" as a delimiter and have the columns in the form of "Environment|Name|BaseURL|
-    //    ///
-    //    /// - Parameters:
-    //    ///   - csv: A string representation of a CSV file.
-    //    ///   - backingStore: The store to load persisted environment from (if applicable). The user defaults will be used to read and write environment information to by default
-    //    public convenience init?(_ csv: String, dataStore: DataStore = UserDefaultsStore()) {
-    //        var parsed: CSV
-    //        do {
-    //            parsed = try CSV(string: csv, hasHeaderRow: true, trimFields: true, delimiter: Token.Delimiter)
-    //        } catch let error {
-    //            print("Error loading the CSV data - CSVError:\(error)")
-    //            return nil
-    //        }
-    //        self.init(csv: parsed, dataStore: UserDefaultsStore())
-    //    }
-    //
-    //    /// Createsa a new EnvironmentManager from a CSV File. The file should use "|" as a delimiter and have the columns in the form of "Environment|Name|BaseURL|
-    //    ///
-    //    /// - Parameters:
-    //    ///   - csv: A string representation of a CSV file.
-    //    ///   - backingStore: The store to load persisted environment from (if applicable). The user defaults will be used to read and write environment information to by default
-    //
-    //    public convenience init?(_ stream: InputStream, dataStore: DataStore = UserDefaultsStore()) {
-    //        var parsed: CSV
-    //        do {
-    //            parsed = try CSV(stream: stream, hasHeaderRow: true, trimFields: true, delimiter: Token.Delimiter)
-    //        } catch let error {
-    //            print("Error loading the CSV data - CSVError:\(error)")
-    //            return nil
-    //        }
-    //        self.init(csv: parsed, dataStore: UserDefaultsStore())
-    //    }
-    
 }
