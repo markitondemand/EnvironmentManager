@@ -24,7 +24,11 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         
         let stream = InputStream(url: Bundle.main.url(forResource: "Environments", withExtension: "csv")!)!
-        environmentManager = EnvironmentManager(stream)
+        environmentManager = try? Builder()
+            .add(stream)
+            .build()
+        
+        
         
         self.serviceOneEnvLabel.text = self.environmentManager.currentEnvironmentFor(apiName: "LoginAPI")
         self.serviceTwoEnvLabel.text = self.environmentManager.currentEnvironmentFor(apiName: "QuoteAPI")
@@ -57,9 +61,10 @@ class ViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // stuff
         print("prepare for storyboard segue")
-        if let segue = segue as? EnvironmentManagerSegue {
-            segue.pass(environmentManager: self.environmentManager)
+        guard let segue = segue as? EnvironmentManagerSegue else {
+            return
         }
+        segue.pass(environmentManager: self.environmentManager)
     }
     
     

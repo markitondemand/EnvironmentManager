@@ -24,7 +24,7 @@ extension Builder {
     ///
     /// - Parameter csv: The csv string
     /// - Returns: The current builder
-    /// - Throws: <#throws value description#>
+    /// - Throws: If there is a parse error, the error will be wrapped in BuildError.CSVParsingError()
     public func add(_ csv: String) throws -> Self {
         do {
             let parsed = try CSV(string: csv, hasHeaderRow: true, trimFields: true, delimiter: Token.Delimiter)
@@ -45,7 +45,7 @@ extension Builder {
     ///
     /// - Parameter csvStream: The stream to use
     /// - Returns: The current builder
-    /// - Throws: If there is a parse error
+    /// - Throws: If there is a parse error, the error will be wrapped in BuildError.CSVParsingError()
     public func add(_ csvStream: InputStream) throws -> Self {
         do {
             let parsed = try CSV(stream: csvStream, hasHeaderRow: true, trimFields: true, delimiter: Token.Delimiter)

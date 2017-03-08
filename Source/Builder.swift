@@ -4,15 +4,13 @@
 import Foundation
 import CSV
 
-// TOOD: Error handle CSV parsing better. Wrap the CSV.swift error with our own error
-// TOOD: builder with input stream for csv parsing
 // TODO: clean up access mutators for Entry and EnvironmentManager since we now use Builder
 // TOOD: update example... it is probably not compiling
-class Builder {
-    var dataStore: DataStore = UserDefaultsStore()
-    var entries: [String:[(String, String)]] = [:]
-    var productionEnvironmentMap: [String:String] = [:]
-    var productionEnabled: Bool = false
+public class Builder {
+    internal var dataStore: DataStore = UserDefaultsStore()
+    internal var entries: [String:[(String, String)]] = [:]
+    internal var productionEnvironmentMap: [String:String] = [:]
+    internal var productionEnabled: Bool = false
     
     
     /// List of erors that may occur when building the EnvironmentManager
