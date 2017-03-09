@@ -29,9 +29,7 @@ public enum EnvironmentChangedKeys: String {
 
 /// This is the main class of the EnvironmentManager
 public class EnvironmentManager {
-    public let store: DataStore
-    internal static let privateStoreKey = "com.markit.EnvironmentMenanager"
-    
+    public let store: DataStore    
     fileprivate var entries: [String: Entry] = [:]
     
     
@@ -181,16 +179,20 @@ extension EnvironmentManager {
 
 // MARK: - Convenience extension for accessing our data from the DataStore
 internal extension DataStore {
+    internal var privateStoreKey: String {
+         return "com.markit.EnvironmentMenanager"
+    }
+
     func environment(forService service: String) -> String? {
         return self.readEnvironments()[service]
     }
     
     mutating func write(environments: [String: String]) {
-        self[EnvironmentManager.privateStoreKey] = environments
+        self[privateStoreKey] = environments
     }
     
     func readEnvironments() -> [String: String] {
-        guard let environmentsDictionary = self[EnvironmentManager.privateStoreKey] as? [String: String] else {
+        guard let environmentsDictionary = self[privateStoreKey] as? [String: String] else {
             return [:]
         }
         return environmentsDictionary

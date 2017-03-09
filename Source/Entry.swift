@@ -11,7 +11,7 @@ public class Entry {
     /// The name of the API (e.g. MDQuoteService)
     public let name: String
     
-    // Datastructure to hold the environments for this Entry
+    // Data structure to hold the environments for this Entry
     fileprivate var environments: [String: URL]
     
     /// This variable is needed to define a backing store variable because when you override the set or get on a property they lose their backing variable
@@ -24,7 +24,7 @@ public class Entry {
                 let oldEnvironment = self.backingCurrentEnvironment
                 self.backingCurrentEnvironment = newEnvironment
                 
-                // @TODO: possibly use a "broadcaster" that is injected on initialization like TestAccountManager to separate notifiaction from this class
+                // @TODO: possibly use a "broadcaster" that is injected on initialization like TestAccountManager to separate NotificationCenter from this class
                 NotificationCenter.default.post(Notification(name: Notification.Name.EnvironmentDidChange, object: self, userInfo: [EnvironmentChangedKeys.APIName:self.name,
                                                                                                                                     EnvironmentChangedKeys.OldEnvironment:oldEnvironment,
                                                                                                                                     EnvironmentChangedKeys.NewEnvironment:newEnvironment]))
@@ -114,6 +114,16 @@ extension Entry {
     }
     
     
+    /// Returns the base URL for a given environment, or nil if the environment does not exist for this entry
+    ///
+    /// - Parameter environment: The environment name
+    /// - Returns: The base URL for that environment, or nil
+    public func baseUrl(forEnvironment env: String) -> URL? {
+        return self.environments[env]
+    }
+    
+    
+    
     /// Returns an unordered array of all of the current environments this manager is managing
     ///
     /// - Returns: An unordered array of environment names.
@@ -167,7 +177,7 @@ extension Entry {
     ///   - index: The index to search
     ///   - function: Optional paramter to override the default sort. The default is ascending
     /// - Returns: The base URL as a URL or nil if the index was out of bounds
-    public func baseURL(forIndex index: Int, usingSortFunction function: SortSignature = DefaultSort) -> URL? {
+    public func baseUrl(forIndex index: Int, usingSortFunction function: SortSignature = DefaultSort) -> URL? {
         guard let environment = self.environment(forIndex: index, usingSortFunction: function) else {
             return nil
         }
@@ -185,10 +195,11 @@ extension Entry {
     }
     
     
-    /// TODO
+    // TODO: unit test
+    /// This method returns an integer index for the currently seleced environment. By default, the list of names will be sorted in ascending order
     ///
-    /// - Parameter function: <#function description#>
-    /// - Returns: <#return value description#>
+    /// - Parameter function: The sorting function to use, default is ascending
+    /// - Returns: The index for the enironment, otherwise nil if the environment does not exist
     public func indexForSelectedEnvironment(usingSortFunction function: SortSignature = DefaultSort) -> Int? {
         return self.environments.keys.sorted(by: function).index(of: self.currentEnvironment)
     }
