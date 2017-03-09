@@ -49,7 +49,7 @@ class CSVTests: XCTestCase {
     // MARK: - Test Cases
     func testCreateOneEnvironmentFromCSV() {
 
-        let em = EnvironmentManager(self.createCSV(rows:[("Service1", "Env1", "http://env1.api.service1.com")]))
+        let em = try? Builder().add(self.createCSV(rows:[("Service1", "Env1", "http://env1.api.service1.com")])).build()
         
         let entry = em?.entry(forService: "Service1")
         XCTAssertEqual(entry?.name, "Service1")
@@ -62,7 +62,7 @@ class CSVTests: XCTestCase {
         var csvItems: [CSVLineItem] = []
         self.add(services: 1, environments: 2, array: &csvItems)
         
-        let em = EnvironmentManager(self.createCSV(rows: csvItems))
+        let em = try? Builder().add(self.createCSV(rows: csvItems)).build()
         
         let entry = em?.entry(forService: "Service1")
         
@@ -73,7 +73,7 @@ class CSVTests: XCTestCase {
         var csvItems: [CSVLineItem] = []
         self.add(services: 2, environments: 1, array: &csvItems)
         
-        let em = EnvironmentManager(self.createCSV(rows: csvItems))
+        let em = try? Builder().add(self.createCSV(rows: csvItems)).build()
         let entryTwo = em?.entry(forService: "Service2")
         
         XCTAssertEqual(entryTwo?.currentBaseUrl.absoluteString, "http://env1.api.service2.com")
@@ -86,7 +86,7 @@ class CSVTests: XCTestCase {
         
         let csv = self.createCSV(rows: entries)
         
-        let em = EnvironmentManager(csv)
+        let em = try? Builder().add(csv).build()
         let entryTwo = em?.entry(forService: "Service2")
         
         XCTAssertEqual(entryTwo?.currentBaseUrl.absoluteString, "http://env1.api.service2.com")
@@ -102,7 +102,7 @@ class CSVTests: XCTestCase {
             "\nService2|Prod|http://url.com" +
             "\nService3|Acc|http://url.com"
         
-        let em = EnvironmentManager(csvString)
+        let em = try? Builder().add(csvString).build()
         
         XCTAssertEqual(em?.apiNames().count, 3)
         XCTAssertEqual(em?.entry(forService: "Service1")?.currentEnvironment, "Acc")

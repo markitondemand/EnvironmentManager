@@ -5,7 +5,7 @@ import Foundation
 
 /// This viewcontroller shows a selectable list of environments for a specific API entry
 class EnvironmentEntryDetailViewController: UITableViewController {
-    private struct CellIdentifiers {
+    private enum CellIdentifiers {
         static let EnvironmentCellIdentifier = "EnvironmentCellIdentifier"
     }
     var entry: Entry!
