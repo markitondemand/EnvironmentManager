@@ -3,12 +3,9 @@
 
 import UIKit
 
-
-
-
 extension UIStoryboard {
     /// The name of the storyboard this belong to. you can segue to a Storyboad using this identifier
-    public static let StoryboardName = "EnvironmentManagerStoryboard"
+    public static let EnvironmentManagerStoryboardName = "EnvironmentManagerStoryboard"
 }
 
 class EnvironmentManagerViewcontroller: UITableViewController {

@@ -68,16 +68,16 @@ extension Builder {
     ///
     /// - Parameter map: The map of API Entry names to envirnments.
     /// - Returns: The current builder
-    public func productionEnvironments(map: [String: String]) -> Self {
+    internal func productionEnvironments(map: [String: String]) -> Self {
         productionEnvironmentMap += map
         return self
     }
     
-    
+    // TODO: Make public - internal for now as it is not quite finished
     /// Sets the builder to production mode. This will cause it to use the associated productionEnvironmentMap you provide to only set up the environments for production. (I.e. Only the production environments will  end up in the produced EnvironmentManager)
     ///
     /// - Returns: The current builder
-    public func production() -> Self {
+    internal func production() -> Self {
         productionEnabled = true
         return self
     }
