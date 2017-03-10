@@ -16,7 +16,7 @@ extension UIStoryboard {
 extension Bundle {
     
     /// The bundle identifier for this framework's bundle
-    public static var environmentManagerBundleIdentifier = "com.markit.MDEnvironmentManager"
+    public static let environmentManagerBundleIdentifier = "com.markit.MDEnvironmentManager"
     /// The bundle for this framework
     public static var environmentManagerBundle: Bundle? {
         return Bundle(identifier: Bundle.environmentManagerBundleIdentifier)
