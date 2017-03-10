@@ -11,6 +11,7 @@
 		286CFFA11E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286CFFA01E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift */; };
 		288C829C1E69E0E6001E70F4 /* CSVTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288C829B1E69E0E6001E70F4 /* CSVTests.swift */; };
 		28A492841E722F4600FF690B /* EnvironmentManagerStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28AB956F1E60CE69000EAEA9 /* EnvironmentManagerStoryboard.storyboard */; };
+		28A492861E7361AA00FF690B /* BundleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A492851E7361AA00FF690B /* BundleTests.swift */; };
 		28AB95521E5E3062000EAEA9 /* MDEnvironmentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 28AB95501E5E3062000EAEA9 /* MDEnvironmentManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		28AB955F1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AB955E1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift */; };
 		28AB95611E5E3130000EAEA9 /* MDEnvironmentManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28AB954D1E5E3062000EAEA9 /* MDEnvironmentManager.framework */; };
@@ -54,6 +55,7 @@
 		283EB6741E65FE140004C1A3 /* DataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataStore.swift; path = Source/DataStore.swift; sourceTree = SOURCE_ROOT; };
 		286CFFA01E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnvironmentEntryDetailViewController.swift; path = Source/EnvironmentEntryDetailViewController.swift; sourceTree = SOURCE_ROOT; };
 		288C829B1E69E0E6001E70F4 /* CSVTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSVTests.swift; sourceTree = "<group>"; };
+		28A492851E7361AA00FF690B /* BundleTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BundleTests.swift; sourceTree = "<group>"; };
 		28AB954D1E5E3062000EAEA9 /* MDEnvironmentManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MDEnvironmentManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		28AB95501E5E3062000EAEA9 /* MDEnvironmentManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MDEnvironmentManager.h; sourceTree = "<group>"; };
 		28AB95511E5E3062000EAEA9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -153,6 +155,7 @@
 				288C829B1E69E0E6001E70F4 /* CSVTests.swift */,
 				28AB955E1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift */,
 				28C57B001E6E2875000F6B32 /* BuilderTests.swift */,
+				28A492851E7361AA00FF690B /* BundleTests.swift */,
 			);
 			path = MDEnvironmentManagerTests;
 			sourceTree = "<group>";
@@ -511,6 +514,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				288C829C1E69E0E6001E70F4 /* CSVTests.swift in Sources */,
+				28A492861E7361AA00FF690B /* BundleTests.swift in Sources */,
 				28C57B011E6E2875000F6B32 /* BuilderTests.swift in Sources */,
 				28AB955F1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift in Sources */,
 			);
