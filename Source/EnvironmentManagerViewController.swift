@@ -5,12 +5,26 @@ import UIKit
 
 extension UIStoryboard {
     /// The name of the storyboard this belong to. you can segue to a Storyboad using this identifier
-    public static let EnvironmentManagerStoryboardName = "EnvironmentManagerStoryboard"
+    public static let environmentManagerStoryboardName = "EnvironmentManagerStoryboard"
+    
+    /// The storyboard that the EnvironmentManager uses for UI
+    public static var environmentManagerStoryboard: UIStoryboard {
+        return UIStoryboard(name: UIStoryboard.environmentManagerStoryboardName, bundle: Bundle.environmentManagerBundle)
+    }
 }
 
-class EnvironmentManagerViewcontroller: UITableViewController {
+extension Bundle {
+    
+    /// The bundle identifier for this framework's bundle
+    public static let environmentManagerBundleIdentifier = "com.markit.MDEnvironmentManager"
+    /// The bundle for this framework
+    public static var environmentManagerBundle: Bundle? {
+        return Bundle(identifier: Bundle.environmentManagerBundleIdentifier)
+    }
+}
 
-/// This class manages a default UI for selecting environment
+/// This class manages a default UI for selecting environments
+class EnvironmentManagerViewcontroller: UITableViewController {
     private enum SegueIdentifiers {
         static let Exit = "Exit"
         static let EnvironmentDetails = "EnvironmentDetails"
