@@ -9,19 +9,18 @@ extension UIStoryboard {
     
     /// The storyboard that the EnvironmentManager uses for UI
     public static var environmentManagerStoryboard: UIStoryboard {
-        return UIStoryboard(name: UIStoryboard.environmentManagerStoryboardName, bundle: BundleAccessor.bundle())
+        return UIStoryboard(name: UIStoryboard.environmentManagerStoryboardName, bundle: BundleAccessor().resourceBundle)
     }
 }
 
 
 /// Needed to work around an issue with cocoapods where they dont let you set your own bundle identifier
 class BundleAccessor {
-    public var environmentManagerBundle: Bundle {
-        return Bundle(for: type(of: self))
-    }
-    
-    class func bundle() -> Bundle {
-        return BundleAccessor().environmentManagerBundle
+    var resourceBundle: Bundle {
+        let frameworkBundle = Bundle(for: type(of: self))
+        // Force unwrap here as this should "never" be nil. However this needs to be unit tested so run time issues are caught (i.e. resource bundle name changes)
+        //TODO: Fix tests
+        return Bundle(url: frameworkBundle.url(forResource: "MDEnvironmentManager", withExtension: "bundle")!)!
     }
 }
 
