@@ -9,17 +9,19 @@ extension UIStoryboard {
     
     /// The storyboard that the EnvironmentManager uses for UI
     public static var environmentManagerStoryboard: UIStoryboard {
-        return UIStoryboard(name: UIStoryboard.environmentManagerStoryboardName, bundle: Bundle.environmentManagerBundle)
+        return UIStoryboard(name: UIStoryboard.environmentManagerStoryboardName, bundle: BundleAccessor.bundle())
     }
 }
 
-extension Bundle {
+
+/// Needed to work around an issue with cocoapods where they dont let you set your own bundle identifier
+class BundleAccessor {
+    public var environmentManagerBundle: Bundle {
+        return Bundle(for: type(of: self))
+    }
     
-    /// The bundle identifier for this framework's bundle
-    public static let environmentManagerBundleIdentifier = "com.markit.MDEnvironmentManager"
-    /// The bundle for this framework
-    public static var environmentManagerBundle: Bundle? {
-        return Bundle(identifier: Bundle.environmentManagerBundleIdentifier)
+    class func bundle() -> Bundle {
+        return BundleAccessor().environmentManagerBundle
     }
 }
 
