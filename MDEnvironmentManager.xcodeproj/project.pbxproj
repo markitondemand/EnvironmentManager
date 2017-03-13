@@ -77,6 +77,8 @@
 		28C57AFC1E6E105B000F6B32 /* Environments.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Environments.csv; sourceTree = "<group>"; };
 		28C57B001E6E2875000F6B32 /* BuilderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuilderTests.swift; sourceTree = "<group>"; };
 		28C57B061E6F7FAC000F6B32 /* Builder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Builder.swift; path = Source/Builder.swift; sourceTree = SOURCE_ROOT; };
+		28E0E1D31E77587400B0CD70 /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = SOURCE_ROOT; };
+		28E0E1D41E77588B00B0CD70 /* MDEnvironmentManager.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = MDEnvironmentManager.podspec; sourceTree = SOURCE_ROOT; };
 		68422CA4AC48A86B487D0C2D /* Pods-MDEnvironmentManagerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MDEnvironmentManagerTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MDEnvironmentManagerTests/Pods-MDEnvironmentManagerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		813C61D7659D654AFB827347 /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
 		ACBD0674CFE686507D536FF3 /* Pods_MDEnvironmentManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MDEnvironmentManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -140,6 +142,7 @@
 		28AB954F1E5E3062000EAEA9 /* MDEnvironmentManager */ = {
 			isa = PBXGroup;
 			children = (
+				28E0E1D21E77584F00B0CD70 /* Pod Metadata */,
 				28AB95671E5E40A4000EAEA9 /* Source */,
 				28AB956E1E60CDFC000EAEA9 /* Resources */,
 				28AB95501E5E3062000EAEA9 /* MDEnvironmentManager.h */,
@@ -194,6 +197,15 @@
 				28AB95831E60DA39000EAEA9 /* Info.plist */,
 			);
 			path = Example;
+			sourceTree = "<group>";
+		};
+		28E0E1D21E77584F00B0CD70 /* Pod Metadata */ = {
+			isa = PBXGroup;
+			children = (
+				28E0E1D41E77588B00B0CD70 /* MDEnvironmentManager.podspec */,
+				28E0E1D31E77587400B0CD70 /* LICENSE.txt */,
+			);
+			name = "Pod Metadata";
 			sourceTree = "<group>";
 		};
 		6FB3827BDC9E46A9DD86D7B7 /* Pods */ = {
