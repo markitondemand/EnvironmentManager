@@ -3,6 +3,8 @@
 
 import UIKit
 
+
+// MARK: - Exposing Storyboard
 extension UIStoryboard {
     /// The name of the storyboard this belong to. you can segue to a Storyboad using this identifier
     public static let environmentManagerStoryboardName = "EnvironmentManagerStoryboard"
@@ -86,8 +88,9 @@ public protocol Unwindable {
     func unwind(toExit segue:UIStoryboardSegue)
 }
 
+
+// MARK: - Data Passing Between Storyboards
 extension UIStoryboardSegue {
-    
     /// Helper method used for passing data in our segue
     ///
     /// - Parameter environmentManager: The data to pass
