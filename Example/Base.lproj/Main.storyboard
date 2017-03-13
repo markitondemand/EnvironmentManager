@@ -50,7 +50,7 @@
                                 <rect key="frame" x="109" y="558" width="156" height="30"/>
                                 <state key="normal" title="Manage environments!"/>
                                 <connections>
-                                    <segue destination="BYb-vo-Xmu" kind="presentation" customClass="EnvironmentManagerSegue" customModule="MDEnvironmentManager" id="is1-5x-zuL"/>
+                                    <segue destination="z8w-j2-OtQ" kind="presentation" id="iMM-12-0qL"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="api.some.com" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zej-Ki-8Q9">
@@ -120,13 +120,31 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="2eU-GB-6JO">
+            <objects>
+                <navigationController id="z8w-j2-OtQ" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="pKF-do-pRb">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="BYb-vo-Xmu" kind="relationship" relationship="rootViewController" id="Yap-eY-oJk"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yHn-r1-7RI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="780" y="36"/>
+        </scene>
         <!--EnvironmentManagerStoryboard-->
         <scene sceneID="PRN-j2-eOQ">
             <objects>
-                <viewControllerPlaceholder storyboardName="EnvironmentManagerStoryboard" bundleIdentifier="com.markit.MDEnvironmentManager" id="BYb-vo-Xmu" sceneMemberID="viewController"/>
+                <viewControllerPlaceholder storyboardName="EnvironmentManagerStoryboard" bundleIdentifier="com.markit.MDEnvironmentManager" id="BYb-vo-Xmu" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="4Md-Kv-OFG"/>
+                </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8Q5-bU-nF2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="857" y="35"/>
+            <point key="canvasLocation" x="1530" y="36"/>
         </scene>
     </scenes>
 </document>

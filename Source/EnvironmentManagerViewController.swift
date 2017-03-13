@@ -86,8 +86,11 @@ public protocol Unwindable {
     func unwind(toExit segue:UIStoryboardSegue)
 }
 
-/// Custom segue used to pass the Environment manager into the view controller via a Storyboard Segue. This is passed into your prepareForSegue:sender: method. You should use this to pass your environment maanager into the UI
-public class EnvironmentManagerSegue: UIStoryboardSegue {
+extension UIStoryboardSegue {
+    
+    /// Helper method used for passing data in our segue
+    ///
+    /// - Parameter environmentManager: The data to pass
     public func pass(environmentManager: EnvironmentManager) {
         guard let destination = self.destination as? ManagerPassable else {
             return
