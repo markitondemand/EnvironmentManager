@@ -61,9 +61,6 @@ class ViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // stuff
         print("prepare for storyboard segue")
-        guard let segue = segue as? EnvironmentManagerSegue else {
-            return
-        }
         segue.pass(environmentManager: self.environmentManager)
     }
     
