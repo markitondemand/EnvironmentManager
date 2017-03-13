@@ -89,9 +89,22 @@ public protocol Unwindable {
 }
 
 
-// MARK: - Data Passing Between Storyboards
+// MARK: - Data Passing Between controller and storyboards
+extension UIViewController {
+    
+    /// Helper method used for passing the EnvironmentManager into our segue
+    ///
+    /// - Parameter environmentManager: The manager to pass
+    public func pass(_ environmentManager: EnvironmentManager) {
+        guard let controller = self as? ManagerPassable else {
+            return
+        }
+        controller.pass(environmentManager: environmentManager)
+    }
+}
+
 extension UIStoryboardSegue {
-    /// Helper method used for passing data in our segue
+    /// Helper method used for passing the EnvironmentManager into our segue
     ///
     /// - Parameter environmentManager: The data to pass
     public func pass(environmentManager: EnvironmentManager) {
