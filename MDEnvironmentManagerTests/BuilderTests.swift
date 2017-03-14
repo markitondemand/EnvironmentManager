@@ -41,6 +41,24 @@ class BuilderTests: XCTestCase {
         XCTAssertEqual(em.entry(forService: "Service1")?.environmentNames().count, 1)
     }
     
+    func testSettingSortOrder() {
+        // Default is order added
+        let b = Builder()
+        
+        let em = try! b
+            .add(entry: "ZService", environments:[("BEnv", "http://benv.api.zervice.com"), ("AEnv", "http://aenv.api.zservice.com")])
+            .add(entry: "AService", environments:[("BEnv", "http://benv.api.aservice.com"), ("AEnv", "http://aenv.api.aservice.com")])
+            .build()
+        
+        XCTAssertEqual(em.entry(forIndex: 0)?.name, "ZService")
+        XCTAssertEqual(em.entry(forIndex: 0)?.environment(forIndex: 0), "BEnv")
+        //  test setting our own sort function
+        
+//        let b = Builder()
+//        
+//        let em = try
+    }
+    
     // Error checking
     // Commenting out for now. For some reason XCTAssertThrowsError is not passing even tho I verified an error is thrown from b.build(). (by trying try!, it crashes)
 //    func testNotSettingProductionEnvironmentShouldThrowError() {

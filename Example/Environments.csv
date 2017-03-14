@@ -5,5 +5,5 @@ LoginAPI|Prod|http://prod.api.login.com
 QuoteAPI|Acc|http://acc.api.quote.com
 QuoteAPI|PreProd|http://preprod.api.quote.com
 QuoteAPI|Prod|http://prod.api.quote.com
-NewsAPI|Prod|http://prod.api.quote.com
 NewsAPI|Test|http://test.api.quote.com
+NewsAPI|Prod|http://prod.api.quote.com

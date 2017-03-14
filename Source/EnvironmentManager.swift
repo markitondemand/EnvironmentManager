@@ -30,7 +30,7 @@ public enum EnvironmentChangedKeys: String {
 /// This is the main class of the EnvironmentManager
 public class EnvironmentManager {
     public let store: DataStore    
-    fileprivate var entries: [String: Entry] = [:]
+    fileprivate var entries: [Entry] = []
     
     
     /// Createsa a new EnvironmentManager using an array of pre created Entry objects.
@@ -55,9 +55,9 @@ public class EnvironmentManager {
         var store = store ?? self.store
 
         // Reduce our entries to a dictionary of service names -> current environment
-        let reduced = self.entries.reduce([:]) { (dict, pair: (key: String, value: Entry)) -> [String: String] in
+        let reduced = self.entries.reduce([:]) { (dict, entry: Entry) -> [String: String] in
             var dict = dict
-            dict[pair.value.name] = pair.value.currentEnvironment
+            dict[entry.name] = entry.currentEnvironment
             return dict
         }
         
@@ -68,8 +68,8 @@ public class EnvironmentManager {
     /// Returns an ordered list of all of the API names currently managed. By default the list will be returned in ascending order but you can optionally sort them in another way (i.e. descending)
     ///
     /// - Returns: The names of all APIs currently managed
-    public func apiNames(usingSortFunction function: (String, String) -> Bool = { $0 < $1}) -> [String] {
-        return Array(self.entries.keys).sorted(by: function)
+    public func apiNames() -> [String] {
+        return self.entries.map({ $0.name })
     }
     
     /// Builds a full URL for a given base API.
@@ -79,10 +79,10 @@ public class EnvironmentManager {
     ///   - path: The path to the resource. This will be appended to the base URL
     /// - Returns: A new URL for use or nil if the URL could not be created or the API is not found in the manager
     public func urlFor(apiName: String, path: String) -> URL? {
-        guard let entry = entries[apiName] else {
+        guard let singleEntry = self.entry(forService: apiName) else {
             return nil
         }
-        return entry.buildURLWith(path: path)
+        return singleEntry.buildURLWith(path: path)
     }
     
     
@@ -91,7 +91,7 @@ public class EnvironmentManager {
     /// - Parameter apiName: The name of the API to check what the currently selected environment is
     /// - Returns: The environment name, or nil if that API name is not registered with the manager
     public func currentEnvironmentFor(apiName: String) -> String? {
-        return self.entries[apiName]?.currentEnvironment
+        return self.entries.first(where: { $0.name == apiName })?.currentEnvironment
     }
     
     
@@ -100,7 +100,7 @@ public class EnvironmentManager {
     /// - Parameter apiName: The name of the API
     /// - Returns: A base URL or nil if that API name cannot be found
     public func baseUrl(apiName: String) -> URL? {
-        return self.entries[apiName]?.currentBaseUrl
+        return self.entries.first(where: { $0.name == apiName })?.currentBaseUrl
     }
     
     
@@ -112,7 +112,8 @@ public class EnvironmentManager {
         if let environment = self.store.environment(forService: entry.name) {
             entry.backingCurrentEnvironment = environment
         }
-        self.entries[entry.name] = entry
+        //TOOD: dont allow multiple of the same env name - overwrite old one if new one w/ matching name coems in - write test
+        self.entries.append(entry)
     }
     
     /// Adds a list of entries for a given API
@@ -139,10 +140,7 @@ public class EnvironmentManager {
     ///   - environment: The environment to select
     ///   - apiName: The API to select the environment for
     public func select(environment: String, forAPI apiName: String) {
-        if (!self.entries.keys.contains(apiName)) {
-            return
-        }
-        guard let entry = self.entries[apiName] else {
+        guard let entry = self.entry(forService: apiName) else {
             return
         }
         
@@ -155,17 +153,15 @@ public class EnvironmentManager {
     /// - Parameter service: The name of the service
     /// - Returns: The corresponding Entry or nil
     public func entry(forService service: String) -> Entry? {
-        return self.entries[service]
+        return self.entries.first(where: { $0.name == service })
     }
+    
 }
 
 // MARK: - Index and IndexPath support
 extension EnvironmentManager {
     public func entry(forIndex index: Int) -> Entry? {
-        guard let environment = self.apiNames()[safe: index] else {
-            return nil
-        }
-        return self.entries[environment]
+        return self.entries[safe: index]
     }
     
 //    func url(forIndexPath path: IndexPath) -> URL? {
