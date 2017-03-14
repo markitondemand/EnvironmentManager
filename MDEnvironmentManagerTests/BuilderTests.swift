@@ -41,7 +41,7 @@ class BuilderTests: XCTestCase {
         XCTAssertEqual(em.entry(forService: "Service1")?.environmentNames().count, 1)
     }
     
-    func testSettingSortOrder() {
+    func testDefaultSortOrderIsOrderOfItemsAdded() {
         // Default is order added
         let b = Builder()
         
@@ -57,6 +57,19 @@ class BuilderTests: XCTestCase {
 //        let b = Builder()
 //        
 //        let em = try
+    }
+    
+    func testSettingSortOrder() {
+        let b = Builder()
+        
+        let em = try! b
+            .add(entry: "ZService", environments:[("BEnv", "http://benv.api.zervice.com"), ("AEnv", "http://aenv.api.zservice.com")])
+            .add(entry: "AService", environments:[("BEnv", "http://benv.api.aservice.com"), ("AEnv", "http://aenv.api.aservice.com")])
+            .sortBy(.name)
+            .build()
+    
+        XCTAssertEqual(em.entry(forIndex: 0)?.name, "AService")
+        XCTAssertEqual(em.entry(forIndex: 0)?.environment(forIndex: 0), "AEnv")
     }
     
     // Error checking

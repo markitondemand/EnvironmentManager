@@ -4,13 +4,27 @@
 import Foundation
 import CSV
 
-// TODO: clean up access mutators for Entry and EnvironmentManager since we now use Builder
-// TOOD: update example... it is probably not compiling
+
+/// Use an instance of the Builder to create your EnvironmentManager. This provides reasonable defaults, failsafes, and error handling in the event something is misconfigured on your end. You use this class by chaining calls to a single Builder() and ultimately end with a "build()" call.
+/// ```
+/// Builder()
+/// .setDataStore(store: DictionaryStore())
+/// .add(myCSVStringData)
+/// .build()
+/// ```
+/// This also supports managing production environments. When you are ready to ship a production app you can configure the Builder to production mode and tell it what type of Environments are production. This will than discard all other environments. If you are missing anything in your map an error will be raised.
+/// ```
+/// Builder()
+/// // assume entries were added here
+/// .productionEnvironments(map: ["Service1":"Prod", "Service2":"Prod"])
+/// .production() // This signifies we are doing a production build. In the future it will probably be some way to be driven via configuration
+/// .build()
 public class Builder {
     internal var dataStore: DataStore = UserDefaultsStore()
     internal var entries: [String:[(String, String)]] = [:]
     internal var productionEnvironmentMap: [String:String] = [:]
     internal var productionEnabled: Bool = false
+    internal var sortOption: SortType = .added
     
     
     /// List of erors that may occur when building the EnvironmentManager
@@ -18,7 +32,7 @@ public class Builder {
     /// - NoProductionEnvironmentSet: A service does not have a production environment set. The service at fault is passed back
     /// - EnvironmentCouldNotBeFound: A service has a non existant environemnt set. The service at fault and the environment are passed back
     /// - UnableToConstructBaseUrl: A base URL instance could not be constructed. The service at fault and the urlString are passed back
-    /// - CSVParsingError: An error occurred parsing a CSV file. the erorr details from the CSV parser are passed back
+    /// - CSVParsingError: An error occurred parsing a CSV file. the error details from the CSV parser are passed back
     public enum BuildError: Error {
         case NoProductionEnvironmentSet(service: String)
         case EnvironmentCouldNotBeFound(service: String, name: String)
@@ -84,19 +98,38 @@ extension Builder {
 }
 
 
+// MARK: - Sorting
+extension Builder {
+    
+    /// Represents a way that entries and environments are sorted when using any index: methods, or getting lists of things
+    ///
+    /// - added: Sorted by the order the item was added.
+    /// - name: Sorted by the name of the item (i.e. sort entries by there service name, and sort environments in an entry by the environment name)
+    public enum SortType {
+        case added
+        case name
+    }
+    public func sortBy(_ type: SortType) -> Self {
+        sortOption = type
+        
+        return self
+    }
+}
+
+
 // MARK: - Builder build function
 extension Builder {
     
     /// Builds a new EnvironentManager based on the currently configured Builder
     ///
     /// - Returns: Returns a new EnvironmentManager, or throws an error in the event an error occurred
-    /// - Throws: Throws a BuildError in the event an error occurred, please see BuildError for details of the errros
+    /// - Throws: Throws a BuildError in the event an error occurred, please see BuildError for details of the error
     public func build() throws -> EnvironmentManager {
         var localEntries = self.entries
         if productionEnabled {
             for (service, environments) in self.entries {
                 guard let prodEnvToPick = productionEnvironmentMap[service] else {
-                    // Set no prod API set for service
+                    // Throw no prod API set for service error
                     throw BuildError.NoProductionEnvironmentSet(service: service)
                 }
                 

@@ -129,12 +129,11 @@ class MDEnvironmentManagerTests: XCTestCase {
         let environments = [("acc", defaultAccURL), ("prod", defaultProdURL)]
         let entry = Entry(name: "service1", environments: environments)
         
-        let en = EnvironmentManager()
+        let store = DictionaryStore()
+        let en = EnvironmentManager(backingStore:store)
         en.add(entry: entry)
         en.select(environment: "prod", forAPI: "service1")
-        
-        let store = DictionaryStore()
-        en.save(usingStore: store)
+        en.save()
         
         
         let en2 = EnvironmentManager(backingStore: store)
