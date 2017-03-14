@@ -17,13 +17,13 @@ import CSV
 /// Builder()
 /// // assume entries were added here
 /// .productionEnvironments(map: ["Service1":"Prod", "Service2":"Prod"])
-/// .production() // This signifies we are doing a production build. In the future it will probably be some way to be driven via configuration
+/// .production() // This signifies we are doing a production build. Optionally, pass your own block in to return true or false, you can than inject a #ifdef based off of your configuration
 /// .build()
 public class Builder {
     internal var dataStore: DataStore = UserDefaultsStore()
     internal var entries: [String:[(String, String)]] = [:]
     internal var productionEnvironmentMap: [String:String] = [:]
-    internal var productionEnabled: Bool = false
+    internal var productionEnabled: () -> Bool = { return false }
     internal var sortOption: SortType = .added
     
     
@@ -82,17 +82,28 @@ extension Builder {
     ///
     /// - Parameter map: The map of API Entry names to envirnments.
     /// - Returns: The current builder
-    internal func productionEnvironments(map: [String: String]) -> Self {
+    public func productionEnvironments(map: [String: String]) -> Self {
         productionEnvironmentMap += map
         return self
     }
     
-    // TODO: Make public - internal for now as it is not quite finished
-    /// Sets the builder to production mode. This will cause it to use the associated productionEnvironmentMap you provide to only set up the environments for production. (I.e. Only the production environments will  end up in the produced EnvironmentManager)
+    /// Sets the builder to production mode. This will cause it to use the associated productionEnvironmentMap you provide to only set up the environments for production. (I.e. Only the production environments will end up in the produced EnvironmentManager).
+    /// Pass your own block in to externally change if this should build in production
+    /// Example
+    /// ```
+    /// Builder().production({
+    /// #ifdef RELEASE
+    ///     return true
+    /// #else
+    ///     return false
+    /// #endif
+    /// }
+    /// ```
     ///
+    /// - Parameter expression: The block that will be evaluated to determine if the builder should build for production or not. The default for this will return true
     /// - Returns: The current builder
-    internal func production() -> Self {
-        productionEnabled = true
+    public func production(expression: @escaping() -> Bool = { return true }) -> Self {
+        self.productionEnabled = expression
         return self
     }
 }
@@ -124,7 +135,7 @@ extension Builder {
     /// - Throws: Throws a BuildError in the event an error occurred, please see BuildError for details of the error
     public func build() throws -> EnvironmentManager {
         var localEntries = self.entries
-        if productionEnabled {
+        if productionEnabled() {
             for (service, environments) in self.entries {
                 guard let prodEnvToPick = productionEnvironmentMap[service] else {
                     // Throw no prod API set for service error
