@@ -101,13 +101,11 @@ extension Builder {
 // MARK: - Sorting
 extension Builder {
     
-    /// Represents a way that entries and environments are sorted when using any index: methods, or getting lists of things
+    /// Represents a way that entries and environments are sorted when using any index: methods, or getting lists of things. Right now only one sort type is supported. To add additional sorting options there will need to be refactoring done to the code base.
     ///
     /// - added: Sorted by the order the item was added.
-    /// - name: Sorted by the name of the item (i.e. sort entries by there service name, and sort environments in an entry by the environment name)
     public enum SortType {
         case added
-        case name
     }
     public func sortBy(_ type: SortType) -> Self {
         sortOption = type
