@@ -61,11 +61,10 @@ class MDEnvironmentManagerTests: XCTestCase {
         let entry = Entry(name: "service", initialEnvironment: ("prod", defaultProdURL))
         entry.add(url: defaultAccURL, forEnvironment: "acc")
         
-        XCTAssertEqual(entry.environment(forIndex: 0), "acc")
-        XCTAssertEqual(entry.environment(forIndex: 0, usingSortFunction: >), "prod")
+        XCTAssertEqual(entry.environment(forIndex: 0), "prod")
         
-        XCTAssertEqual(entry.baseUrl(forIndex: 0), defaultAccURL)
-        XCTAssertEqual(entry.baseUrl(forIndex: 0, usingSortFunction: >), defaultProdURL)
+        XCTAssertEqual(entry.baseUrl(forIndex: 1), defaultAccURL)
+        XCTAssertEqual(entry.baseUrl(forIndex: 0), defaultProdURL)
     }
     
     func testEnvironmentManagerCreatesURL() {
@@ -112,7 +111,7 @@ class MDEnvironmentManagerTests: XCTestCase {
         // test return service name + default to using ascending sort
         XCTAssertEqual(en.apiNames(), ["service1"])
         en.add(apiName: "a", environmentUrls: [("acc", URL(string: "https://acc.api.other.com")!)])
-        XCTAssertEqual(en.apiNames(), ["a", "service1"])
+        XCTAssertEqual(en.apiNames(), ["service1", "a"])
         
         // test return base API
         XCTAssertEqual(en.baseUrl(apiName: "service1"), URL(string: "http://acc.api.domain.com")!)
@@ -130,12 +129,11 @@ class MDEnvironmentManagerTests: XCTestCase {
         let environments = [("acc", defaultAccURL), ("prod", defaultProdURL)]
         let entry = Entry(name: "service1", environments: environments)
         
-        let en = EnvironmentManager()
+        let store = DictionaryStore()
+        let en = EnvironmentManager(backingStore:store)
         en.add(entry: entry)
         en.select(environment: "prod", forAPI: "service1")
-        
-        let store = DictionaryStore()
-        en.save(usingStore: store)
+        en.save()
         
         
         let en2 = EnvironmentManager(backingStore: store)

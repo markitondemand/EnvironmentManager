@@ -27,10 +27,10 @@ public enum EnvironmentChangedKeys: String {
     case NewEnvironment
 }
 
-/// This is the main class of the EnvironmentManager
+/// This is the main class of the EnvironmentManager. To create one please use a Builder() instance.
 public class EnvironmentManager {
     public let store: DataStore    
-    fileprivate var entries: [String: Entry] = [:]
+    fileprivate var entries: [Entry] = []
     
     
     /// Createsa a new EnvironmentManager using an array of pre created Entry objects.
@@ -38,7 +38,7 @@ public class EnvironmentManager {
     /// - Parameters:
     ///   - initialEntries: The initial entries to use
     ///   - backingStore: The store to load persisted environment from (if applicable). The user defaults will be used to read and write environment information to by default
-    public init(initialEntries: [Entry] = [], backingStore: DataStore = UserDefaultsStore()) {
+    internal init(initialEntries: [Entry] = [], backingStore: DataStore = UserDefaultsStore()) {
         self.store = backingStore
         let environments = self.store.readEnvironments()
         for entry in initialEntries {
@@ -48,16 +48,14 @@ public class EnvironmentManager {
         }
     }
     
-    /// Attempts to save the current environments to a given store. If no store is provided the one passed when creating this instance will be used instead
-    ///
-    /// - Parameter store: The store to save the selected environments to. Defaults to the store that was used when the instance was created
-    public func save(usingStore store: DataStore? = nil) {
-        var store = store ?? self.store
+    /// Attempts to save the current environments to the store passed at creation.
+    public func save() {
+        var store = self.store
 
         // Reduce our entries to a dictionary of service names -> current environment
-        let reduced = self.entries.reduce([:]) { (dict, pair: (key: String, value: Entry)) -> [String: String] in
+        let reduced = self.entries.reduce([:]) { (dict, entry: Entry) -> [String: String] in
             var dict = dict
-            dict[pair.value.name] = pair.value.currentEnvironment
+            dict[entry.name] = entry.currentEnvironment
             return dict
         }
         
@@ -68,8 +66,8 @@ public class EnvironmentManager {
     /// Returns an ordered list of all of the API names currently managed. By default the list will be returned in ascending order but you can optionally sort them in another way (i.e. descending)
     ///
     /// - Returns: The names of all APIs currently managed
-    public func apiNames(usingSortFunction function: (String, String) -> Bool = { $0 < $1}) -> [String] {
-        return Array(self.entries.keys).sorted(by: function)
+    public func apiNames() -> [String] {
+        return self.entries.map({ $0.name })
     }
     
     /// Builds a full URL for a given base API.
@@ -79,10 +77,10 @@ public class EnvironmentManager {
     ///   - path: The path to the resource. This will be appended to the base URL
     /// - Returns: A new URL for use or nil if the URL could not be created or the API is not found in the manager
     public func urlFor(apiName: String, path: String) -> URL? {
-        guard let entry = entries[apiName] else {
+        guard let singleEntry = self.entry(forService: apiName) else {
             return nil
         }
-        return entry.buildURLWith(path: path)
+        return singleEntry.buildURLWith(path: path)
     }
     
     
@@ -91,7 +89,7 @@ public class EnvironmentManager {
     /// - Parameter apiName: The name of the API to check what the currently selected environment is
     /// - Returns: The environment name, or nil if that API name is not registered with the manager
     public func currentEnvironmentFor(apiName: String) -> String? {
-        return self.entries[apiName]?.currentEnvironment
+        return self.entries.first(where: { $0.name == apiName })?.currentEnvironment
     }
     
     
@@ -100,37 +98,7 @@ public class EnvironmentManager {
     /// - Parameter apiName: The name of the API
     /// - Returns: A base URL or nil if that API name cannot be found
     public func baseUrl(apiName: String) -> URL? {
-        return self.entries[apiName]?.currentBaseUrl
-    }
-    
-    
-    /// Adds a single Entry to the environment manager. If the entry was persisted to the store that was passed on creation, it will update the current environment to match what the store has.
-    ///
-    /// - Parameter entry: The entry to add
-    public func add(entry: Entry) {
-        // check if the entry was saved previously
-        if let environment = self.store.environment(forService: entry.name) {
-            entry.backingCurrentEnvironment = environment
-        }
-        self.entries[entry.name] = entry
-    }
-    
-    /// Adds a list of entries for a given API
-    ///
-    /// - Parameters:
-    ///   - apiName: The API name (e.g. MDQuoteService)
-    ///   - environmentUrls: An array of tuples that match an environment string to a given URL. The first element in the array will become the current environment for that API. This must be an array with more than 0 eleemnts
-    public func add(apiName: String, environmentUrls:[(environment: String, baseUrl: URL)]) {
-        precondition(!environmentUrls.isEmpty, "Error, input URLs for given entry was empty! Plesae provide at least one environment and corresponding url")
-        var environmentUrls = environmentUrls
-        
-        // Bad logic
-        let entry = self.entry(forService: apiName) ?? Entry(name: apiName, initialEnvironment: environmentUrls.removeFirst())
-        
-        for pair in environmentUrls {
-            entry.add(pair: pair)
-        }
-        self.add(entry: entry)
+        return self.entries.first(where: { $0.name == apiName })?.currentBaseUrl
     }
     
     /// Attempts to select a new environment for a given API. If the environment succefully changes for an API a notification will be posted. Please see the "EnvironmentDidChange": notifcation
@@ -139,10 +107,7 @@ public class EnvironmentManager {
     ///   - environment: The environment to select
     ///   - apiName: The API to select the environment for
     public func select(environment: String, forAPI apiName: String) {
-        if (!self.entries.keys.contains(apiName)) {
-            return
-        }
-        guard let entry = self.entries[apiName] else {
+        guard let entry = self.entry(forService: apiName) else {
             return
         }
         
@@ -155,17 +120,15 @@ public class EnvironmentManager {
     /// - Parameter service: The name of the service
     /// - Returns: The corresponding Entry or nil
     public func entry(forService service: String) -> Entry? {
-        return self.entries[service]
+        return self.entries.first(where: { $0.name == service })
     }
+    
 }
 
 // MARK: - Index and IndexPath support
 extension EnvironmentManager {
     public func entry(forIndex index: Int) -> Entry? {
-        guard let environment = self.apiNames()[safe: index] else {
-            return nil
-        }
-        return self.entries[environment]
+        return self.entries[safe: index]
     }
     
 //    func url(forIndexPath path: IndexPath) -> URL? {
@@ -174,6 +137,40 @@ extension EnvironmentManager {
 //    func environment(forIndexPath path: IndexPath) -> URL? {
 //        
 //    }
+}
+
+
+// MARK: - Mutators - internal. Use Builder() to add entries
+extension EnvironmentManager {
+    /// Adds a single Entry to the environment manager. If the entry was persisted to the store that was passed on creation, it will update the current environment to match what the store has.
+    ///
+    /// - Parameter entry: The entry to add
+    internal func add(entry: Entry) {
+        // check if the entry was saved previously
+        if let environment = self.store.environment(forService: entry.name) {
+            entry.backingCurrentEnvironment = environment
+        }
+        //TOOD: dont allow multiple of the same env name - overwrite old one if new one w/ matching name coems in - write test
+        self.entries.append(entry)
+    }
+    
+    /// Adds a list of entries for a given API
+    ///
+    /// - Parameters:
+    ///   - apiName: The API name (e.g. MDQuoteService)
+    ///   - environmentUrls: An array of tuples that match an environment string to a given URL. The first element in the array will become the current environment for that API. This must be an array with more than 0 eleemnts
+    internal func add(apiName: String, environmentUrls:[(environment: String, baseUrl: URL)]) {
+        precondition(!environmentUrls.isEmpty, "Error, input URLs for given entry was empty! Plesae provide at least one environment and corresponding url")
+        var environmentUrls = environmentUrls
+        
+        // Bad logic
+        let entry = self.entry(forService: apiName) ?? Entry(name: apiName, initialEnvironment: environmentUrls.removeFirst())
+        
+        for pair in environmentUrls {
+            entry.add(pair: pair)
+        }
+        self.add(entry: entry)
+    }
 }
 
 

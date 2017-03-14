@@ -4,13 +4,27 @@
 import Foundation
 import CSV
 
-// TODO: clean up access mutators for Entry and EnvironmentManager since we now use Builder
-// TOOD: update example... it is probably not compiling
+
+/// Use an instance of the Builder to create your EnvironmentManager. This provides reasonable defaults, failsafes, and error handling in the event something is misconfigured on your end. You use this class by chaining calls to a single Builder() and ultimately end with a "build()" call.
+/// ```
+/// Builder()
+/// .setDataStore(store: DictionaryStore())
+/// .add(myCSVStringData)
+/// .build()
+/// ```
+/// This also supports managing production environments. When you are ready to ship a production app you can configure the Builder to production mode and tell it what type of Environments are production. This will than discard all other environments. If you are missing anything in your map an error will be raised.
+/// ```
+/// Builder()
+/// // assume entries were added here
+/// .productionEnvironments(map: ["Service1":"Prod", "Service2":"Prod"])
+/// .production() // This signifies we are doing a production build. Optionally, pass your own block in to return true or false, you can than inject a #ifdef based off of your configuration
+/// .build()
 public class Builder {
     internal var dataStore: DataStore = UserDefaultsStore()
     internal var entries: [String:[(String, String)]] = [:]
     internal var productionEnvironmentMap: [String:String] = [:]
-    internal var productionEnabled: Bool = false
+    internal var productionEnabled: () -> Bool = { return false }
+    internal var sortOption: SortType = .added
     
     
     /// List of erors that may occur when building the EnvironmentManager
@@ -18,7 +32,7 @@ public class Builder {
     /// - NoProductionEnvironmentSet: A service does not have a production environment set. The service at fault is passed back
     /// - EnvironmentCouldNotBeFound: A service has a non existant environemnt set. The service at fault and the environment are passed back
     /// - UnableToConstructBaseUrl: A base URL instance could not be constructed. The service at fault and the urlString are passed back
-    /// - CSVParsingError: An error occurred parsing a CSV file. the erorr details from the CSV parser are passed back
+    /// - CSVParsingError: An error occurred parsing a CSV file. the error details from the CSV parser are passed back
     public enum BuildError: Error {
         case NoProductionEnvironmentSet(service: String)
         case EnvironmentCouldNotBeFound(service: String, name: String)
@@ -68,17 +82,45 @@ extension Builder {
     ///
     /// - Parameter map: The map of API Entry names to envirnments.
     /// - Returns: The current builder
-    internal func productionEnvironments(map: [String: String]) -> Self {
+    public func productionEnvironments(map: [String: String]) -> Self {
         productionEnvironmentMap += map
         return self
     }
     
-    // TODO: Make public - internal for now as it is not quite finished
-    /// Sets the builder to production mode. This will cause it to use the associated productionEnvironmentMap you provide to only set up the environments for production. (I.e. Only the production environments will  end up in the produced EnvironmentManager)
+    /// Sets the builder to production mode. This will cause it to use the associated productionEnvironmentMap you provide to only set up the environments for production. (I.e. Only the production environments will end up in the produced EnvironmentManager).
+    /// Pass your own block in to externally change if this should build in production
+    /// Example
+    /// ```
+    /// Builder().production({
+    /// #ifdef RELEASE
+    ///     return true
+    /// #else
+    ///     return false
+    /// #endif
+    /// }
+    /// ```
     ///
+    /// - Parameter expression: The block that will be evaluated to determine if the builder should build for production or not. The default for this will return true
     /// - Returns: The current builder
-    internal func production() -> Self {
-        productionEnabled = true
+    public func production(expression: @escaping() -> Bool = { return true }) -> Self {
+        self.productionEnabled = expression
+        return self
+    }
+}
+
+
+// MARK: - Sorting
+extension Builder {
+    
+    /// Represents a way that entries and environments are sorted when using any index: methods, or getting lists of things. Right now only one sort type is supported. To add additional sorting options there will need to be refactoring done to the code base.
+    ///
+    /// - added: Sorted by the order the item was added.
+    public enum SortType {
+        case added
+    }
+    public func sortBy(_ type: SortType) -> Self {
+        sortOption = type
+        
         return self
     }
 }
@@ -90,13 +132,13 @@ extension Builder {
     /// Builds a new EnvironentManager based on the currently configured Builder
     ///
     /// - Returns: Returns a new EnvironmentManager, or throws an error in the event an error occurred
-    /// - Throws: Throws a BuildError in the event an error occurred, please see BuildError for details of the errros
+    /// - Throws: Throws a BuildError in the event an error occurred, please see BuildError for details of the error
     public func build() throws -> EnvironmentManager {
         var localEntries = self.entries
-        if productionEnabled {
+        if productionEnabled() {
             for (service, environments) in self.entries {
                 guard let prodEnvToPick = productionEnvironmentMap[service] else {
-                    // Set no prod API set for service
+                    // Throw no prod API set for service error
                     throw BuildError.NoProductionEnvironmentSet(service: service)
                 }
                 

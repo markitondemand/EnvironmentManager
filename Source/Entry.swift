@@ -6,13 +6,37 @@ import Foundation
 
 /// Simple datastructure represneting an API and its associated enviroments, as not all APIs will have the same number of enviromments (e.g. some may have a dev, where others wont, like client APIs)
 public class Entry {
+    fileprivate struct EnvironmentPair: Equatable, Hashable {
+        let environment: String
+        let baseUrl: URL
+        
+        public init(environment: String, baseUrl: URL) {
+            self.environment = environment
+            self.baseUrl = baseUrl
+        }
+        
+        public init(pair: Pair) {
+            self.init(environment: pair.0, baseUrl: pair.1)
+        }
+        
+        // Hashable
+        var hashValue: Int {
+            return "\(environment),\(baseUrl)".hashValue
+        }
+        
+        // Equatabe
+        public static func ==(lhs: EnvironmentPair, rhs: EnvironmentPair) -> Bool {
+            return lhs.baseUrl == rhs.baseUrl && lhs.environment == rhs.environment
+        }
+    }
+    
     public typealias Pair = (environment: String, baseUrl: URL)
     
     /// The name of the API (e.g. MDQuoteService)
     public let name: String
     
     // Data structure to hold the environments for this Entry
-    fileprivate var environments: [String: URL]
+    fileprivate var environments: [EnvironmentPair]
     
     /// This variable is needed to define a backing store variable because when you override the set or get on a property they lose their backing variable
     internal var backingCurrentEnvironment: String
@@ -20,7 +44,7 @@ public class Entry {
     /// Get and Set the current environment. If you attempt to set the environment to something this Entry does not know about nothing will change. (i.e. this guarantees that it will always be pointing to an environment that exists within this Entry)
     public var currentEnvironment: String {
         set (newEnvironment) {
-            if (self.environments.keys.contains(newEnvironment) && newEnvironment != self.backingCurrentEnvironment) {
+            if self.environments.contains(where: { $0.environment == newEnvironment }) && newEnvironment != self.backingCurrentEnvironment {
                 let oldEnvironment = self.backingCurrentEnvironment
                 self.backingCurrentEnvironment = newEnvironment
                 
@@ -38,8 +62,8 @@ public class Entry {
     /// Returns the base API for the currently selected environment
     public var currentBaseUrl: URL {
         get {
-            // We guarantee elsewhere that the currentEnvironment will always exist in the dictionary. There might be a way to use the "Dictionary.Index" stuff to access the value directly instead of force unwrapping the optional
-            return self.environments[self.currentEnvironment]!
+            // We guarantee elsewhere that the currentEnvironment will always exist in the array.
+            return self.environments.first(where: { $0.environment == self.currentEnvironment })!.baseUrl
         }
     }
     
@@ -48,8 +72,8 @@ public class Entry {
     /// - Parameters:
     ///   - name: The name of the entry, this should be something like the name of your API, (e.g. "MDQuoteService")
     ///   - initialEnvironment: The initial environment as a tuple. (e.g. acc, prod, acceptance, test, etc.) The URL should be the base URL to your service
-    public init(name: String, initialEnvironment: (String, URL)) {
-        environments = [initialEnvironment.0 : initialEnvironment.1]
+    internal init(name: String, initialEnvironment: (String, URL)) {
+        environments = [EnvironmentPair(pair: initialEnvironment)]
         self.name = name
         self.backingCurrentEnvironment = initialEnvironment.0
     }
@@ -60,7 +84,7 @@ public class Entry {
     /// - Parameters:
     ///   - name: The name of the Entry
     ///   - environments: The list of environments and URLs. There must be at least one element in this or an assertion is raised. The first element is used as the initial current environment
-    public convenience init(name: String, environments: [(String, URL)]) {
+    internal convenience init(name: String, environments: [(String, URL)]) {
         precondition(environments.count > 0, "You must pass at least one environment par.")
         var environments = environments
         self.init(name:name, initialEnvironment: environments.removeFirst())
@@ -90,48 +114,26 @@ extension Entry {
     /// - Parameter path: The path to append
     /// - Returns: The new URL or nil if the URL could not be formed
     public func buildURLWith(path: String) -> URL? {
-        guard let baseURL = self.environments[self.currentEnvironment] else {
-            return nil
-        }
-        
-        return baseURL.appendingPathComponent(path)
+        return self.currentBaseUrl.appendingPathComponent(path)
     }
-    
-    /// Adds a new environment and corresponding baseURL to this entry
-    ///
-    /// - Parameters:
-    ///   - url: The base URL
-    ///   - environment: The environment it belongs to
-    public func add(url: URL, forEnvironment environment:String) {
-        self.environments[environment] = url
-    }
-    
-    /// Adds a new envvironemt and base URL to this entry
-    ///
-    /// - Parameter pair: The tuple representing the environment and baseUR:
-    public func add(pair: Pair) {
-        self.add(url: pair.baseUrl, forEnvironment: pair.environment)
-    }
-    
     
     /// Returns the base URL for a given environment, or nil if the environment does not exist for this entry
     ///
     /// - Parameter environment: The environment name
     /// - Returns: The base URL for that environment, or nil
     public func baseUrl(forEnvironment env: String) -> URL? {
-        return self.environments[env]
+        guard let index = self.environments.index(where: { $0.environment == env }) else {
+            return nil
+        }
+        return self.environments[index].baseUrl
     }
-    
-    
     
     /// Returns an unordered array of all of the current environments this manager is managing
     ///
     /// - Returns: An unordered array of environment names.
     public func environmentNames() -> [String] {
-        return Array(self.environments.keys)
+        return self.environments.map({ $0.environment })
     }
-
-    
     
     /// Attempts to select a new environment. If the environment is not currently known, or already selected no operation is performed. This does the same as setting the "currentEnvironment" variable directly
     ///
@@ -144,51 +146,36 @@ extension Entry {
 
 // MARK: - Index and IndexPath support
 extension Entry {
-    
-    /// This type represnts the sorting function signature used by many of the "forIndex" methods
-    public typealias SortSignature = (String, String) -> Bool
-    
-    // Sort ascending by default
-    private static let DefaultSort: SortSignature = { $0 < $1 }
-    
-    /// Returns an array of all environments the current entry supports. This will by default sort the names in ascending order. Pass your own sort closure to change the sorting behavior
-    ///
-    /// - Returns: An array of all environments for this entry
-    public func sortedEnvironmentNames(usingSortFunction function: SortSignature = DefaultSort ) -> [String] {
-        return Array(self.environments.keys).sorted(by: function)
-    }
-
-    
+        
     /// Returns the environment for a given index. The environemnts are put into a sorted order using a function. The default function is ascending.
     ///
     /// - Parameters:
     ///   - index: The index to search
     ///   - function: Optional paramter to override the default sort. The default is ascending
     /// - Returns: The environment as a string or nil if the index was out of bounds
-    public func environment(forIndex index: Int, usingSortFunction function: SortSignature = DefaultSort) -> String? {
-        return self.sortedEnvironmentNames(usingSortFunction: function)[safe: index]
+    public func environment(forIndex index: Int) -> String? {
+        return self.environmentNames()[safe: index]
     }
     
-    
     /// Returns the baseURL for a given index. The baseURLs are put into a sorted order using a function. The default function is ascending.
-
     ///
     /// - Parameters:
     ///   - index: The index to search
     ///   - function: Optional paramter to override the default sort. The default is ascending
     /// - Returns: The base URL as a URL or nil if the index was out of bounds
-    public func baseUrl(forIndex index: Int, usingSortFunction function: SortSignature = DefaultSort) -> URL? {
-        guard let environment = self.environment(forIndex: index, usingSortFunction: function) else {
+    public func baseUrl(forIndex index: Int) -> URL? {
+        guard let environment = self.environmentNames()[safe: index] else {
             return nil
         }
-        return self.environments[environment]
+        // TOOD: refactor. This is most likely horrendously ineficient. Need to probably support sorting the actual EnvironmentPair objects
+        return self.baseUrl(forEnvironment: environment)
     }
     
     /// Selects an environment at a given index. This will sort the environment by there name for selecting an index. The default sort is in ascending order
     ///
     /// - Parameter index: The index
-    public func selectEnvironment(forIndex index: Int, usingSortFunction function: SortSignature = DefaultSort) {
-        guard let environment = self.environments.keys.sorted(by: function)[safe: index] else {
+    public func selectEnvironment(forIndex index: Int) {
+        guard let environment = self.environmentNames()[safe: index] else {
             return
         }
         self.currentEnvironment = environment
@@ -200,7 +187,27 @@ extension Entry {
     ///
     /// - Parameter function: The sorting function to use, default is ascending
     /// - Returns: The index for the enironment, otherwise nil if the environment does not exist
-    public func indexForSelectedEnvironment(usingSortFunction function: SortSignature = DefaultSort) -> Int? {
-        return self.environments.keys.sorted(by: function).index(of: self.currentEnvironment)
+    public func indexForSelectedEnvironment() -> Int? {
+        return self.environmentNames().index(of: self.currentEnvironment)
+    }
+}
+
+
+// MARK: - Internal mutating functions
+extension Entry {
+    /// Adds a new environment and corresponding baseURL to this entry
+    ///
+    /// - Parameters:
+    ///   - url: The base URL
+    ///   - environment: The environment it belongs to
+    internal func add(url: URL, forEnvironment environment:String) {
+        self.environments.append(EnvironmentPair(environment: environment, baseUrl: url))
+    }
+    
+    /// Adds a new envvironemt and base URL to this entry
+    ///
+    /// - Parameter pair: The tuple representing the environment and baseUR:
+    internal func add(pair: Pair) {
+        self.add(url: pair.baseUrl, forEnvironment: pair.environment)
     }
 }

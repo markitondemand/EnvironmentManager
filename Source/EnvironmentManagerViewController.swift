@@ -75,7 +75,7 @@ class EnvironmentManagerViewcontroller: UITableViewController {
             let index = self.tableView.indexPath(for: cell)!.row
             controller.entry = self.environmentManager.entry(forIndex: index)
         case SegueIdentifiers.Exit:
-            self.environmentManager.save(usingStore: UserDefaultsStore())
+            self.environmentManager.save()
         default:
             return
         }

@@ -20,7 +20,7 @@ class EnvironmentEntryDetailViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifiers.EnvironmentCellIdentifier)!
-        let sortedEnvironmentNames = self.entry.sortedEnvironmentNames()
+        let sortedEnvironmentNames = self.entry.environmentNames()
         cell.textLabel?.text = sortedEnvironmentNames[indexPath.row]
         cell.accessoryType = self.entry.currentEnvironment == sortedEnvironmentNames[indexPath.row] ? .checkmark : .none
         return cell
