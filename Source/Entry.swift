@@ -128,9 +128,9 @@ extension Entry {
         return self.environments[index].baseUrl
     }
     
-    /// Returns an unordered array of all of the current environments this manager is managing
+    /// Returns an array of all of the current environments this manager is managing
     ///
-    /// - Returns: An unordered array of environment names.
+    /// - Returns: An array of environment names.
     public func environmentNames() -> [String] {
         return self.environments.map({ $0.environment })
     }
@@ -144,7 +144,7 @@ extension Entry {
 }
 
 
-// MARK: - Index and IndexPath support
+// MARK: - Index support
 extension Entry {
         
     /// Returns the environment for a given index. The environemnts are put into a sorted order using a function. The default function is ascending.
