@@ -139,7 +139,6 @@ extension EnvironmentManager {
 //    }
 }
 
-
 // MARK: - Mutators - internal. Use Builder() to add entries
 extension EnvironmentManager {
     /// Adds a single Entry to the environment manager. If the entry was persisted to the store that was passed on creation, it will update the current environment to match what the store has.
