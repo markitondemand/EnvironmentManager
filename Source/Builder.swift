@@ -3,6 +3,7 @@
 
 import Foundation
 import CSV
+import MD_Extensions
 
 
 /// Use an instance of the Builder to create your EnvironmentManager. This provides reasonable defaults, failsafes, and error handling in the event something is misconfigured on your end. You use this class by chaining calls to a single Builder() and ultimately end with a "build()" call.
@@ -164,16 +165,5 @@ extension Builder {
             product.add(apiName: name, environmentUrls:environmentPair)
         }
         return product
-    }
-}
-
-/// += operator for Dictionary. This takes the elements of the dictinary on the right and adds them to the elements of the dictionary on the left. Items on the left will be overwritten in the event of a key collision
-///
-/// - Parameters:
-///   - left: The dictionary to add elements to
-///   - right: The dictionary that will have its elements added from
-func +=<K, V> (left: inout [K : V], right: [K : V]) {
-    for (k, v) in right {
-        left[k] = v
     }
 }

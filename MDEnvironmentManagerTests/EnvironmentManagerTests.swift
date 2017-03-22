@@ -8,8 +8,8 @@ import Foundation
 
 
 class MDEnvironmentManagerTests: XCTestCase {
-    let defaultAccURL = URL(string: "http://acc.api.domain.com")!
-    let defaultProdURL = URL(string: "http://prod.api.domain.com")!
+    let defaultAccUrl = URL(string: "http://acc.api.domain.com")!
+    let defaultProdUrl = URL(string: "http://prod.api.domain.com")!
     
     var backingStore: DictionaryStore!
     
@@ -23,54 +23,16 @@ class MDEnvironmentManagerTests: XCTestCase {
     // Builders
     func defaultEnvironmentManager() -> EnvironmentManager {
         let en = EnvironmentManager(backingStore: self.backingStore)
-        en.add(apiName: "service1", environmentUrls: [("acc", defaultAccURL), ("prod", defaultProdURL)])
+        en.add(apiName: "service1", environmentUrls: [("acc", defaultAccUrl), ("prod", defaultProdUrl)])
         return en
     }
     
     // Tests
-    func  testEnvironmentChangingForAnEntry() {
-        let path = "the/path/to/resource/"
-        let expectedProdURL = URL(string: "http://prod.api.domain.com/the/path/to/resource/")!
-        let expectedAccURL = URL(string: "http://acc.api.domain.com/the/path/to/resource/")!
-        
-        let entry = Entry(name: "service1", initialEnvironment: ("prod", defaultProdURL))
-        
-        let prodURL = entry.buildURLWith(path: path)
-        
-        XCTAssertEqual(prodURL, expectedProdURL)
-        entry.add(url: defaultAccURL, forEnvironment: "acc")
-        
-        let prodURLTwo = entry.buildURLWith(path: path)
-        
-        // test current environment stays after adding another environment
-        XCTAssertEqual(prodURLTwo, expectedProdURL)
-        
-        entry.currentEnvironment = "acc"
-        let accURL = entry.buildURLWith(path: path)
-        XCTAssertEqual(accURL, expectedAccURL)
-        
-        // test that environment only changes if it is exists
-        entry.currentEnvironment = "unknown-environment"
-        XCTAssertEqual(entry.currentEnvironment, "acc")
-        
-        entry.select(environment: "prod")
-        XCTAssertEqual(entry.currentEnvironment, "prod")
-    }
-    
-    func testEntryGetters() {
-        let entry = Entry(name: "service", initialEnvironment: ("prod", defaultProdURL))
-        entry.add(url: defaultAccURL, forEnvironment: "acc")
-        
-        XCTAssertEqual(entry.environment(forIndex: 0), "prod")
-        
-        XCTAssertEqual(entry.baseUrl(forIndex: 1), defaultAccURL)
-        XCTAssertEqual(entry.baseUrl(forIndex: 0), defaultProdURL)
-    }
     
     func testEnvironmentManagerCreatesURL() {
         let path = "the/path/to/resource/"
-        let expectedProdURL = defaultProdURL.appendingPathComponent(path)
-        let expectedAccURL = defaultAccURL.appendingPathComponent(path)
+        let expectedProdURL = defaultProdUrl.appendingPathComponent(path)
+        let expectedAccURL = defaultAccUrl.appendingPathComponent(path)
         
         let em = EnvironmentManager()
         em.add(apiName: "service1", environmentUrls: [("acc", URL(string: "http://acc.api.domain.com")!), ("prod", URL(string: "http://prod.api.domain.com")!)])
@@ -95,7 +57,7 @@ class MDEnvironmentManagerTests: XCTestCase {
         let em = EnvironmentManager()
         em.add(apiName: "service1", environmentUrls: [("acc", URL(string: "http://acc.api.domain.com")!), ("prod", URL(string: "http://prod.api.domain.com")!)])
         
-        let observer = TestEnvironmentObserver()
+        let observer = TestEnvironmentNotificationObserver()
         
         // When
         em.select(environment: "prod", forAPI: "service1")
@@ -110,14 +72,14 @@ class MDEnvironmentManagerTests: XCTestCase {
         
         // test return service name + default to using ascending sort
         XCTAssertEqual(en.apiNames(), ["service1"])
-        en.add(apiName: "a", environmentUrls: [("acc", URL(string: "https://acc.api.other.com")!)])
+        en.add(apiName: "a", environmentUrls: [("acc", defaultAccUrl)])
         XCTAssertEqual(en.apiNames(), ["service1", "a"])
         
         // test return base API
-        XCTAssertEqual(en.baseUrl(apiName: "service1"), URL(string: "http://acc.api.domain.com")!)
+        XCTAssertEqual(en.baseUrl(apiName: "service1"), defaultAccUrl)
         
         en.select(environment: "prod", forAPI: "service1")
-        XCTAssertEqual(en.baseUrl(apiName: "service1"), URL(string: "http://prod.api.domain.com")!)
+        XCTAssertEqual(en.baseUrl(apiName: "service1"), defaultProdUrl)
         
         let entry = Entry(name: "Service", initialEnvironment: ("acc", URL(string:"http://acc.api.service.com")!))
         entry.add(url: URL(string:"http://prod.api.service.com")!, forEnvironment: "prod")
@@ -126,7 +88,7 @@ class MDEnvironmentManagerTests: XCTestCase {
     }
 
     func testReadWriteData() {
-        let environments = [("acc", defaultAccURL), ("prod", defaultProdURL)]
+        let environments = [("acc", defaultAccUrl), ("prod", defaultProdUrl)]
         let entry = Entry(name: "service1", environments: environments)
         
         let store = DictionaryStore()
@@ -141,17 +103,8 @@ class MDEnvironmentManagerTests: XCTestCase {
         XCTAssertEqual(en2.currentEnvironmentFor(apiName: "service1"), "prod")
     }
     
-    func testEntryEquatable() {
-        let entry1 = Entry(name: "Service1", initialEnvironment: ("acc", self.defaultAccURL))
-        let entry2 = Entry(name: "Service1", initialEnvironment: ("acc", self.defaultAccURL))
-        
-        XCTAssertEqual(entry1, entry2)
-        entry2.add(pair: ("prod", self.defaultProdURL))
-        XCTAssertNotEqual(entry1, entry2)
-    }
-    
     // helper
-    class TestEnvironmentObserver {
+    class TestEnvironmentNotificationObserver {
         var oldEnv: String!
         var newEnv: String!
         

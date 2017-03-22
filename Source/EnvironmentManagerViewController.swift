@@ -4,25 +4,20 @@
 import UIKit
 
 
-// MARK: - Exposing Storyboard
-extension UIStoryboard {
-    /// The name of the storyboard this belong to. you can segue to a Storyboad using this identifier
-    public static let environmentManagerStoryboardName = "EnvironmentManagerStoryboard"
-    
-    /// The storyboard that the EnvironmentManager uses for UI
-    public static var environmentManagerStoryboard: UIStoryboard {
-        return UIStoryboard(name: UIStoryboard.environmentManagerStoryboardName, bundle: BundleAccessor().resourceBundle)
-    }
-}
-
-
 /// Needed to work around an issue with cocoapods where they dont let you set your own bundle identifier
 class BundleAccessor {
     var resourceBundle: Bundle {
         let frameworkBundle = Bundle(for: type(of: self))
-        // Force unwrap here as this should "never" be nil. However this needs to be unit tested so run time issues are caught (i.e. resource bundle name changes)
-        //TODO: Fix tests
-        return Bundle(url: frameworkBundle.url(forResource: "MDEnvironmentManager", withExtension: "bundle")!)!
+        
+        // Note - If the app is installed via cocoapods our resources are in a separate resource bundle, but if it is installed another way (i.e. dragging source) then the resources are not in a separate "resource bundle" and are instead in the framework bundle.
+        // TODO: it may be possible to change how the project builds, so that it generate a framework with the given resource bundle name so that tests and what not work properly.
+        guard let resourceBundleURL = frameworkBundle.url(forResource: "MDEnvironmentManager", withExtension: "bundle") else {
+            return frameworkBundle
+        }
+        guard let bundle = Bundle(url: resourceBundleURL) else {
+            return frameworkBundle
+        }
+        return bundle
     }
 }
 
@@ -83,53 +78,34 @@ class EnvironmentManagerViewcontroller: UITableViewController {
     }
 }
 
-/// Implement this protocol method somewhere in your application where you presented this UI from to allow the environment manager to unwind. This function will be called when the presented viewcontroller unwinds
-public protocol Unwindable {
-    func unwind(toExit segue:UIStoryboardSegue)
-}
-
-
 // MARK: - Data Passing Between controller and storyboards
 extension UIViewController {
     
-    /// Helper method used for passing the EnvironmentManager into our segue
+    /// Helper method used for passing the EnvironmentManager into our segue.
     ///
     /// - Parameter environmentManager: The manager to pass
     public func pass(_ environmentManager: EnvironmentManager) {
-        guard let controller = self as? ManagerPassable else {
+        guard let controller = self as? EnvironmentManagerPassable else {
             return
         }
         controller.pass(environmentManager: environmentManager)
     }
 }
 
-extension UIStoryboardSegue {
-    /// Helper method used for passing the EnvironmentManager into our segue
-    ///
-    /// - Parameter environmentManager: The data to pass
-    public func pass(environmentManager: EnvironmentManager) {
-        guard let destination = self.destination as? ManagerPassable else {
-            return
-        }
-        destination.pass(environmentManager: environmentManager)
-    }
+/// Protocol that defines the entry point for passing a pre created EnvironmentManager to the UI
+protocol EnvironmentManagerPassable {
+    func pass(environmentManager: EnvironmentManager)
 }
 
-extension EnvironmentManagerViewcontroller: ManagerPassable {
+extension EnvironmentManagerViewcontroller: EnvironmentManagerPassable {
     func pass(environmentManager: EnvironmentManager) {
         self.environmentManager = environmentManager
     }
 }
 
-
-/// Protocol that defines the entry point for passing a pre created EnvironmentManager to the UI
-protocol ManagerPassable {
-    func pass(environmentManager: EnvironmentManager)
-}
-
-extension UINavigationController: ManagerPassable {
+extension UINavigationController: EnvironmentManagerPassable {
     func pass(environmentManager:EnvironmentManager) {
-        guard let environmentController = self.viewControllers.first as? ManagerPassable else {
+        guard let environmentController = self.viewControllers.first as? EnvironmentManagerPassable else {
             return
         }
         environmentController.pass(environmentManager: environmentManager)

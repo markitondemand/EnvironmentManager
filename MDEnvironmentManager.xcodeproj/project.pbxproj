@@ -8,12 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		283EB6751E65FE140004C1A3 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 283EB6741E65FE140004C1A3 /* DataStore.swift */; };
+		28440B6B1E79A1CD00E00667 /* EntryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28440B6A1E79A1CD00E00667 /* EntryTests.swift */; };
 		286CFFA11E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286CFFA01E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift */; };
+		287F06311E82ED02004937BA /* Storyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287F06301E82ED02004937BA /* Storyboard.swift */; };
 		288C829C1E69E0E6001E70F4 /* CSVTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288C829B1E69E0E6001E70F4 /* CSVTests.swift */; };
 		28A492841E722F4600FF690B /* EnvironmentManagerStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28AB956F1E60CE69000EAEA9 /* EnvironmentManagerStoryboard.storyboard */; };
 		28A492861E7361AA00FF690B /* BundleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A492851E7361AA00FF690B /* BundleTests.swift */; };
 		28AB95521E5E3062000EAEA9 /* MDEnvironmentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 28AB95501E5E3062000EAEA9 /* MDEnvironmentManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		28AB955F1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AB955E1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift */; };
+		28AB955F1E5E3130000EAEA9 /* EnvironmentManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AB955E1E5E3130000EAEA9 /* EnvironmentManagerTests.swift */; };
 		28AB95611E5E3130000EAEA9 /* MDEnvironmentManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28AB954D1E5E3062000EAEA9 /* MDEnvironmentManager.framework */; };
 		28AB95691E5E4135000EAEA9 /* EnvironmentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AB95681E5E4135000EAEA9 /* EnvironmentManager.swift */; };
 		28AB956B1E60B2EB000EAEA9 /* Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AB956A1E60B2EB000EAEA9 /* Entry.swift */; };
@@ -53,14 +55,16 @@
 		02ADF07F38CF7C1946C57620 /* Pods-MDEnvironmentManager.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MDEnvironmentManager.release.xcconfig"; path = "Pods/Target Support Files/Pods-MDEnvironmentManager/Pods-MDEnvironmentManager.release.xcconfig"; sourceTree = "<group>"; };
 		18B4DE39BA1B428233046F14 /* Pods_MDEnvironmentManagerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MDEnvironmentManagerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		283EB6741E65FE140004C1A3 /* DataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataStore.swift; path = Source/DataStore.swift; sourceTree = SOURCE_ROOT; };
+		28440B6A1E79A1CD00E00667 /* EntryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntryTests.swift; sourceTree = "<group>"; };
 		286CFFA01E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnvironmentEntryDetailViewController.swift; path = Source/EnvironmentEntryDetailViewController.swift; sourceTree = SOURCE_ROOT; };
+		287F06301E82ED02004937BA /* Storyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Storyboard.swift; path = Source/Storyboard.swift; sourceTree = SOURCE_ROOT; };
 		288C829B1E69E0E6001E70F4 /* CSVTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSVTests.swift; sourceTree = "<group>"; };
 		28A492851E7361AA00FF690B /* BundleTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BundleTests.swift; sourceTree = "<group>"; };
 		28AB954D1E5E3062000EAEA9 /* MDEnvironmentManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MDEnvironmentManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		28AB95501E5E3062000EAEA9 /* MDEnvironmentManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MDEnvironmentManager.h; sourceTree = "<group>"; };
 		28AB95511E5E3062000EAEA9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		28AB955C1E5E3130000EAEA9 /* MDEnvironmentManagerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MDEnvironmentManagerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		28AB955E1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDEnvironmentManagerTests.swift; sourceTree = "<group>"; };
+		28AB955E1E5E3130000EAEA9 /* EnvironmentManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentManagerTests.swift; sourceTree = "<group>"; };
 		28AB95601E5E3130000EAEA9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		28AB95681E5E4135000EAEA9 /* EnvironmentManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnvironmentManager.swift; path = Source/EnvironmentManager.swift; sourceTree = SOURCE_ROOT; };
 		28AB956A1E60B2EB000EAEA9 /* Entry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Entry.swift; path = Source/Entry.swift; sourceTree = SOURCE_ROOT; };
@@ -142,7 +146,7 @@
 		28AB954F1E5E3062000EAEA9 /* MDEnvironmentManager */ = {
 			isa = PBXGroup;
 			children = (
-				28E0E1D21E77584F00B0CD70 /* Pod Metadata */,
+				28E0E1D21E77584F00B0CD70 /* Podspec Metadata */,
 				28AB95671E5E40A4000EAEA9 /* Source */,
 				28AB956E1E60CDFC000EAEA9 /* Resources */,
 				28AB95501E5E3062000EAEA9 /* MDEnvironmentManager.h */,
@@ -156,9 +160,10 @@
 			children = (
 				28AB95601E5E3130000EAEA9 /* Info.plist */,
 				288C829B1E69E0E6001E70F4 /* CSVTests.swift */,
-				28AB955E1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift */,
+				28AB955E1E5E3130000EAEA9 /* EnvironmentManagerTests.swift */,
 				28C57B001E6E2875000F6B32 /* BuilderTests.swift */,
 				28A492851E7361AA00FF690B /* BundleTests.swift */,
+				28440B6A1E79A1CD00E00667 /* EntryTests.swift */,
 			);
 			path = MDEnvironmentManagerTests;
 			sourceTree = "<group>";
@@ -173,6 +178,7 @@
 				283EB6741E65FE140004C1A3 /* DataStore.swift */,
 				28C57B061E6F7FAC000F6B32 /* Builder.swift */,
 				28BA27541E6F805E00CA0949 /* CSVSupport.swift */,
+				287F06301E82ED02004937BA /* Storyboard.swift */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -199,13 +205,13 @@
 			path = Example;
 			sourceTree = "<group>";
 		};
-		28E0E1D21E77584F00B0CD70 /* Pod Metadata */ = {
+		28E0E1D21E77584F00B0CD70 /* Podspec Metadata */ = {
 			isa = PBXGroup;
 			children = (
 				28E0E1D41E77588B00B0CD70 /* MDEnvironmentManager.podspec */,
 				28E0E1D31E77587400B0CD70 /* LICENSE.txt */,
 			);
-			name = "Pod Metadata";
+			name = "Podspec Metadata";
 			sourceTree = "<group>";
 		};
 		6FB3827BDC9E46A9DD86D7B7 /* Pods */ = {
@@ -515,6 +521,7 @@
 				28AB95691E5E4135000EAEA9 /* EnvironmentManager.swift in Sources */,
 				28C57B081E6F8014000F6B32 /* Builder.swift in Sources */,
 				28BA27551E6F805E00CA0949 /* CSVSupport.swift in Sources */,
+				287F06311E82ED02004937BA /* Storyboard.swift in Sources */,
 				286CFFA11E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift in Sources */,
 				283EB6751E65FE140004C1A3 /* DataStore.swift in Sources */,
 				28AB956B1E60B2EB000EAEA9 /* Entry.swift in Sources */,
@@ -527,8 +534,9 @@
 			files = (
 				288C829C1E69E0E6001E70F4 /* CSVTests.swift in Sources */,
 				28A492861E7361AA00FF690B /* BundleTests.swift in Sources */,
+				28440B6B1E79A1CD00E00667 /* EntryTests.swift in Sources */,
 				28C57B011E6E2875000F6B32 /* BuilderTests.swift in Sources */,
-				28AB955F1E5E3130000EAEA9 /* MDEnvironmentManagerTests.swift in Sources */,
+				28AB955F1E5E3130000EAEA9 /* EnvironmentManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
