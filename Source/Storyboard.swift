@@ -7,10 +7,10 @@ import Foundation
 // MARK: - Exposing Storyboard
 extension UIStoryboard {
     /// The name of the storyboard this belong to. you can segue to a Storyboad using this identifier
-    static let environmentManagerStoryboardName = "EnvironmentManagerStoryboard"
+    public static let environmentManagerStoryboardName = "EnvironmentManagerStoryboard"
     
     /// The storyboard that the EnvironmentManager uses for UI
-    static var environmentManagerStoryboard: UIStoryboard {
+    public static var environmentManagerStoryboard: UIStoryboard {
         return UIStoryboard(name: UIStoryboard.environmentManagerStoryboardName, bundle: BundleAccessor().resourceBundle)
     }
 }
