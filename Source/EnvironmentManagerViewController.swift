@@ -23,12 +23,15 @@ class BundleAccessor {
 
 /// This class manages a default UI for selecting environments
 class EnvironmentManagerViewcontroller: UITableViewController {
-    private enum SegueIdentifiers {
-        static let Exit = "Exit"
-        static let EnvironmentDetails = "EnvironmentDetails"
+    private enum Segue: String {
+        case Exit = "Exit"
+        case EnvironmentDetails = "EnvironmentDetails"
+        case AddEnvironment = "AddEnvironment"
     }
+    
     private enum CellIdentifiers {
         static let APICellIdentifier = "APICellIdentifier"
+        static let AddCellIdentifier = "AddEnvironmentIdentifier"
     }
     
     var environmentManager: EnvironmentManager!
@@ -53,12 +56,12 @@ class EnvironmentManagerViewcontroller: UITableViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let identifier = segue.identifier else {
+        guard let segueID = Segue(rawValue: segue.identifier ?? "") else {
             return
         }
         
-        switch identifier {
-        case SegueIdentifiers.EnvironmentDetails:
+        switch segueID {
+        case .EnvironmentDetails:
             guard let controller = segue.destination as? EnvironmentEntryDetailViewController else {
                 return
             }
@@ -69,10 +72,10 @@ class EnvironmentManagerViewcontroller: UITableViewController {
             
             let index = self.tableView.indexPath(for: cell)!.row
             controller.entry = self.environmentManager.entry(forIndex: index)
-        case SegueIdentifiers.Exit:
+        case .AddEnvironment:
+            fallthrough
+        case .Exit:
             self.environmentManager.save()
-        default:
-            return
         }
 
     }

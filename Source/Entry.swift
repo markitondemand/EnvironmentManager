@@ -85,7 +85,7 @@ public class Entry {
     ///   - name: The name of the Entry
     ///   - environments: The list of environments and URLs. There must be at least one element in this or an assertion is raised. The first element is used as the initial current environment
     internal convenience init(name: String, environments: [(String, URL)]) {
-        precondition(environments.count > 0, "You must pass at least one environment par.")
+        precondition(environments.count > 0, "You must pass at least one environment pair.")
         var environments = environments
         self.init(name:name, initialEnvironment: environments.removeFirst())
         for remaining in environments {

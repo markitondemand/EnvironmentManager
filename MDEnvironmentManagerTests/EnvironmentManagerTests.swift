@@ -103,17 +103,39 @@ class MDEnvironmentManagerTests: XCTestCase {
         XCTAssertEqual(en2.currentEnvironmentFor(apiName: "service1"), "prod")
     }
     
+    func testAddCustomEnvironment() {
+        let store = DictionaryStore()
+        let en = EnvironmentManager(backingStore: store)
+        
+        let entry = Entry(name: "Test", initialEnvironment: ("acc", URL(string: "http://acc.api.service.com")!))
+        en.createCustomEntry(entry)
+        
+        // Then
+        XCTAssertEqual(en.currentEnvironmentFor(apiName: "Test"), "acc")
+        
+    }
+    
+    func testRemoveCustomEnvironment() {
+        XCTFail()
+    }
+    
+//    func testOnlyAllowOne
+    
     // helper
     class TestEnvironmentNotificationObserver {
         var oldEnv: String!
         var newEnv: String!
+        var callBackBlock: ((TestEnvironmentNotificationObserver) -> Void)?
         
         init() {
             NotificationCenter.default.addObserver(forName: Notification.Name.EnvironmentDidChange, object: nil, queue: nil) { (notification: Notification) in
                 self.oldEnv = notification.userInfo?[EnvironmentChangedKeys.OldEnvironment] as? String ?? ""
                 self.newEnv = notification.userInfo?[EnvironmentChangedKeys.NewEnvironment] as? String ?? ""
+                self.callBackBlock?(self)
             }
         }
+        
+        
     }
 }
 

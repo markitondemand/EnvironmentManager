@@ -38,7 +38,7 @@ public class EnvironmentManager {
     /// - Parameters:
     ///   - initialEntries: The initial entries to use
     ///   - backingStore: The store to load persisted environment from (if applicable). The user defaults will be used to read and write environment information to by default
-    internal init(initialEntries: [Entry] = [], backingStore: DataStore = UserDefaultsStore()) {
+    internal init(_ initialEntries: [Entry] = [], backingStore: DataStore = UserDefaultsStore()) {
         self.store = backingStore
         let environments = self.store.readEnvironments()
         for entry in initialEntries {
@@ -59,7 +59,7 @@ public class EnvironmentManager {
             return dict
         }
         
-        store.write(environments:reduced)
+        store.write(reduced)
     }
     
     
@@ -175,7 +175,7 @@ extension EnvironmentManager {
 
 // MARK: - Convenience extension for accessing our data from the DataStore
 internal extension DataStore {
-    internal var privateStoreKey: String {
+    private var privateStoreKey: String {
          return "com.markit.EnvironmentMenanager"
     }
 
@@ -183,9 +183,10 @@ internal extension DataStore {
         return self.readEnvironments()[service]
     }
     
-    mutating func write(environments: [String: String]) {
+    mutating func write(_ environments: [String: String]) {
         self[privateStoreKey] = environments
     }
+    
     
     func readEnvironments() -> [String: String] {
         guard let environmentsDictionary = self[privateStoreKey] as? [String: String] else {
