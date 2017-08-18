@@ -2,11 +2,13 @@
 //
 
 import Foundation
+import CSV
+import MD_Extensions
 
 
 /// Simple datastructure represneting an API and its associated enviroments, as not all APIs will have the same number of enviromments (e.g. some may have a dev, where others wont, like client APIs)
 public class Entry {
-    fileprivate struct EnvironmentPair: Equatable, Hashable {
+    internal struct EnvironmentPair: Equatable, Hashable {
         let environment: String
         let baseUrl: URL
         
@@ -36,7 +38,7 @@ public class Entry {
     public let name: String
     
     // Data structure to hold the environments for this Entry
-    fileprivate var environments: [EnvironmentPair]
+    internal fileprivate(set) var environments: [EnvironmentPair]
     
     /// This variable is needed to define a backing store variable because when you override the set or get on a property they lose their backing variable
     internal var backingCurrentEnvironment: String
@@ -72,7 +74,7 @@ public class Entry {
     /// - Parameters:
     ///   - name: The name of the entry, this should be something like the name of your API, (e.g. "MDQuoteService")
     ///   - initialEnvironment: The initial environment as a tuple. (e.g. acc, prod, acceptance, test, etc.) The URL should be the base URL to your service
-    internal init(name: String, initialEnvironment: (String, URL)) {
+    public init(name: String, initialEnvironment: (String, URL)) {
         environments = [EnvironmentPair(pair: initialEnvironment)]
         self.name = name
         self.backingCurrentEnvironment = initialEnvironment.0
@@ -84,7 +86,7 @@ public class Entry {
     /// - Parameters:
     ///   - name: The name of the Entry
     ///   - environments: The list of environments and URLs. There must be at least one element in this or an assertion is raised. The first element is used as the initial current environment
-    internal convenience init(name: String, environments: [(String, URL)]) {
+    public convenience init(name: String, environments: [(String, URL)]) {
         precondition(environments.count > 0, "You must pass at least one environment pair.")
         var environments = environments
         self.init(name:name, initialEnvironment: environments.removeFirst())
@@ -209,5 +211,28 @@ extension Entry {
     /// - Parameter pair: The tuple representing the environment and baseUR:
     internal func add(pair: Pair) {
         self.add(url: pair.baseUrl, forEnvironment: pair.environment)
+    }
+}
+
+// MARK: - Storage to DataStore
+extension Entry {
+    func writeToStore(_ store: DataStore) {
+        var store = store
+        
+        
+        if store["CustomEntryStorage"] == nil {
+            store["CustomEntryStorage"] = [[String: Any]]()
+        }
+        
+        var array = store["CustomEntryStorage"] as! [[String: Any]]
+        array.append(self.serialize())
+        store["CustomEntryStorage"] = array
+    }
+    
+    // TOOD: port Entry to `Codeable` in swift 4
+    private func serialize() -> [String: [[String: String]]] {
+        let name = self.name
+        let pairs = self.environments
+        return [name: pairs.map { [$0.environment: $0.baseUrl.absoluteString] }]
     }
 }

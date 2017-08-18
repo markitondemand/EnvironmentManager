@@ -13,6 +13,8 @@ class EntryTests: XCTestCase {
     let defaultAccUrl = URL(string: "http://acc.api.domain.com")!
     let defaultProdUrl = URL(string: "http://prod.api.domain.com")!
     
+    var testEntry: Entry { return Entry(name: "Service", initialEnvironment: ("acc", defaultAccUrl)) }
+    
     func  testEnvironmentChangingForAnEntry() {
         let path = "the/path/to/resource/"
         let expectedProdURL = URL(string: "http://prod.api.domain.com/the/path/to/resource/")!
@@ -60,4 +62,43 @@ class EntryTests: XCTestCase {
         entry2.add(pair: ("prod", self.defaultProdUrl))
         XCTAssertNotEqual(entry1, entry2)
     }
+    
+    // Create CSV tests
+    
+    func testWritesToCSVRow() {
+        let csv = testEntry.asCSV
+        XCTAssertEqual(csv, "Service|acc|http://acc.api.domain.com")
+    }
+    
+    func testCreatesFromCSVRow() {
+        
+        let csvRow = "Service|acc|http://acc.api.domain.com"
+        
+        // When
+        let entry = Entry(csv: csvRow)
+        
+        XCTAssertEqual(entry, testEntry)
+        
+    }
+    
+    func testCreateMultipleEnvironments() {
+        // Given
+        let csvRows = "Service|acc|http://acc.api.domain.com\nService|prod|http://prod.api.domain.com"
+        // When
+        let entry = Entry(csv: csvRows)!
+        
+        XCTAssertEqual(entry.environmentNames(), ["acc", "prod"])
+    }
+    
+    func testCreateMultipleEnvironmentsWithDifferingNamesFails() {
+        // Given
+        let csvRows = "Service|acc|http://acc.api.domain.com\nOtherService|prod|http://prod.api.domain.com"
+        
+        // When
+        let entry = Entry(csv: csvRows)
+        
+        // Then
+        XCTAssertNil(entry)
+    }
+
 }

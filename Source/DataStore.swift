@@ -5,6 +5,9 @@
 // TOOD: move this to its own common code
 import Foundation
 
+public protocol Stringable {
+    var stringValue: String { get }
+}
 
 /// The DataStore is an abstract class for storing data in different ways. It separates the "How" and the "What".
 public protocol DataStore {

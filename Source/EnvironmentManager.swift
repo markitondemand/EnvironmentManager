@@ -29,8 +29,20 @@ public enum EnvironmentChangedKeys: String {
 
 /// This is the main class of the EnvironmentManager. To create one please use a Builder() instance.
 public class EnvironmentManager {
+    typealias EntryAsStoreable = [String:[String: String]]
     public let store: DataStore    
     fileprivate var entries: [Entry] = []
+    fileprivate var customEntries: [Entry] = []//{
+//        get {
+//            let customEntries = self.store["CustomEntryKey"] as! [EntryAsStoreable]
+//            
+//            return
+//        }
+//        set (entry) {
+//            
+//        }
+//    }
+
     
     
     /// Createsa a new EnvironmentManager using an array of pre created Entry objects.
@@ -89,7 +101,7 @@ public class EnvironmentManager {
     /// - Parameter apiName: The name of the API to check what the currently selected environment is
     /// - Returns: The environment name, or nil if that API name is not registered with the manager
     public func currentEnvironmentFor(apiName: String) -> String? {
-        return self.entries.first(where: { $0.name == apiName })?.currentEnvironment
+        return (self.entries + self.customEntries).first(where: {$0.name == apiName })?.currentEnvironment
     }
     
     
@@ -121,6 +133,10 @@ public class EnvironmentManager {
     /// - Returns: The corresponding Entry or nil
     public func entry(forService service: String) -> Entry? {
         return self.entries.first(where: { $0.name == service })
+    }
+    
+    public func createCustomEntry(_ entry: Entry) {
+        self.customEntries.append(entry)
     }
     
 }

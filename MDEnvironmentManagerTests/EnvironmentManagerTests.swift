@@ -11,6 +11,8 @@ class MDEnvironmentManagerTests: XCTestCase {
     let defaultAccUrl = URL(string: "http://acc.api.domain.com")!
     let defaultProdUrl = URL(string: "http://prod.api.domain.com")!
     
+    var testEntry: Entry { return Entry(name: "TestEntry", initialEnvironment: ("acc", defaultAccUrl)) }
+    
     var backingStore: DictionaryStore!
     
     override func setUp() {
@@ -103,6 +105,9 @@ class MDEnvironmentManagerTests: XCTestCase {
         XCTAssertEqual(en2.currentEnvironmentFor(apiName: "service1"), "prod")
     }
     
+    
+    
+    // MARK: - custom entries
     func testAddCustomEnvironment() {
         let store = DictionaryStore()
         let en = EnvironmentManager(backingStore: store)
@@ -112,7 +117,19 @@ class MDEnvironmentManagerTests: XCTestCase {
         
         // Then
         XCTAssertEqual(en.currentEnvironmentFor(apiName: "Test"), "acc")
+
+    }
+    
+    func testCustomEntryStoresToDataStore() {
+        let store = DictionaryStore()
+        let en1 = EnvironmentManager(backingStore: store)
         
+        en1.createCustomEntry(testEntry)
+        
+        let en2 = EnvironmentManager(backingStore: store)
+        
+        // Then
+//        XCTAssertEqual(en2.currentEnvironmentFor(apiName: "TestEntry"), "acc")
     }
     
     func testRemoveCustomEnvironment() {
