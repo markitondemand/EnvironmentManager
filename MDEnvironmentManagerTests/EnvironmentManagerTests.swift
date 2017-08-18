@@ -133,7 +133,17 @@ class MDEnvironmentManagerTests: XCTestCase {
     }
     
     func testRemoveCustomEnvironment() {
-        XCTFail()
+        let store = DictionaryStore()
+        let en1 = EnvironmentManager(backingStore: store)
+        
+        en1.createCustomEntry(testEntry)
+        
+        let en2 = EnvironmentManager(backingStore: store)
+        
+        XCTAssertNotNil(en2.entry(forService: "TestEntry"))
+        en2.removeEntry("TestEntry")
+        
+        XCTAssertNil(en2.entry(forService: "TestEntry"))
     }
     
 //    func testOnlyAllowOne

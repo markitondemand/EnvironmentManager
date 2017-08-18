@@ -42,15 +42,12 @@ public class EnvironmentManager {
         set (entries) {
             var array = [String]()
             array.append(contentsOf: entries.map({ $0.asCSV }))
-
-            if var alreadyStored = self.store["CustomEntryKey"] as? [String] {
-                alreadyStored.append(contentsOf: array)
-                self.store["CustomEntryKey"] = alreadyStored
-            }
-            else {
-                self.store["CustomEntryKey"] = array
-            }
+            self.store["CustomEntryKey"] = array
         }
+    }
+    
+    fileprivate var totalEntries: [Entry] {
+        return entries + customEntries
     }
 
     
@@ -89,7 +86,7 @@ public class EnvironmentManager {
     ///
     /// - Returns: The names of all APIs currently managed
     public func apiNames() -> [String] {
-        return self.entries.map({ $0.name })
+        return self.totalEntries.map({ $0.name })
     }
     
     /// Builds a full URL for a given base API.
@@ -111,7 +108,7 @@ public class EnvironmentManager {
     /// - Parameter apiName: The name of the API to check what the currently selected environment is
     /// - Returns: The environment name, or nil if that API name is not registered with the manager
     public func currentEnvironmentFor(apiName: String) -> String? {
-        return (self.entries + self.customEntries).first(where: {$0.name == apiName })?.currentEnvironment
+        return self.totalEntries.first(where: {$0.name == apiName })?.currentEnvironment
     }
     
     
@@ -120,7 +117,7 @@ public class EnvironmentManager {
     /// - Parameter apiName: The name of the API
     /// - Returns: A base URL or nil if that API name cannot be found
     public func baseUrl(apiName: String) -> URL? {
-        return self.entries.first(where: { $0.name == apiName })?.currentBaseUrl
+        return self.totalEntries.first(where: { $0.name == apiName })?.currentBaseUrl
     }
     
     /// Attempts to select a new environment for a given API. If the environment succefully changes for an API a notification will be posted. Please see the "EnvironmentDidChange": notifcation
@@ -142,17 +139,32 @@ public class EnvironmentManager {
     /// - Parameter service: The name of the service
     /// - Returns: The corresponding Entry or nil
     public func entry(forService service: String) -> Entry? {
-        return self.entries.first(where: { $0.name == service })
+        return self.totalEntries.first(where: { $0.name == service })
     }
     
     public func createCustomEntry(_ entry: Entry) {
         self.customEntries.append(entry)
     }
     
+    
+    /// Removes a custom entry. This will _not_ remove an entry that may have been aded via the Builder, .csv file, or `self.add(entry: Entry)`
+    ///
+    /// - Parameter name: <#name description#>
+    public func removeEntry(_ name: String) {
+        guard let index = self.customEntries.index(where: {$0.name == name}) else {
+            return
+        }
+        
+        var customEntries = self.customEntries
+        customEntries.remove(at: index)
+        self.customEntries = customEntries
+    }
 }
 
 // MARK: - Index and IndexPath support
 extension EnvironmentManager {
+    
+    /// Returns an entry from a given index. this only cares about entries passed on creation from the Builder or the .csv file
     public func entry(forIndex index: Int) -> Entry? {
         return self.entries[safe: index]
     }
@@ -167,7 +179,7 @@ extension EnvironmentManager {
 
 // MARK: - Mutators - internal. Use Builder() to add entries
 extension EnvironmentManager {
-    /// Adds a single Entry to the environment manager. If the entry was persisted to the store that was passed on creation, it will update the current environment to match what the store has.
+    /// Adds a single Entry to the environment manager. If the entry's selected environment was persisted to the store in the past, it will update the current environment to match what the store has.
     ///
     /// - Parameter entry: The entry to add
     internal func add(entry: Entry) {
