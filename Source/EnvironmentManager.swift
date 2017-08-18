@@ -30,18 +30,28 @@ public enum EnvironmentChangedKeys: String {
 /// This is the main class of the EnvironmentManager. To create one please use a Builder() instance.
 public class EnvironmentManager {
     typealias EntryAsStoreable = [String:[String: String]]
-    public let store: DataStore    
+    public var store: DataStore
     fileprivate var entries: [Entry] = []
-    fileprivate var customEntries: [Entry] = []//{
-//        get {
-//            let customEntries = self.store["CustomEntryKey"] as! [EntryAsStoreable]
-//            
-//            return
-//        }
-//        set (entry) {
-//            
-//        }
-//    }
+    fileprivate var customEntries: [Entry] {
+        get {
+            guard let customEntries = self.store["CustomEntryKey"] as? [String] else {
+                return []
+            }
+            return customEntries.map( {Entry(csv: $0) }).flatMap { $0 }
+        }
+        set (entries) {
+            var array = [String]()
+            array.append(contentsOf: entries.map({ $0.asCSV }))
+
+            if var alreadyStored = self.store["CustomEntryKey"] as? [String] {
+                alreadyStored.append(contentsOf: array)
+                self.store["CustomEntryKey"] = alreadyStored
+            }
+            else {
+                self.store["CustomEntryKey"] = array
+            }
+        }
+    }
 
     
     

@@ -129,7 +129,7 @@ class MDEnvironmentManagerTests: XCTestCase {
         let en2 = EnvironmentManager(backingStore: store)
         
         // Then
-//        XCTAssertEqual(en2.currentEnvironmentFor(apiName: "TestEntry"), "acc")
+        XCTAssertEqual(en2.currentEnvironmentFor(apiName: "TestEntry"), "acc")
     }
     
     func testRemoveCustomEnvironment() {
