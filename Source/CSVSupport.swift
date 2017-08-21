@@ -25,7 +25,7 @@ extension Builder {
     /// - Parameter csv: The csv string
     /// - Returns: The current builder
     /// - Throws: If there is a parse error, the error will be wrapped in BuildError.CSVParsingError()
-    public func add(_ csv: String) throws -> Self {
+    @discardableResult public func add(_ csv: String) throws -> Self {
         do {
             let parsed = try CSV(string: csv, hasHeaderRow: true, trimFields: true, delimiter: Token.Delimiter)
             return add(parsed)
@@ -46,7 +46,7 @@ extension Builder {
     /// - Parameter csvStream: The stream to use
     /// - Returns: The current builder
     /// - Throws: If there is a parse error, the error will be wrapped in BuildError.CSVParsingError()
-    public func add(_ csvStream: InputStream) throws -> Self {
+    @discardableResult public func add(_ csvStream: InputStream) throws -> Self {
         do {
             let parsed = try CSV(stream: csvStream, hasHeaderRow: true, trimFields: true, delimiter: Token.Delimiter)
             return add(parsed)
@@ -64,7 +64,7 @@ extension Builder {
                     continue // possibly throw error here for invalid csv scheme
             }
             
-            _ = self.add(entry: serviceName, environments: [(environment, baseUrlString)])
+            self.add(entry: serviceName, environments: [(environment, baseUrlString)])
         }
         return self
     }
@@ -74,6 +74,12 @@ extension Builder {
 
 // MARK: - Entry TO and FROM CSV
 extension Entry {
+    
+    /// Converts the current Entry to a valid CSV string
+    ///
+    /// An entry with three environments will generate a CSV string with three line items in the following form, appending new lines if necessary `[Service]|[Name]|[URL]`
+    /// Example Usage:
+    /// `let csvString = entry.asCSV`
     public var asCSV: String {
         get {
             let stream = OutputStream(toMemory: ())
@@ -97,7 +103,15 @@ extension Entry {
     
     /// This initializer expects a CSV string formatted in the following way
     /// `[ServiceName]|[EnvironmentName]|[URL]`
-    /// Alternatively, if an Entry needs more than one environment a String can be passed with additional environments (name and URL). As long as the [ServiceName] matches, this will create an Entry. If the [ServiceName] mismatches than nil will be returned. Essentially, follow the prescribed format.
+    /// Alternatively, if an Entry needs more than one environment a CSV string can be passed, appending additional CSV lines. As long as the [ServiceName] matches, this will create an Entry. If the [ServiceName] mismatches than nil will be returned. Essentially, follow the prescribed format.
+    /// 
+    /// Example Usage:
+    /// `Service1|acc|http://acc.api.service.com\n
+    ///  Serivce1|prod|http://prod.api.service.com`
+    ///
+    /// Invalid usage that will result in nil:
+    /// `Service1|acc|http://acc.api.service.com\n
+    ///  OtherService|prod|http://prod.api.service.com`
     convenience init?(csv: String) {
         guard let stringData = csv.data(using: .utf8) else {
             return nil

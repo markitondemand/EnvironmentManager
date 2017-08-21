@@ -63,11 +63,20 @@ class EntryTests: XCTestCase {
         XCTAssertNotEqual(entry1, entry2)
     }
     
-    // Create CSV tests
-    
+    // MARK: - Create CSV Tests
     func testWritesToCSVRow() {
         let csv = testEntry.asCSV
         XCTAssertEqual(csv, "Service|acc|http://acc.api.domain.com")
+    }
+    
+    func testMultipleEnvironemntsToCSV() {
+        let entry = testEntry
+        entry.add(pair: Entry.Pair("prod", defaultProdUrl))
+        
+        // When
+        let csv = entry.asCSV
+        
+        XCTAssertEqual(csv, "Service|acc|http://acc.api.domain.com\nService|prod|http://prod.api.domain.com")
     }
     
     func testCreatesFromCSVRow() {
