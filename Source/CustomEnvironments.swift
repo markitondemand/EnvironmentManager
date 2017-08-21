@@ -48,7 +48,7 @@ class CustomEntryStore {
         let entryToUpdate: Entry
         if let entry = self[name] {
             environments.forEach {
-                entry.add(pair: $0)
+                entry.add($0)
             }
             entryToUpdate = entry
         }

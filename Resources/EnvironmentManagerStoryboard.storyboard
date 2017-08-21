@@ -5,6 +5,7 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -64,46 +65,82 @@
             </objects>
             <point key="canvasLocation" x="-836" y="-18"/>
         </scene>
-        <!--Add-->
-        <scene sceneID="wM7-Ze-nfD">
+        <!--EntryName-->
+        <scene sceneID="Qzj-fC-rL6">
             <objects>
-                <tableViewController id="Ib7-uC-5vk" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="Nbd-cS-YBR">
+                <viewController id="72Y-Xr-4Kv" customClass="AddEnvironmentViewController" customModule="MDEnvironmentManager" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="l2B-je-Bsv"/>
+                        <viewControllerLayoutGuide type="bottom" id="HDH-Rv-Cs6"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ysQ-yi-6Nd">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="ov5-jE-Nut">
+                                <rect key="frame" x="16" y="40" width="343" height="75"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="nhG-bx-Ui0">
+                                        <rect key="frame" x="0.0" y="0.0" width="343" height="30"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dtX-M9-Cfb">
+                                                <rect key="frame" x="0.0" y="0.0" width="45" height="30"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Environment Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Way-2b-ONq">
+                                                <rect key="frame" x="55" y="0.0" width="288" height="30"/>
+                                                <nil key="textColor"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits"/>
+                                            </textField>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Syk-AQ-ocd">
+                                        <rect key="frame" x="0.0" y="45" width="343" height="30"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="End Point" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wfQ-g5-mi5">
+                                                <rect key="frame" x="0.0" y="0.0" width="73" height="30"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Base API Path" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="e2B-Tr-Fv6">
+                                                <rect key="frame" x="83" y="0.0" width="260" height="30"/>
+                                                <nil key="textColor"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits"/>
+                                            </textField>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CustomEnvironmentCell" id="LfB-5J-loh">
-                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="LfB-5J-loh" id="Jin-aA-HYV">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="Ib7-uC-5vk" id="SWb-rU-IPa"/>
-                            <outlet property="delegate" destination="Ib7-uC-5vk" id="tmB-dN-Pbs"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" title="Add" id="gU3-Ea-dt6">
-                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="bAF-hd-lb9">
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="ov5-jE-Nut" secondAttribute="trailing" id="DOY-yv-wHl"/>
+                            <constraint firstItem="ov5-jE-Nut" firstAttribute="top" secondItem="l2B-je-Bsv" secondAttribute="bottom" constant="20" id="cnd-4b-LKW"/>
+                            <constraint firstItem="ov5-jE-Nut" firstAttribute="leading" secondItem="ysQ-yi-6Nd" secondAttribute="leadingMargin" id="xfZ-Ss-8go"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="EntryName" id="Jym-IH-0Td">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="teF-0I-hHc">
                             <connections>
-                                <segue destination="iFw-Tc-6Er" kind="unwind" identifier="CancelSegue" unwindAction="unwindToExit:" id="5be-4V-Nb7"/>
+                                <segue destination="EaC-mQ-1nA" kind="unwind" identifier="CancelSegue" unwindAction="addEnvironment:" id="Rja-aM-xVx"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="jeQ-NX-j7m">
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="xNB-ij-HrG">
                             <connections>
-                                <segue destination="iFw-Tc-6Er" kind="unwind" identifier="DoneSegue" unwindAction="unwindToExit:" id="OnK-1J-imV"/>
+                                <segue destination="EaC-mQ-1nA" kind="unwind" identifier="DoneSegue" unwindAction="addEnvironment:" id="rU2-YM-bhy"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="YHg-02-crV" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="iFw-Tc-6Er" userLabel="Exit" sceneMemberID="exit"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ngU-1L-nAc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="EaC-mQ-1nA" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="794" y="-18"/>
+            <point key="canvasLocation" x="848.79999999999995" y="-18.440779610194905"/>
         </scene>
         <!--Environment-->
         <scene sceneID="Gdl-Jk-8bw">
@@ -145,7 +182,7 @@
                     <navigationItem key="navigationItem" title="Environment" id="b5q-P7-lm7">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="fuw-FA-Cka">
                             <connections>
-                                <segue destination="Ib7-uC-5vk" kind="show" identifier="AddSegue" id="fXO-LQ-H4i"/>
+                                <segue destination="72Y-Xr-4Kv" kind="show" identifier="AddSegue" id="eYC-rJ-YKM"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

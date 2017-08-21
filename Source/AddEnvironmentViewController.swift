@@ -3,7 +3,7 @@
 
 import Foundation
 
-class AddEnvironmentViewController: UITableViewController {
+class AddEnvironmentViewController: UIViewController {
     private enum Cells: String {
         case environmentCell = "CustomEnvironmentCell"
     }
@@ -13,15 +13,21 @@ class AddEnvironmentViewController: UITableViewController {
         case done = "DoneSegue"
     }
     
-    var initialEntry: Entry!
-    var newEnvironments:[ (environment: String, url: URL)] = []
+    @IBOutlet private var nameField: UITextField!
+    @IBOutlet private var urlField: UITextField!
     
     // Data
-    var store: CustomEntryStore!
+//    var store: CustomEntryStore!
+    var newEnvironment: Entry.Pair?
     
     
     override func viewDidLoad() {
         
+    }
+    
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        // TOOD: return false if we fail validation on .done
+        return true
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -33,23 +39,13 @@ class AddEnvironmentViewController: UITableViewController {
         case .cancel:
             return
         case .done:
-//            newEnvironments.forEach({ (<#(environment: String, url: URL)#>) in
-////                store
-//            })
-            return
-            
+            // TOOD: do some validation
+            guard let name = nameField.text,
+                let urlString = urlField.text,
+                let url = URL(string: urlString) else {
+                    return
+            }
+            newEnvironment = (name, url)
         }
-    }
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return store.allEntries.count
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        return tableView.dequeueReusableCell(withIdentifier: Cells.environmentCell.rawValue)!
     }
 }

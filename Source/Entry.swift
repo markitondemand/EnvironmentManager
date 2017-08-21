@@ -91,9 +91,7 @@ public class Entry {
         precondition(environments.count > 0, "You must pass at least one environment pair.")
         var environments = environments
         self.init(name:name, initialEnvironment: environments.removeFirst())
-        for remaining in environments {
-            self.add(pair: remaining)
-        }
+        self.add(environments)
     }
 }
 
@@ -210,8 +208,26 @@ extension Entry {
     /// Adds a new envvironemt and base URL to this entry
     ///
     /// - Parameter pair: The tuple representing the environment and baseUR:
-    internal func add(pair: Pair) {
+    internal func add(_ pair: Pair) {
         self.add(url: pair.baseUrl, forEnvironment: pair.environment)
+    }
+    
+    
+    // TOOD: unit test
+    /// Adds an array of environment pairs to this Entry
+    ///
+    /// - Parameter pairs: The environments to add
+    internal func add(_ pairs: [Pair]) {
+        pairs.forEach{ self.add($0) }
+    }
+    
+    // TOOD: unit test
+    @discardableResult  internal func removeEnvironment(_ name: String) -> Bool {
+        guard let index = environments.index(where:{ $0.environment == name }) else {
+            return false
+        }
+        environments.remove(at: index)
+        return true
     }
 }
 

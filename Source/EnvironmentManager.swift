@@ -31,11 +31,11 @@ public enum EnvironmentChangedKeys: String {
 public class EnvironmentManager {
     typealias EntryAsStoreable = [String:[String: String]]
     public var store: DataStore
+    internal var customEntryStore: CustomEntryStore
     
-    fileprivate var customEnvironments: CustomEntryStore
     fileprivate var entries: [Entry] = []
     fileprivate var customEntries: [Entry] {
-        return self.customEnvironments.allEntries
+        return self.customEntryStore.allEntries
     }
     fileprivate var totalEntries: [Entry] {
         return entries + customEntries
@@ -50,7 +50,7 @@ public class EnvironmentManager {
     ///   - backingStore: The store to load persisted environment from (if applicable). The user defaults will be used to read and write environment information to by default
     internal init(_ initialEntries: [Entry] = [], backingStore: DataStore = UserDefaultsStore()) {
         self.store = backingStore
-        customEnvironments = CustomEntryStore(backingStore)
+        customEntryStore = CustomEntryStore(backingStore)
         
         let environments = self.store.readEnvironments()
         for entry in initialEntries {
@@ -136,7 +136,7 @@ public class EnvironmentManager {
     }
     
     public func createCustomEntry(_ entry: Entry) {
-        self.customEnvironments.addCustomEntry(entry)
+        customEntryStore.addCustomEntry(entry)
     }
     
     
@@ -144,7 +144,7 @@ public class EnvironmentManager {
     ///
     /// - Parameter name: The name of the custom entry to remove
     public func removeEntry(_ name: String) {
-        self.customEnvironments.removeCustomEntry(name)
+        customEntryStore.removeCustomEntry(name)
     }
 }
 
@@ -191,7 +191,7 @@ extension EnvironmentManager {
         let entry = self.entry(forService: apiName) ?? Entry(name: apiName, initialEnvironment: environmentUrls.removeFirst())
         
         for pair in environmentUrls {
-            entry.add(pair: pair)
+            entry.add(pair)
         }
         self.add(entry: entry)
     }

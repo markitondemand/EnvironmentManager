@@ -23,10 +23,11 @@ class BundleAccessor {
 
 /// This class manages a default UI for selecting environments
 class EnvironmentManagerViewcontroller: UITableViewController {
+    internal static var sharedEnvironmentManager: EnvironmentManager!
+    
     private enum Segue: String {
         case Exit = "Exit"
         case EnvironmentDetails = "EnvironmentDetails"
-        case AddEnvironment = "AddEnvironment"
     }
     
     private enum CellIdentifiers {
@@ -34,7 +35,14 @@ class EnvironmentManagerViewcontroller: UITableViewController {
         static let AddCellIdentifier = "AddEnvironmentIdentifier"
     }
     
-    var environmentManager: EnvironmentManager!
+    var environmentManager: EnvironmentManager {
+        get {
+            return EnvironmentManagerViewcontroller.sharedEnvironmentManager
+        }
+        set(value) {
+            EnvironmentManagerViewcontroller.sharedEnvironmentManager = value
+        }
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         self.tableView.reloadData()
@@ -71,13 +79,10 @@ class EnvironmentManagerViewcontroller: UITableViewController {
             }
             
             let index = self.tableView.indexPath(for: cell)!.row
-            controller.entry = self.environmentManager.entry(forIndex: index)
-        case .AddEnvironment:
-            fallthrough
+            controller.entryName = self.environmentManager.entry(forIndex: index)?.name
         case .Exit:
             self.environmentManager.save()
         }
-
     }
 }
 
