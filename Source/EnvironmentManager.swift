@@ -31,21 +31,12 @@ public enum EnvironmentChangedKeys: String {
 public class EnvironmentManager {
     typealias EntryAsStoreable = [String:[String: String]]
     public var store: DataStore
+    
+    fileprivate var customEnvironments: CustomEntryStore
     fileprivate var entries: [Entry] = []
     fileprivate var customEntries: [Entry] {
-        get {
-            guard let customEntries = self.store["CustomEntryKey"] as? [String] else {
-                return []
-            }
-            return customEntries.map( {Entry(csv: $0) }).flatMap { $0 }
-        }
-        set (entries) {
-            var array = [String]()
-            array.append(contentsOf: entries.map({ $0.asCSV }))
-            self.store["CustomEntryKey"] = array
-        }
+        return self.customEnvironments.allEntries
     }
-    
     fileprivate var totalEntries: [Entry] {
         return entries + customEntries
     }
@@ -59,6 +50,8 @@ public class EnvironmentManager {
     ///   - backingStore: The store to load persisted environment from (if applicable). The user defaults will be used to read and write environment information to by default
     internal init(_ initialEntries: [Entry] = [], backingStore: DataStore = UserDefaultsStore()) {
         self.store = backingStore
+        customEnvironments = CustomEntryStore(backingStore)
+        
         let environments = self.store.readEnvironments()
         for entry in initialEntries {
             let environment = environments[entry.name] ?? entry.currentEnvironment
@@ -143,21 +136,15 @@ public class EnvironmentManager {
     }
     
     public func createCustomEntry(_ entry: Entry) {
-        self.customEntries.append(entry)
+        self.customEnvironments.addCustomEntry(entry)
     }
     
     
     /// Removes a custom entry. This will _not_ remove an entry that may have been aded via the Builder, .csv file, or `self.add(entry: Entry)`
     ///
-    /// - Parameter name: <#name description#>
+    /// - Parameter name: The name of the custom entry to remove
     public func removeEntry(_ name: String) {
-        guard let index = self.customEntries.index(where: {$0.name == name}) else {
-            return
-        }
-        
-        var customEntries = self.customEntries
-        customEntries.remove(at: index)
-        self.customEntries = customEntries
+        self.customEnvironments.removeCustomEntry(name)
     }
 }
 

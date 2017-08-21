@@ -8,7 +8,8 @@ import MD_Extensions
 
 /// Simple datastructure represneting an API and its associated enviroments, as not all APIs will have the same number of enviromments (e.g. some may have a dev, where others wont, like client APIs)
 public class Entry {
-    internal struct EnvironmentPair: Equatable, Hashable {
+    // TOOD: fix naming
+    internal struct Environment: Equatable, Hashable {
         let environment: String
         let baseUrl: URL
         
@@ -27,7 +28,7 @@ public class Entry {
         }
         
         // Equatabe
-        public static func ==(lhs: EnvironmentPair, rhs: EnvironmentPair) -> Bool {
+        public static func ==(lhs: Environment, rhs: Environment) -> Bool {
             return lhs.baseUrl == rhs.baseUrl && lhs.environment == rhs.environment
         }
     }
@@ -38,7 +39,7 @@ public class Entry {
     public let name: String
     
     // Data structure to hold the environments for this Entry
-    internal fileprivate(set) var environments: [EnvironmentPair]
+    internal fileprivate(set) var environments: [Environment]
     
     /// This variable is needed to define a backing store variable because when you override the set or get on a property they lose their backing variable
     internal var backingCurrentEnvironment: String
@@ -75,7 +76,7 @@ public class Entry {
     ///   - name: The name of the entry, this should be something like the name of your API, (e.g. "MDQuoteService")
     ///   - initialEnvironment: The initial environment as a tuple. (e.g. acc, prod, acceptance, test, etc.) The URL should be the base URL to your service
     public init(name: String, initialEnvironment: (String, URL)) {
-        environments = [EnvironmentPair(pair: initialEnvironment)]
+        environments = [Environment(pair: initialEnvironment)]
         self.name = name
         self.backingCurrentEnvironment = initialEnvironment.0
     }
@@ -203,7 +204,7 @@ extension Entry {
     ///   - url: The base URL
     ///   - environment: The environment it belongs to
     internal func add(url: URL, forEnvironment environment:String) {
-        self.environments.append(EnvironmentPair(environment: environment, baseUrl: url))
+        self.environments.append(Environment(environment: environment, baseUrl: url))
     }
     
     /// Adds a new envvironemt and base URL to this entry

@@ -8,10 +8,27 @@ class EnvironmentEntryDetailViewController: UITableViewController {
     private enum CellIdentifiers {
         static let EnvironmentCellIdentifier = "EnvironmentCellIdentifier"
     }
+    
+    private enum Segue: String {
+        case add = "AddSegue"
+    }
+    
     var entry: Entry!
     
     override func viewDidLoad() {
         self.navigationItem.title = self.entry.name
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let segueID = Segue(rawValue: segue.identifier ?? "") else {
+            return
+        }
+        
+        switch segueID {
+        case .add:
+            let destination = segue.destination as! AddEnvironmentViewController
+            destination.initialEntry = self.entry
+        }
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
