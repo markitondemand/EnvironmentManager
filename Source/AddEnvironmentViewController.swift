@@ -16,13 +16,15 @@ class AddEnvironmentViewController: UIViewController {
     @IBOutlet private var nameField: UITextField!
     @IBOutlet private var urlField: UITextField!
     
-    // Data
-//    var store: CustomEntryStore!
+    // Input
+    var entryName: String?
+    
+    // Output
     var newEnvironment: Entry.Pair?
     
     
     override func viewDidLoad() {
-        
+        self.navigationItem.title = entryName
     }
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
@@ -39,10 +41,10 @@ class AddEnvironmentViewController: UIViewController {
         case .cancel:
             return
         case .done:
-            // TOOD: do some validation
             guard let name = nameField.text,
                 let urlString = urlField.text,
                 let url = URL(string: urlString) else {
+                    self.present(UIAlertController(title: "Error", message: "Please ensure you have a name and your URL is correct and valid.", preferredStyle: .alert), animated: true)
                     return
             }
             newEnvironment = (name, url)

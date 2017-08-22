@@ -32,17 +32,34 @@ public class EnvironmentManager {
     typealias EntryAsStoreable = [String:[String: String]]
     public var store: DataStore
     private var environmentStore: EnvironmentStore
-//    internal var customEntryStore: CustomEntryStore
     
     fileprivate var entries: [Entry] = []
     fileprivate var customEntries: [Entry] {
-        return []
+        return CustomEntryStore(store).allEntries
     }
     fileprivate var totalEntries: [Entry] {
-        return entries + customEntries
+        // elements that include a custom entry
+        
+        // The below logic is a bit scary at first, but basically I am doing the following.
+        // Find any overlapping entries that are in both the "CustomEntryStore" store, as well as the ones added at initialization via CSV. Entry is treated as a value object, and thus such is transactional, so modifying, creating, etc. dont really matter. (its all stored underneath, either in the self.entries, created via CSV, or in the CustomEntryStore, created via user and stored as CSV strings)
+        // For each in memory entry, we find the entry that also exists in the CustomStore.
+        // After that, we flat map out the environments and add them to the current entry.
+        // We than add that into the final list.
+        var finalSet: [Entry] = []
+        
+        // TOOD: dont do this, instead, just loop through the Custom entries for the environments, add them to the matching entry in self.entries (not permanently, just for returning)
+        
+        entries.forEach({ (entry) in
+            var entry = entry
+            entry.add(customEntries.filter{ $0.name == entry.name }.flatMap{ $0.environments.map{$0.asPair} })
+            finalSet.append(entry)
+        })
+        
+        
+        
+        return finalSet
     }
 
-    
     
     /// Createsa a new EnvironmentManager using an array of pre created Entry objects.
     ///
@@ -56,21 +73,6 @@ public class EnvironmentManager {
             self.add(entry: entry)
         }
     }
-    
-    /// Attempts to save the current environments to the store passed at creation.
-//    public func save() {
-//        var store = self.store
-//
-//        // Reduce our entries to a dictionary of service names -> current environment
-//        let reduced = self.entries.reduce([:]) { (dict, entry: Entry) -> [String: String] in
-//            var dict = dict
-//            dict[entry.name] = entry.currentEnvironment
-//            return dict
-//        }
-//        
-//        store.write(reduced)
-//    }
-//    
     
     /// Returns an ordered list of all of the API names currently managed. By default the list will be returned in ascending order but you can optionally sort them in another way (i.e. descending)
     ///
@@ -128,7 +130,7 @@ public class EnvironmentManager {
     ///   - environment: The environment to select
     ///   - apiName: The API to select the environment for
     public func select(environment: String, forAPI apiName: String) {
-        guard let entry = self.entry(forService: apiName) else {
+        guard let entry = self.totalEntries.first(where: { $0.name == apiName }) else {
             return
         }
         
@@ -141,19 +143,7 @@ public class EnvironmentManager {
     /// - Parameter service: The name of the service
     /// - Returns: The corresponding Entry or nil
     public func entry(forService service: String) -> Entry? {
-        return self.totalEntries.first(where: { $0.name == service })
-    }
-    
-    public func createCustomEntry(_ entry: Entry) {
-//        customEntryStore.addCustomEntry(entry)
-    }
-    
-    
-    /// Removes a custom entry. This will _not_ remove an entry that may have been aded via the Builder, .csv file, or `self.add(entry: Entry)`
-    ///
-    /// - Parameter name: The name of the custom entry to remove
-    public func removeEntry(_ name: String) {
-//        customEntryStore.removeCustomEntry(name)
+        return self.entries.first(where: { $0.name == service })
     }
 }
 
@@ -183,7 +173,6 @@ extension EnvironmentManager {
 //        if let environment = self.store.environment(forService: entry.name) {
 //            entry.backingCurrentEnvironment = environment
 //        }
-        //TOOD: dont allow multiple of the same env name - overwrite old one if new one w/ matching name coems in - write test
         self.entries.append(entry)
     }
     

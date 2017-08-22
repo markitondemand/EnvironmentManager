@@ -110,3 +110,15 @@ extension CustomEntryStore {
         return self
     }
 }
+
+// MARK: - conveinece for Entry
+extension CustomEntryStore {
+    internal func addEnvironment(_ environment: Entry.Pair, to entryName: String) {
+        guard var entry = self[entryName] else {
+            self[entryName] = Entry(name: entryName, initialEnvironment: environment)
+            return
+        }
+        entry.add(environment)
+        self[entryName] = entry
+    }
+}

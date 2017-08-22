@@ -13,6 +13,10 @@ public struct Entry {
         let environment: String
         let baseUrl: URL
         
+        var asPair: Pair {
+            return (environment, baseUrl)
+        }
+        
         public init(environment: String, baseUrl: URL) {
             self.environment = environment
             self.baseUrl = baseUrl
