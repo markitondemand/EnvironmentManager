@@ -39,25 +39,7 @@ public class EnvironmentManager {
     }
     fileprivate var totalEntries: [Entry] {
         // elements that include a custom entry
-        
-        // The below logic is a bit scary at first, but basically I am doing the following.
-        // Find any overlapping entries that are in both the "CustomEntryStore" store, as well as the ones added at initialization via CSV. Entry is treated as a value object, and thus such is transactional, so modifying, creating, etc. dont really matter. (its all stored underneath, either in the self.entries, created via CSV, or in the CustomEntryStore, created via user and stored as CSV strings)
-        // For each in memory entry, we find the entry that also exists in the CustomStore.
-        // After that, we flat map out the environments and add them to the current entry.
-        // We than add that into the final list.
-        var finalSet: [Entry] = []
-        
-        // TOOD: dont do this, instead, just loop through the Custom entries for the environments, add them to the matching entry in self.entries (not permanently, just for returning)
-        
-        entries.forEach({ (entry) in
-            var entry = entry
-            entry.add(customEntries.filter{ $0.name == entry.name }.flatMap{ $0.environments.map{$0.asPair} })
-            finalSet.append(entry)
-        })
-        
-        
-        
-        return finalSet
+        return entries + customEntries
     }
 
     

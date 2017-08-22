@@ -70,6 +70,7 @@ class EnvironmentEntryDetailViewController: UITableViewController {
         
         let sortedEnvironmentNames: [Int: [Entry.Environment]] = [0: self.viewModel.baseEnviromnments, 1: self.viewModel.customEnvironments]
         cell.textLabel?.text = environment.environment
+        cell.detailTextLabel?.text = environment.baseUrl.absoluteString
         cell.accessoryType = self.viewModel.currentlySelectedEnvironment == sortedEnvironmentNames[indexPath.section]?[indexPath.row].environment ? .checkmark : .none
         return cell
     }
