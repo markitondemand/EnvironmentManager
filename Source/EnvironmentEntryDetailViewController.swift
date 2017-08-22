@@ -94,7 +94,27 @@ class EnvironmentEntryDetailViewController: UITableViewController {
         }
     }
     
-    // TODO: Edit to delete "custom" section only
+    // MARK: - Delete
+    
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return indexPath.section == 1
+    }
+    
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        return [UITableViewRowAction(style: .destructive, title: "Delete", handler: { (action: UITableViewRowAction, path) in
+            guard action.style == .destructive else {
+                return
+            }
+            self.tableView.beginUpdates()
+            self.viewModel.deleteEnvironment(at: indexPath)
+            if (self.viewModel.customEnvironments.count == 0) {
+                self.tableView.deleteSections(IndexSet(integer: 1), with: .automatic)
+            }
+            self.tableView.deleteRows(at: [indexPath], with: .automatic)
+            self.tableView.endUpdates()
+            
+        })]
+    }
     
     private var currentEntry: Entry {
         return EnvironmentManagerViewcontroller.sharedEnvironmentManager.entry(forService: entryName)!
@@ -144,10 +164,6 @@ class EntryViewModel {
         customEntryStore = customStore
     }
     
-    private var allEnvironments: [Entry.Environment] {
-        return baseEnviromnments + customEnvironments
-    }
-    
     var currentlySelectedEnvironment: String {
         return EnvironmentManagerViewcontroller.sharedEnvironmentManager.currentEnvironmentFor(apiName: name)!
     }
@@ -163,6 +179,15 @@ class EntryViewModel {
         self.customEntryStore[name] = entry
     }
     
+    func deleteEnvironment(at indexPath: IndexPath) {
+        guard indexPath.section == 1,
+            let environment = self.environmentFor(indexPath) else {
+            return
+        }
+        
+        self.customEntryStore.removeEnvironments([environment], forEntryNamed: name)
+    }
+    
     func selectEnvironment(_ indexPath: IndexPath) {
         let environment: Entry.Environment?
         if indexPath.section == 0 {
@@ -172,5 +197,16 @@ class EntryViewModel {
             environment = customEntryStore[name]?.environments[indexPath.row]
         }
         EnvironmentManagerViewcontroller.sharedEnvironmentManager.select(environment: environment?.environment ?? "", forAPI: name)
+    }
+    
+    private func environmentFor(_ indexPath: IndexPath) -> Entry.Environment?  {
+        switch indexPath.section {
+        case 0:
+            return baseEntry.environments[indexPath.row]
+        case 1:
+            return customEntryStore[name]?.environments[indexPath.row]
+        default:
+            return nil
+        }
     }
 }

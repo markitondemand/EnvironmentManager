@@ -60,6 +60,34 @@ class CustomEntryStore {
     }
     
     
+    /// Attempts to remove a given set of environments by name from a given entry. If the environment names match what is stored, the environment will be removed
+    ///
+    /// - Parameters:
+    ///   - environments: The environments to remove
+    ///   - name: The name of the entry to remove from
+    func removeEnvironments(_ environments: [String], forEntryNamed name: String) {
+        guard var entry = self[name] else {
+            return
+        }
+        
+        environments.forEach {
+            entry.removeEnvironment($0)
+        }
+        
+        self[name] = entry
+    }
+    
+    
+    /// Attempts to remove a given set of environments from a given entry.
+    ///
+    /// - Parameters:
+    ///   - environments: The environments to remove
+    ///   - name: The name of the entry to remove from
+    func removeEnvironments(_ environments: [Entry.Environment], forEntryNamed name: String) {
+        self.removeEnvironments(environments.map{$0.environment}, forEntryNamed: name)
+    }
+    
+    
     /// Attempts to remove a custom entry
     ///
     /// - Parameter name: The name of the entry to remove

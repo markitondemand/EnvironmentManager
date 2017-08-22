@@ -24,7 +24,6 @@ public class DictionaryStore: DataStore {
     
     public subscript(key: String) -> Any? {
         get {
-            print("key:\(key), value:\(backingDictionary[key])")
             return backingDictionary[key]
         }
         set(newValue) {
