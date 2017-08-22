@@ -46,7 +46,7 @@ class CustomEntryStore {
     ///   - name: The name of the entry to add to. If the entry does not exist, it will be created
     func addEnvironments(_ environments: [Entry.Pair], forEntry name: String) {
         let entryToUpdate: Entry
-        if let entry = self[name] {
+        if var entry = self[name] {
             environments.forEach {
                 entry.add($0)
             }

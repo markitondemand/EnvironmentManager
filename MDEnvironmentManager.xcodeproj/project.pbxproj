@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		283EB6751E65FE140004C1A3 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 283EB6741E65FE140004C1A3 /* DataStore.swift */; };
 		28440B6B1E79A1CD00E00667 /* EntryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28440B6A1E79A1CD00E00667 /* EntryTests.swift */; };
+		28616A1C1F4C90E7006C5D70 /* SelectingEnvironmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28616A1B1F4C90E7006C5D70 /* SelectingEnvironmentTests.swift */; };
+		28616A1E1F4CB32D006C5D70 /* EnvironmentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28616A1D1F4CB32D006C5D70 /* EnvironmentStore.swift */; };
+		28616A211F4CB524006C5D70 /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28616A201F4CB524006C5D70 /* TestHelper.swift */; };
 		286CFFA11E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286CFFA01E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift */; };
 		287F06311E82ED02004937BA /* Storyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287F06301E82ED02004937BA /* Storyboard.swift */; };
 		288C829C1E69E0E6001E70F4 /* CSVTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288C829B1E69E0E6001E70F4 /* CSVTests.swift */; };
@@ -59,6 +62,9 @@
 		18B4DE39BA1B428233046F14 /* Pods_MDEnvironmentManagerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MDEnvironmentManagerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		283EB6741E65FE140004C1A3 /* DataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataStore.swift; path = Source/DataStore.swift; sourceTree = SOURCE_ROOT; };
 		28440B6A1E79A1CD00E00667 /* EntryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntryTests.swift; sourceTree = "<group>"; };
+		28616A1B1F4C90E7006C5D70 /* SelectingEnvironmentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectingEnvironmentTests.swift; sourceTree = "<group>"; };
+		28616A1D1F4CB32D006C5D70 /* EnvironmentStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnvironmentStore.swift; path = Source/EnvironmentStore.swift; sourceTree = SOURCE_ROOT; };
+		28616A201F4CB524006C5D70 /* TestHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHelper.swift; sourceTree = "<group>"; };
 		286CFFA01E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnvironmentEntryDetailViewController.swift; path = Source/EnvironmentEntryDetailViewController.swift; sourceTree = SOURCE_ROOT; };
 		287F06301E82ED02004937BA /* Storyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Storyboard.swift; path = Source/Storyboard.swift; sourceTree = SOURCE_ROOT; };
 		288C829B1E69E0E6001E70F4 /* CSVTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSVTests.swift; sourceTree = "<group>"; };
@@ -127,6 +133,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		28616A1F1F4CB518006C5D70 /* TestHelper */ = {
+			isa = PBXGroup;
+			children = (
+				28616A201F4CB524006C5D70 /* TestHelper.swift */,
+			);
+			name = TestHelper;
+			sourceTree = "<group>";
+		};
 		28AB95431E5E3062000EAEA9 = {
 			isa = PBXGroup;
 			children = (
@@ -164,6 +178,7 @@
 		28AB955D1E5E3130000EAEA9 /* MDEnvironmentManagerTests */ = {
 			isa = PBXGroup;
 			children = (
+				28616A1F1F4CB518006C5D70 /* TestHelper */,
 				28AB95601E5E3130000EAEA9 /* Info.plist */,
 				288C829B1E69E0E6001E70F4 /* CSVTests.swift */,
 				28AB955E1E5E3130000EAEA9 /* EnvironmentManagerTests.swift */,
@@ -171,6 +186,7 @@
 				28A492851E7361AA00FF690B /* BundleTests.swift */,
 				28440B6A1E79A1CD00E00667 /* EntryTests.swift */,
 				28E61ABC1F4B4DF70003ABBD /* CustomEntryTests.swift */,
+				28616A1B1F4C90E7006C5D70 /* SelectingEnvironmentTests.swift */,
 			);
 			path = MDEnvironmentManagerTests;
 			sourceTree = "<group>";
@@ -188,6 +204,7 @@
 				287F06301E82ED02004937BA /* Storyboard.swift */,
 				28AE6ED41F464E3D000264D3 /* CustomEnvironments.swift */,
 				28E61ABA1F4B4C8D0003ABBD /* AddEnvironmentViewController.swift */,
+				28616A1D1F4CB32D006C5D70 /* EnvironmentStore.swift */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -530,6 +547,7 @@
 				28AB95691E5E4135000EAEA9 /* EnvironmentManager.swift in Sources */,
 				28C57B081E6F8014000F6B32 /* Builder.swift in Sources */,
 				28BA27551E6F805E00CA0949 /* CSVSupport.swift in Sources */,
+				28616A1E1F4CB32D006C5D70 /* EnvironmentStore.swift in Sources */,
 				287F06311E82ED02004937BA /* Storyboard.swift in Sources */,
 				28AE6ED51F464E3D000264D3 /* CustomEnvironments.swift in Sources */,
 				286CFFA11E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift in Sources */,
@@ -546,7 +564,9 @@
 				288C829C1E69E0E6001E70F4 /* CSVTests.swift in Sources */,
 				28A492861E7361AA00FF690B /* BundleTests.swift in Sources */,
 				28440B6B1E79A1CD00E00667 /* EntryTests.swift in Sources */,
+				28616A211F4CB524006C5D70 /* TestHelper.swift in Sources */,
 				28C57B011E6E2875000F6B32 /* BuilderTests.swift in Sources */,
+				28616A1C1F4C90E7006C5D70 /* SelectingEnvironmentTests.swift in Sources */,
 				28E61ABD1F4B4DF70003ABBD /* CustomEntryTests.swift in Sources */,
 				28AB955F1E5E3130000EAEA9 /* EnvironmentManagerTests.swift in Sources */,
 			);

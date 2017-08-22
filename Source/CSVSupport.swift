@@ -112,7 +112,7 @@ extension Entry {
     /// Invalid usage that will result in nil:
     /// `Service1|acc|http://acc.api.service.com\n
     ///  OtherService|prod|http://prod.api.service.com`
-    convenience init?(csv: String) {
+    init?(csv: String) {
         guard let stringData = csv.data(using: .utf8) else {
             return nil
         }
@@ -147,6 +147,7 @@ extension Entry {
             environments.count > 0 else {
                 return nil
         }
+        // TOOD: dont pass userdefault store here
         self.init(name: name!, environments: environments)
     }
 }

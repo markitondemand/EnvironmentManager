@@ -19,7 +19,11 @@ class EnvironmentEntryDetailViewController: UITableViewController {
     
     override func viewDidLoad() {
         self.navigationItem.title = self.entryName
-        viewModel = EntryViewModel(entry: currentEntry, customStore: EnvironmentManagerViewcontroller.sharedEnvironmentManager.customEntryStore)
+//        viewModel = EntryViewModel(entry: currentEntry, customStore: EnvironmentManagerViewcontroller.sharedEnvironmentManager.customEntryStore)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        tableView.reloadData()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -33,20 +37,33 @@ class EnvironmentEntryDetailViewController: UITableViewController {
         }
     }
     
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return viewModel.customEnvironments.count > 0 ? 2 : 1
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return currentEntry.environmentNames().count
+        return viewModel.baseEnviromnments.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifiers.EnvironmentCellIdentifier)!
-        let sortedEnvironmentNames = self.currentEntry.environmentNames()
-        cell.textLabel?.text = sortedEnvironmentNames[indexPath.row]
-        cell.accessoryType = self.currentEntry.currentEnvironment == sortedEnvironmentNames[indexPath.row] ? .checkmark : .none
+
+        let environment: Entry.Environment
+        if indexPath.section == 1 {
+            environment = viewModel.baseEnviromnments[indexPath.row]
+        }
+        else {
+            environment = viewModel.customEnvironments[indexPath.row]
+        }
+        
+//        let sortedEnvironmentNames = self.viewModel.baseEnviromnments
+        cell.textLabel?.text = environment.environment
+//        cell.accessoryType = self.currentEntry.currentEnvironment == sortedEnvironmentNames[indexPath.row] ? .checkmark : .none
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.currentEntry.selectEnvironment(forIndex: indexPath.row)
+        self.viewModel.selectEnvironment(indexPath.row)
         tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         tableView.deselectRow(at: indexPath, animated: true)
         tableView.reloadRows(at: [indexPath], with: .automatic)
@@ -95,17 +112,38 @@ class EntryViewModel {
         customEntryStore = customStore
     }
     
+    private var allEnvironments: [Entry.Environment] {
+        return baseEnviromnments + customEnvironments
+    }
+    
     
     // Mutators
     func addEnvironment(_ environment: Entry.Environment) {
-        let entry = self.customEntryStore[name]
+        var entry = self.customEntryStore[name]
         entry?.add((environment.environment, environment.baseUrl))
         self.customEntryStore[name] = entry
     }
     
     func removeEnvironment(_ environmentName: String) {
-        let entry = self.customEntryStore[name]
+        var entry = self.customEntryStore[name]
         entry?.removeEnvironment(environmentName)
         self.customEntryStore[name] = entry
     }
+    
+    func selectEnvironment(_ index: Int) {
+        
+    }
+    
+//    var selectedEnvironment: String {
+//        
+//    }
+//    func selectedEnvironment(for indexPath: IndexPath) -> Bool {
+//        if indexPath.section == 1 {
+//            let environment = self.baseEnviromnments[indexPath.row]
+//            
+//        }
+//        else {
+//            
+//        }
+//    }
 }

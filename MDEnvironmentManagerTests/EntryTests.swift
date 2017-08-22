@@ -12,40 +12,15 @@ import XCTest
 class EntryTests: XCTestCase {
     let defaultAccUrl = URL(string: "http://acc.api.domain.com")!
     let defaultProdUrl = URL(string: "http://prod.api.domain.com")!
-    
+
     var testEntry: Entry { return Entry(name: "Service", initialEnvironment: ("acc", defaultAccUrl)) }
     
-    func  testEnvironmentChangingForAnEntry() {
-        let path = "the/path/to/resource/"
-        let expectedProdURL = URL(string: "http://prod.api.domain.com/the/path/to/resource/")!
-        let expectedAccURL = URL(string: "http://acc.api.domain.com/the/path/to/resource/")!
-        
-        let entry = Entry(name: "service1", initialEnvironment: ("prod", defaultProdUrl))
-        
-        let prodURL = entry.buildURLWith(path: path)
-        
-        XCTAssertEqual(prodURL, expectedProdURL)
-        entry.add(url: defaultAccUrl, forEnvironment: "acc")
-        
-        let prodURLTwo = entry.buildURLWith(path: path)
-        
-        // test current environment stays after adding another environment
-        XCTAssertEqual(prodURLTwo, expectedProdURL)
-        
-        entry.currentEnvironment = "acc"
-        let accURL = entry.buildURLWith(path: path)
-        XCTAssertEqual(accURL, expectedAccURL)
-        
-        // test that environment only changes if it is exists
-        entry.currentEnvironment = "unknown-environment"
-        XCTAssertEqual(entry.currentEnvironment, "acc")
-        
-        entry.select(environment: "prod")
-        XCTAssertEqual(entry.currentEnvironment, "prod")
+    func entryWithName(_ name: String, initialEnvironment: (String, URL)) -> Entry {
+        return Entry(name: name, initialEnvironment: initialEnvironment)
     }
     
     func testEntryGetters() {
-        let entry = Entry(name: "service", initialEnvironment: ("prod", defaultProdUrl))
+        var entry = entryWithName("service", initialEnvironment: ("prod", defaultProdUrl))
         entry.add(url: defaultAccUrl, forEnvironment: "acc")
         
         XCTAssertEqual(entry.environment(forIndex: 0), "prod")
@@ -55,11 +30,11 @@ class EntryTests: XCTestCase {
     }
     
     func testEntryEquatable() {
-        let entry1 = Entry(name: "Service1", initialEnvironment: ("acc", self.defaultAccUrl))
-        let entry2 = Entry(name: "Service1", initialEnvironment: ("acc", self.defaultAccUrl))
+        let entry1 = entryWithName("Service1", initialEnvironment: ("acc", self.defaultAccUrl))
+        var entry2 = entryWithName("Service1", initialEnvironment: ("acc", self.defaultAccUrl))
         
         XCTAssertEqual(entry1, entry2)
-        entry2.add(pair: ("prod", self.defaultProdUrl))
+        entry2.add(("prod", self.defaultProdUrl))
         XCTAssertNotEqual(entry1, entry2)
     }
     
@@ -70,8 +45,8 @@ class EntryTests: XCTestCase {
     }
     
     func testMultipleEnvironemntsToCSV() {
-        let entry = testEntry
-        entry.add(pair: Entry.Pair("prod", defaultProdUrl))
+        var entry = testEntry
+        entry.add(Entry.Pair("prod", defaultProdUrl))
         
         // When
         let csv = entry.asCSV

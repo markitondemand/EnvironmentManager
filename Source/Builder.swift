@@ -21,7 +21,7 @@ import MD_Extensions
 /// .production() // This signifies we are doing a production build. Optionally, pass your own block in to return true or false, you can than inject a #ifdef based off of your configuration
 /// .build()
 public class Builder {
-    internal var dataStore: DataStore = UserDefaultsStore()
+    internal var dataStore: DataStore = DictionaryStore()
     internal var entries: [String:[(String, String)]] = [:]
     internal var productionEnvironmentMap: [String:String] = [:]
     internal var productionEnabled: () -> Bool = { return false }
