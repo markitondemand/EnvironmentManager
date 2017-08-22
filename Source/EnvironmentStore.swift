@@ -16,6 +16,7 @@ class EnvironmentStore {
     }
     
     public func currentlySelectedEnvironmentFor(_ entry: Entry) -> String {
+        // TOOD: return a different result if the current one does not exist in _entry_
         return backingStore[entry.name] as? String ?? entry.environments.first!.environment
     }
     
