@@ -147,12 +147,7 @@ class EntryViewModel {
     }
     
     var baseEnviromnments: [Entry.Environment] {
-        // Filter out any environments that are also in the custom environment
-        // TOOD: the right solution is to have baseEntry just not include any of the custom environments
         return baseEntry.environments
-//        return self.baseEntry.environments.filter{ (element) in
-//            return customEnvironments.contains(where: { $0.environment == element.environment})
-//        }
     }
     
     var customEnvironments: [Entry.Environment] {
@@ -171,12 +166,6 @@ class EntryViewModel {
     // Mutators
     func addEnvironment(_ environment: Entry.Environment) {
         self.customEntryStore.addEnvironment((environment.environment, environment.baseUrl), to: name)
-    }
-    
-    func removeEnvironment(_ environmentName: String) {
-        var entry = self.customEntryStore[name]
-        entry?.removeEnvironment(environmentName)
-        self.customEntryStore[name] = entry
     }
     
     func deleteEnvironment(at indexPath: IndexPath) {
