@@ -113,6 +113,7 @@ class EnvironmentEntryDetailViewController: UITableViewController {
             self.tableView.deleteRows(at: [indexPath], with: .automatic)
             self.tableView.endUpdates()
             
+            self.tableView.reloadData()
         })]
     }
     
@@ -175,6 +176,9 @@ class EntryViewModel {
         }
         
         self.customEntryStore.removeEnvironments([environment], forEntryNamed: name)
+        if self.currentlySelectedEnvironment == environment.environment {
+            self.selectEnvironment(IndexPath(row: 0, section: 0))
+        }
     }
     
     func selectEnvironment(_ indexPath: IndexPath) {
