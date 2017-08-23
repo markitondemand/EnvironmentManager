@@ -21,6 +21,16 @@ import MD_Extensions
 /// .production() // This signifies we are doing a production build. Optionally, pass your own block in to return true or false, you can than inject a #ifdef based off of your configuration
 /// .build()
 public class Builder {
+    
+    /// The type of store that the EnvironmentManager will use. this can either be userDefaults, or in memory
+    ///
+    /// - userDefaults: Uses the userdefaults to store data
+    /// - inMemory: Uses an in memory cache to store data
+    public enum StoreType {
+        case userDefaults
+        case inMemory
+    }
+    
     internal var dataStore: DataStore = DictionaryStore()
     internal var entries: [String:[(String, String)]] = [:]
     internal var productionEnvironmentMap: [String:String] = [:]
@@ -64,13 +74,30 @@ public class Builder {
     }
     
     
+    
+    // wIll make this private.
     /// Override the default data store with your own
     ///
     /// - Parameter store: The store to use
     /// - Returns: The current builder
+    @available(*, deprecated, message: "Please use `setStoreType(type:)` instead. This will be removed in a future version")
     @discardableResult public func setDataStore(store: DataStore) -> Self {
         dataStore = store
         return self
+    }
+    
+    
+    /// Override the default store type. The default is an in memory store
+    ///
+    /// - Parameter type: The type to select
+    /// - Returns: The current builder
+    @discardableResult public func setStoreType(_ type: StoreType) -> Self {
+        switch type {
+        case .inMemory:
+            return setDataStore(store: DictionaryStore())
+        case .userDefaults:
+            return setDataStore(store: UserDefaultsStore())
+        }
     }
 }
 
