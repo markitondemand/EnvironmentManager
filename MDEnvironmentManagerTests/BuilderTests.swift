@@ -11,7 +11,7 @@ class BuilderTests: XCTestCase {
         // Use default data store)
         let em = try! b.build()
         
-        let store = UserDefaultsStore()
+        let store = DictionaryStore()
         XCTAssert(type(of:em.store) == type(of:store))
     }
     
@@ -26,11 +26,11 @@ class BuilderTests: XCTestCase {
         let b = Builder()
         let em = try! b.add(entry: "Service1", environments:[("Env1", "http://env1.api.service1.com")]).build()
         
-        XCTAssertEqual(em.entry(forService: "Service1"), Entry(name: "Service1", initialEnvironment: ("Env1", URL(string: "http://env1.api.service1.com")!)))
+        XCTAssertEqual(em.entry(for: "Service1"), Entry(name: "Service1", initialEnvironment: ("Env1", URL(string: "http://env1.api.service1.com")!)))
     }
     
     func testSettingProductionEntryDefaultsToProduction() {
-        let b = Builder()
+        let b = Builder().setDataStore(store: DictionaryStore())
         let em = try! b
             .add(entry: "Service1", environments:[("Env1", "http://env1.api.service1.com"), ("Env2", "http://env2.api.service1.com")])
             .add(entry: "Service2", environments:[("Acc", "http://acc.api.service2.com"), ("Prod", "http://prod.api.service2.com")])
@@ -38,11 +38,11 @@ class BuilderTests: XCTestCase {
             .production()
             .build()
         
-        XCTAssertEqual(em.entry(forService: "Service1")?.environmentNames().count, 1)
+        XCTAssertEqual(em.entry(for: "Service1")?.environmentNames().count, 1)
     }
     
     func testSettingProductionEntryToFalseDoesNotUseProduction() {
-        let b = Builder()
+        let b = Builder().setDataStore(store: DictionaryStore())
         let em = try! b
             .add(entry: "Service1", environments:[("Env1", "http://env1.api.service1.com"), ("Env2", "http://env2.api.service1.com")])
             .add(entry: "Service2", environments:[("Acc", "http://acc.api.service2.com"), ("Prod", "http://prod.api.service2.com")])
@@ -50,12 +50,12 @@ class BuilderTests: XCTestCase {
             .production(expression: { return false })
             .build()
         
-        XCTAssertEqual(em.entry(forService: "Service1")?.environmentNames().count, 2)
+        XCTAssertEqual(em.entry(for: "Service1")?.environmentNames().count, 2)
     }
     
     func testDefaultSortOrderIsOrderOfItemsAdded() {
         // Default is order added
-        let b = Builder()
+        let b = Builder().setDataStore(store: DictionaryStore())
         
         let em = try! b
             .add(entry: "ZService", environments:[("BEnv", "http://benv.api.zervice.com"), ("AEnv", "http://aenv.api.zservice.com")])
@@ -94,7 +94,7 @@ extension BuilderTests {
     
     func testBuilderEnabledForProductionRequiresFullMapping() {
         let b = Builder().add(entry: "Service1", environments:[("Env1", "http://env1.api.service1.com")])
-        .production()
+            .production()
         XCTAssertThrowsError(try b.build()) { (e) in
             guard let error = e as? Builder.BuildError else {
                 XCTFail()

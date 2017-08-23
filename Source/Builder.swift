@@ -21,7 +21,7 @@ import MD_Extensions
 /// .production() // This signifies we are doing a production build. Optionally, pass your own block in to return true or false, you can than inject a #ifdef based off of your configuration
 /// .build()
 public class Builder {
-    internal var dataStore: DataStore = UserDefaultsStore()
+    internal var dataStore: DataStore = DictionaryStore()
     internal var entries: [String:[(String, String)]] = [:]
     internal var productionEnvironmentMap: [String:String] = [:]
     internal var productionEnabled: () -> Bool = { return false }
@@ -52,7 +52,7 @@ public class Builder {
     ///   - name: The name of the entry, this would be the API or service name
     ///   - environments: The tuple of envirnments to URL Strings
     /// - Returns: The current builder
-    public func add(entry name: String, environments:[(String, String)]) -> Self {
+    @discardableResult public func add(entry name: String, environments:[(String, String)]) -> Self {
         precondition(environments.count > 0, "Must pass at least one environment")
         guard var currentEnvironments = entries[name] else {
             entries[name] = environments
@@ -68,7 +68,7 @@ public class Builder {
     ///
     /// - Parameter store: The store to use
     /// - Returns: The current builder
-    public func setDataStore(store: DataStore) -> Self {
+    @discardableResult public func setDataStore(store: DataStore) -> Self {
         dataStore = store
         return self
     }
@@ -83,7 +83,7 @@ extension Builder {
     ///
     /// - Parameter map: The map of API Entry names to envirnments.
     /// - Returns: The current builder
-    public func productionEnvironments(map: [String: String]) -> Self {
+    @discardableResult public func productionEnvironments(map: [String: String]) -> Self {
         productionEnvironmentMap += map
         return self
     }
@@ -103,7 +103,7 @@ extension Builder {
     ///
     /// - Parameter expression: The block that will be evaluated to determine if the builder should build for production or not. The default for this will return true
     /// - Returns: The current builder
-    public func production(expression: @escaping() -> Bool = { return true }) -> Self {
+    @discardableResult public func production(expression: @escaping() -> Bool = { return true }) -> Self {
         self.productionEnabled = expression
         return self
     }

@@ -29,58 +29,54 @@ public enum EnvironmentChangedKeys: String {
 
 /// This is the main class of the EnvironmentManager. To create one please use a Builder() instance.
 public class EnvironmentManager {
-    public let store: DataStore    
-    fileprivate var entries: [Entry] = []
+    typealias EntryAsStoreable = [String:[String: String]]
+    public var store: DataStore
+    private var environmentStore: EnvironmentStore
     
+    fileprivate var entries: [Entry] = []
+    fileprivate var customEntries: [Entry] {
+        return CustomEntryStore(store).allEntries
+    }
+    fileprivate var totalEntries: [Entry] {
+        // elements that include a custom entry
+        return entries + customEntries
+    }
+
     
     /// Createsa a new EnvironmentManager using an array of pre created Entry objects.
     ///
     /// - Parameters:
     ///   - initialEntries: The initial entries to use
     ///   - backingStore: The store to load persisted environment from (if applicable). The user defaults will be used to read and write environment information to by default
-    internal init(initialEntries: [Entry] = [], backingStore: DataStore = UserDefaultsStore()) {
-        self.store = backingStore
-        let environments = self.store.readEnvironments()
+    internal init(_ initialEntries: [Entry] = [], backingStore: DataStore = UserDefaultsStore()) {
+        store = backingStore
+        environmentStore = EnvironmentStore(backingStore: backingStore)
         for entry in initialEntries {
-            let environment = environments[entry.name] ?? entry.currentEnvironment
-            entry.backingCurrentEnvironment = environment
             self.add(entry: entry)
         }
     }
-    
-    /// Attempts to save the current environments to the store passed at creation.
-    public func save() {
-        var store = self.store
-
-        // Reduce our entries to a dictionary of service names -> current environment
-        let reduced = self.entries.reduce([:]) { (dict, entry: Entry) -> [String: String] in
-            var dict = dict
-            dict[entry.name] = entry.currentEnvironment
-            return dict
-        }
-        
-        store.write(environments:reduced)
-    }
-    
     
     /// Returns an ordered list of all of the API names currently managed. By default the list will be returned in ascending order but you can optionally sort them in another way (i.e. descending)
     ///
     /// - Returns: The names of all APIs currently managed
     public func apiNames() -> [String] {
-        return self.entries.map({ $0.name })
+        return self.totalEntries.map({ $0.name })
     }
     
+    // TOOD: move to something that knows sabout current environments.
+    // i.e. selectedEnvironmentStore.
     /// Builds a full URL for a given base API.
     ///
     /// - Parameters:
     ///   - apiName: The name of the API (e.g. MDQuoteService)
     ///   - path: The path to the resource. This will be appended to the base URL
     /// - Returns: A new URL for use or nil if the URL could not be created or the API is not found in the manager
-    public func urlFor(apiName: String, path: String) -> URL? {
-        guard let singleEntry = self.entry(forService: apiName) else {
+    public func url(for apiName: String, path: String) -> URL? {
+        guard let entry = self.entry(for: apiName) else {
             return nil
         }
-        return singleEntry.buildURLWith(path: path)
+        
+        return environmentStore.buildUrl(for: entry, path: path)
     }
     
     
@@ -89,7 +85,11 @@ public class EnvironmentManager {
     /// - Parameter apiName: The name of the API to check what the currently selected environment is
     /// - Returns: The environment name, or nil if that API name is not registered with the manager
     public func currentEnvironmentFor(apiName: String) -> String? {
-        return self.entries.first(where: { $0.name == apiName })?.currentEnvironment
+        guard let entry = self.totalEntries.first(where: {$0.name == apiName }) else {
+            return nil
+        }
+        
+        return environmentStore.currentlySelectedEnvironmentFor(entry)
     }
     
     
@@ -97,8 +97,13 @@ public class EnvironmentManager {
     ///
     /// - Parameter apiName: The name of the API
     /// - Returns: A base URL or nil if that API name cannot be found
-    public func baseUrl(apiName: String) -> URL? {
-        return self.entries.first(where: { $0.name == apiName })?.currentBaseUrl
+    public func baseUrl(for apiName: String) -> URL? {
+        guard let entry = self.totalEntries.first(where: { $0.name == apiName }) else {
+            return nil
+        }
+        
+        // remove training /
+        return environmentStore.baseUrl(for: entry)
     }
     
     /// Attempts to select a new environment for a given API. If the environment succefully changes for an API a notification will be posted. Please see the "EnvironmentDidChange": notifcation
@@ -107,11 +112,11 @@ public class EnvironmentManager {
     ///   - environment: The environment to select
     ///   - apiName: The API to select the environment for
     public func select(environment: String, forAPI apiName: String) {
-        guard let entry = self.entry(forService: apiName) else {
+        guard let entry = self.totalEntries.first(where: { $0.name == apiName }) else {
             return
         }
         
-        entry.currentEnvironment = environment
+        environmentStore.selectEnvironment(environment, for: entry)
     }
     
     
@@ -119,14 +124,15 @@ public class EnvironmentManager {
     ///
     /// - Parameter service: The name of the service
     /// - Returns: The corresponding Entry or nil
-    public func entry(forService service: String) -> Entry? {
+    public func entry(for service: String) -> Entry? {
         return self.entries.first(where: { $0.name == service })
     }
-    
 }
 
 // MARK: - Index and IndexPath support
 extension EnvironmentManager {
+    
+    /// Returns an entry from a given index. this only cares about entries passed on creation from the Builder or the .csv file
     public func entry(forIndex index: Int) -> Entry? {
         return self.entries[safe: index]
     }
@@ -141,15 +147,14 @@ extension EnvironmentManager {
 
 // MARK: - Mutators - internal. Use Builder() to add entries
 extension EnvironmentManager {
-    /// Adds a single Entry to the environment manager. If the entry was persisted to the store that was passed on creation, it will update the current environment to match what the store has.
+    /// Adds a single Entry to the environment manager. If the entry's selected environment was persisted to the store in the past, it will update the current environment to match what the store has.
     ///
     /// - Parameter entry: The entry to add
     internal func add(entry: Entry) {
         // check if the entry was saved previously
-        if let environment = self.store.environment(forService: entry.name) {
-            entry.backingCurrentEnvironment = environment
-        }
-        //TOOD: dont allow multiple of the same env name - overwrite old one if new one w/ matching name coems in - write test
+//        if let environment = self.store.environment(forService: entry.name) {
+//            entry.backingCurrentEnvironment = environment
+//        }
         self.entries.append(entry)
     }
     
@@ -163,10 +168,10 @@ extension EnvironmentManager {
         var environmentUrls = environmentUrls
         
         // Bad logic
-        let entry = self.entry(forService: apiName) ?? Entry(name: apiName, initialEnvironment: environmentUrls.removeFirst())
+        var entry = self.entry(for: apiName) ?? Entry(name: apiName, initialEnvironment: environmentUrls.removeFirst())
         
         for pair in environmentUrls {
-            entry.add(pair: pair)
+            entry.add(pair)
         }
         self.add(entry: entry)
     }
@@ -175,7 +180,7 @@ extension EnvironmentManager {
 
 // MARK: - Convenience extension for accessing our data from the DataStore
 internal extension DataStore {
-    internal var privateStoreKey: String {
+    private var privateStoreKey: String {
          return "com.markit.EnvironmentMenanager"
     }
 
@@ -183,9 +188,12 @@ internal extension DataStore {
         return self.readEnvironments()[service]
     }
     
-    mutating func write(environments: [String: String]) {
-        self[privateStoreKey] = environments
+    mutating func write(_ environments: [String: String]) {
+        var dictionary = readEnvironments()
+        dictionary += environments
+        self[privateStoreKey] = dictionary
     }
+    
     
     func readEnvironments() -> [String: String] {
         guard let environmentsDictionary = self[privateStoreKey] as? [String: String] else {

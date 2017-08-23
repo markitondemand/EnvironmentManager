@@ -5,6 +5,9 @@
 // TOOD: move this to its own common code
 import Foundation
 
+public protocol Stringable {
+    var stringValue: String { get }
+}
 
 /// The DataStore is an abstract class for storing data in different ways. It separates the "How" and the "What".
 public protocol DataStore {
@@ -21,10 +24,10 @@ public class DictionaryStore: DataStore {
     
     public subscript(key: String) -> Any? {
         get {
-            return self.backingDictionary[key]
+            return backingDictionary[key]
         }
         set(newValue) {
-            self.backingDictionary[key] = newValue
+            backingDictionary[key] = newValue
         }
     }
 }
@@ -34,15 +37,16 @@ public class DictionaryStore: DataStore {
 public class UserDefaultsStore: DataStore {
     private var backingDefaults: UserDefaults
     init(defaults: UserDefaults = UserDefaults.standard) {
-        self.backingDefaults = defaults
+        backingDefaults = defaults
     }
     
     public subscript(key: String) -> Any? {
         get {
-            return self.backingDefaults.object(forKey: key)
+            return backingDefaults.object(forKey: key)
         }
         set(newValue) {
-            self.backingDefaults.set(newValue, forKey: key)
+            backingDefaults.set(newValue, forKey: key)
+            backingDefaults.synchronize()
         }
     }
 }
