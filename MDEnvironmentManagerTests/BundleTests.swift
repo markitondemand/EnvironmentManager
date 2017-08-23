@@ -18,7 +18,7 @@ class BundleTests: XCTestCase {
     }
     
     func testInstantiatesViewController() {
-        let em = EnvironmentManager()
+        let em = EnvironmentManager(backingStore: DictionaryStore())
         
         XCTAssertNotNil(em.generateViewController())
     }

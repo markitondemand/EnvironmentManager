@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		283EB6751E65FE140004C1A3 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 283EB6741E65FE140004C1A3 /* DataStore.swift */; };
 		28440B6B1E79A1CD00E00667 /* EntryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28440B6A1E79A1CD00E00667 /* EntryTests.swift */; };
+		28616A1C1F4C90E7006C5D70 /* SelectingEnvironmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28616A1B1F4C90E7006C5D70 /* SelectingEnvironmentTests.swift */; };
+		28616A1E1F4CB32D006C5D70 /* EnvironmentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28616A1D1F4CB32D006C5D70 /* EnvironmentStore.swift */; };
+		28616A211F4CB524006C5D70 /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28616A201F4CB524006C5D70 /* TestHelper.swift */; };
 		286CFFA11E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286CFFA01E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift */; };
 		287F06311E82ED02004937BA /* Storyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287F06301E82ED02004937BA /* Storyboard.swift */; };
 		288C829C1E69E0E6001E70F4 /* CSVTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288C829B1E69E0E6001E70F4 /* CSVTests.swift */; };
@@ -25,10 +28,13 @@
 		28AB957D1E60DA39000EAEA9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28AB957B1E60DA39000EAEA9 /* Main.storyboard */; };
 		28AB957F1E60DA39000EAEA9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 28AB957E1E60DA39000EAEA9 /* Assets.xcassets */; };
 		28AB95821E60DA39000EAEA9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28AB95801E60DA39000EAEA9 /* LaunchScreen.storyboard */; };
+		28AE6ED51F464E3D000264D3 /* CustomEnvironments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE6ED41F464E3D000264D3 /* CustomEnvironments.swift */; };
 		28BA27551E6F805E00CA0949 /* CSVSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28BA27541E6F805E00CA0949 /* CSVSupport.swift */; };
 		28C57AFD1E6E105B000F6B32 /* Environments.csv in Resources */ = {isa = PBXBuildFile; fileRef = 28C57AFC1E6E105B000F6B32 /* Environments.csv */; };
 		28C57B011E6E2875000F6B32 /* BuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28C57B001E6E2875000F6B32 /* BuilderTests.swift */; };
 		28C57B081E6F8014000F6B32 /* Builder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28C57B061E6F7FAC000F6B32 /* Builder.swift */; };
+		28E61ABB1F4B4C8D0003ABBD /* AddEnvironmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E61ABA1F4B4C8D0003ABBD /* AddEnvironmentViewController.swift */; };
+		28E61ABD1F4B4DF70003ABBD /* CustomEntryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E61ABC1F4B4DF70003ABBD /* CustomEntryTests.swift */; };
 		32CCB3FA3F9C78D6EA5F4980 /* Pods_MDEnvironmentManagerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18B4DE39BA1B428233046F14 /* Pods_MDEnvironmentManagerTests.framework */; };
 		6624D10110EE3A68DF54E23E /* Pods_MDEnvironmentManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACBD0674CFE686507D536FF3 /* Pods_MDEnvironmentManager.framework */; };
 		AF7AB28BCEF09D466879C5D7 /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFE1E76DDD7EC314A8E0DFD5 /* Pods_Example.framework */; };
@@ -56,6 +62,9 @@
 		18B4DE39BA1B428233046F14 /* Pods_MDEnvironmentManagerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MDEnvironmentManagerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		283EB6741E65FE140004C1A3 /* DataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataStore.swift; path = Source/DataStore.swift; sourceTree = SOURCE_ROOT; };
 		28440B6A1E79A1CD00E00667 /* EntryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntryTests.swift; sourceTree = "<group>"; };
+		28616A1B1F4C90E7006C5D70 /* SelectingEnvironmentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectingEnvironmentTests.swift; sourceTree = "<group>"; };
+		28616A1D1F4CB32D006C5D70 /* EnvironmentStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnvironmentStore.swift; path = Source/EnvironmentStore.swift; sourceTree = SOURCE_ROOT; };
+		28616A201F4CB524006C5D70 /* TestHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHelper.swift; sourceTree = "<group>"; };
 		286CFFA01E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnvironmentEntryDetailViewController.swift; path = Source/EnvironmentEntryDetailViewController.swift; sourceTree = SOURCE_ROOT; };
 		287F06301E82ED02004937BA /* Storyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Storyboard.swift; path = Source/Storyboard.swift; sourceTree = SOURCE_ROOT; };
 		288C829B1E69E0E6001E70F4 /* CSVTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSVTests.swift; sourceTree = "<group>"; };
@@ -77,12 +86,15 @@
 		28AB957E1E60DA39000EAEA9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		28AB95811E60DA39000EAEA9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		28AB95831E60DA39000EAEA9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		28AE6ED41F464E3D000264D3 /* CustomEnvironments.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomEnvironments.swift; path = Source/CustomEnvironments.swift; sourceTree = SOURCE_ROOT; };
 		28BA27541E6F805E00CA0949 /* CSVSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CSVSupport.swift; path = Source/CSVSupport.swift; sourceTree = SOURCE_ROOT; };
 		28C57AFC1E6E105B000F6B32 /* Environments.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Environments.csv; sourceTree = "<group>"; };
 		28C57B001E6E2875000F6B32 /* BuilderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuilderTests.swift; sourceTree = "<group>"; };
 		28C57B061E6F7FAC000F6B32 /* Builder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Builder.swift; path = Source/Builder.swift; sourceTree = SOURCE_ROOT; };
 		28E0E1D31E77587400B0CD70 /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = SOURCE_ROOT; };
 		28E0E1D41E77588B00B0CD70 /* MDEnvironmentManager.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = MDEnvironmentManager.podspec; sourceTree = SOURCE_ROOT; };
+		28E61ABA1F4B4C8D0003ABBD /* AddEnvironmentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AddEnvironmentViewController.swift; path = Source/AddEnvironmentViewController.swift; sourceTree = SOURCE_ROOT; };
+		28E61ABC1F4B4DF70003ABBD /* CustomEntryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomEntryTests.swift; sourceTree = "<group>"; };
 		68422CA4AC48A86B487D0C2D /* Pods-MDEnvironmentManagerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MDEnvironmentManagerTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MDEnvironmentManagerTests/Pods-MDEnvironmentManagerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		813C61D7659D654AFB827347 /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
 		ACBD0674CFE686507D536FF3 /* Pods_MDEnvironmentManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MDEnvironmentManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -121,6 +133,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		28616A1F1F4CB518006C5D70 /* TestHelper */ = {
+			isa = PBXGroup;
+			children = (
+				28616A201F4CB524006C5D70 /* TestHelper.swift */,
+			);
+			name = TestHelper;
+			sourceTree = "<group>";
+		};
 		28AB95431E5E3062000EAEA9 = {
 			isa = PBXGroup;
 			children = (
@@ -158,12 +178,15 @@
 		28AB955D1E5E3130000EAEA9 /* MDEnvironmentManagerTests */ = {
 			isa = PBXGroup;
 			children = (
+				28616A1F1F4CB518006C5D70 /* TestHelper */,
 				28AB95601E5E3130000EAEA9 /* Info.plist */,
 				288C829B1E69E0E6001E70F4 /* CSVTests.swift */,
 				28AB955E1E5E3130000EAEA9 /* EnvironmentManagerTests.swift */,
 				28C57B001E6E2875000F6B32 /* BuilderTests.swift */,
 				28A492851E7361AA00FF690B /* BundleTests.swift */,
 				28440B6A1E79A1CD00E00667 /* EntryTests.swift */,
+				28E61ABC1F4B4DF70003ABBD /* CustomEntryTests.swift */,
+				28616A1B1F4C90E7006C5D70 /* SelectingEnvironmentTests.swift */,
 			);
 			path = MDEnvironmentManagerTests;
 			sourceTree = "<group>";
@@ -179,6 +202,9 @@
 				28C57B061E6F7FAC000F6B32 /* Builder.swift */,
 				28BA27541E6F805E00CA0949 /* CSVSupport.swift */,
 				287F06301E82ED02004937BA /* Storyboard.swift */,
+				28AE6ED41F464E3D000264D3 /* CustomEnvironments.swift */,
+				28E61ABA1F4B4C8D0003ABBD /* AddEnvironmentViewController.swift */,
+				28616A1D1F4CB32D006C5D70 /* EnvironmentStore.swift */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -521,10 +547,13 @@
 				28AB95691E5E4135000EAEA9 /* EnvironmentManager.swift in Sources */,
 				28C57B081E6F8014000F6B32 /* Builder.swift in Sources */,
 				28BA27551E6F805E00CA0949 /* CSVSupport.swift in Sources */,
+				28616A1E1F4CB32D006C5D70 /* EnvironmentStore.swift in Sources */,
 				287F06311E82ED02004937BA /* Storyboard.swift in Sources */,
+				28AE6ED51F464E3D000264D3 /* CustomEnvironments.swift in Sources */,
 				286CFFA11E64C36500AA2C39 /* EnvironmentEntryDetailViewController.swift in Sources */,
 				283EB6751E65FE140004C1A3 /* DataStore.swift in Sources */,
 				28AB956B1E60B2EB000EAEA9 /* Entry.swift in Sources */,
+				28E61ABB1F4B4C8D0003ABBD /* AddEnvironmentViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -535,7 +564,10 @@
 				288C829C1E69E0E6001E70F4 /* CSVTests.swift in Sources */,
 				28A492861E7361AA00FF690B /* BundleTests.swift in Sources */,
 				28440B6B1E79A1CD00E00667 /* EntryTests.swift in Sources */,
+				28616A211F4CB524006C5D70 /* TestHelper.swift in Sources */,
 				28C57B011E6E2875000F6B32 /* BuilderTests.swift in Sources */,
+				28616A1C1F4C90E7006C5D70 /* SelectingEnvironmentTests.swift in Sources */,
+				28E61ABD1F4B4DF70003ABBD /* CustomEntryTests.swift in Sources */,
 				28AB955F1E5E3130000EAEA9 /* EnvironmentManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -607,7 +639,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -660,7 +692,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

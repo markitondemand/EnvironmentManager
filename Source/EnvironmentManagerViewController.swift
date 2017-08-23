@@ -23,15 +23,26 @@ class BundleAccessor {
 
 /// This class manages a default UI for selecting environments
 class EnvironmentManagerViewcontroller: UITableViewController {
-    private enum SegueIdentifiers {
-        static let Exit = "Exit"
-        static let EnvironmentDetails = "EnvironmentDetails"
-    }
-    private enum CellIdentifiers {
-        static let APICellIdentifier = "APICellIdentifier"
+    internal static var sharedEnvironmentManager: EnvironmentManager!
+    
+    private enum Segue: String {
+        case Exit = "Exit"
+        case EnvironmentDetails = "EnvironmentDetails"
     }
     
-    var environmentManager: EnvironmentManager!
+    private enum CellIdentifiers {
+        static let APICellIdentifier = "APICellIdentifier"
+        static let AddCellIdentifier = "AddEnvironmentIdentifier"
+    }
+    
+    var environmentManager: EnvironmentManager {
+        get {
+            return EnvironmentManagerViewcontroller.sharedEnvironmentManager
+        }
+        set(value) {
+            EnvironmentManagerViewcontroller.sharedEnvironmentManager = value
+        }
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         self.tableView.reloadData()
@@ -46,19 +57,19 @@ class EnvironmentManagerViewcontroller: UITableViewController {
         
         let apiName = self.environmentManager.apiNames()[indexPath.row]
         cell.textLabel?.text = apiName
-        cell.detailTextLabel?.text = self.environmentManager.currentEnvironmentFor(apiName: apiName)
+        cell.detailTextLabel?.text = self.environmentManager.currentEnvironment(for: apiName)
         cell.accessoryType = .disclosureIndicator
         
         return cell
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let identifier = segue.identifier else {
+        guard let segueID = Segue(rawValue: segue.identifier ?? "") else {
             return
         }
         
-        switch identifier {
-        case SegueIdentifiers.EnvironmentDetails:
+        switch segueID {
+        case .EnvironmentDetails:
             guard let controller = segue.destination as? EnvironmentEntryDetailViewController else {
                 return
             }
@@ -68,13 +79,11 @@ class EnvironmentManagerViewcontroller: UITableViewController {
             }
             
             let index = self.tableView.indexPath(for: cell)!.row
-            controller.entry = self.environmentManager.entry(forIndex: index)
-        case SegueIdentifiers.Exit:
-            self.environmentManager.save()
-        default:
+            controller.entryName = self.environmentManager.entry(forIndex: index)?.name
+        case .Exit:
             return
+//            self.environmentManager.save()
         }
-
     }
 }
 
