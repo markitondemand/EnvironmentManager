@@ -31,7 +31,7 @@ public enum EnvironmentChangedKeys: String {
 public class EnvironmentManager {
     
     /// The current backing store this EnvironmentManager is using. Passed in the initializer
-    public var store: DataStore
+    internal var store: DataStore
 
     fileprivate var entries: [Entry] = []
     fileprivate var customEntries: [Entry] {
