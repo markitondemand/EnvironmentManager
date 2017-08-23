@@ -71,8 +71,8 @@ public class EnvironmentManager {
     ///   - apiName: The name of the API (e.g. MDQuoteService)
     ///   - path: The path to the resource. This will be appended to the base URL
     /// - Returns: A new URL for use or nil if the URL could not be created or the API is not found in the manager
-    public func urlFor(apiName: String, path: String) -> URL? {
-        guard let entry = self.entry(forService: apiName) else {
+    public func url(for apiName: String, path: String) -> URL? {
+        guard let entry = self.entry(for: apiName) else {
             return nil
         }
         
@@ -97,7 +97,7 @@ public class EnvironmentManager {
     ///
     /// - Parameter apiName: The name of the API
     /// - Returns: A base URL or nil if that API name cannot be found
-    public func baseUrl(apiName: String) -> URL? {
+    public func baseUrl(for apiName: String) -> URL? {
         guard let entry = self.totalEntries.first(where: { $0.name == apiName }) else {
             return nil
         }
@@ -124,7 +124,7 @@ public class EnvironmentManager {
     ///
     /// - Parameter service: The name of the service
     /// - Returns: The corresponding Entry or nil
-    public func entry(forService service: String) -> Entry? {
+    public func entry(for service: String) -> Entry? {
         return self.entries.first(where: { $0.name == service })
     }
 }
@@ -168,7 +168,7 @@ extension EnvironmentManager {
         var environmentUrls = environmentUrls
         
         // Bad logic
-        var entry = self.entry(forService: apiName) ?? Entry(name: apiName, initialEnvironment: environmentUrls.removeFirst())
+        var entry = self.entry(for: apiName) ?? Entry(name: apiName, initialEnvironment: environmentUrls.removeFirst())
         
         for pair in environmentUrls {
             entry.add(pair)

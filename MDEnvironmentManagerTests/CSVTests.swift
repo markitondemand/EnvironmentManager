@@ -51,7 +51,7 @@ class CSVTests: XCTestCase {
 
         let em = try? Builder().add(self.createCSV(rows:[("Service1", "Env1", "http://env1.api.service1.com")])).build()
         
-        let entry = em?.entry(forService: "Service1")
+        let entry = em?.entry(for: "Service1")
         XCTAssertEqual(entry?.name, "Service1")
         XCTAssertEqual(entry?.currentBaseUrlForEnvironment("Env1"), URL(string: "http://env1.api.service1.com")!)
         
@@ -63,7 +63,7 @@ class CSVTests: XCTestCase {
         
         let em = try? Builder().add(self.createCSV(rows: csvItems)).build()
         
-        let entry = em?.entry(forService: "Service1")
+        let entry = em?.entry(for: "Service1")
         
         XCTAssertEqual(entry?.environmentNames().count, 2)
     }
@@ -73,7 +73,7 @@ class CSVTests: XCTestCase {
         self.add(services: 2, environments: 1, array: &csvItems)
         
         let em = try? Builder().add(self.createCSV(rows: csvItems)).build()
-        let entryTwo = em?.entry(forService: "Service2")
+        let entryTwo = em?.entry(for: "Service2")
         
         XCTAssertEqual(entryTwo?.currentBaseUrlForEnvironment("Env1")?.absoluteString, "http://env1.api.service2.com")
     }
@@ -86,7 +86,7 @@ class CSVTests: XCTestCase {
         let csv = self.createCSV(rows: entries)
         
         let em = try? Builder().add(csv).build()
-        let entryTwo = em?.entry(forService: "Service2")
+        let entryTwo = em?.entry(for: "Service2")
         
         XCTAssertEqual(entryTwo?.currentBaseUrlForEnvironment("Env1")?.absoluteString, "http://env1.api.service2.com")
         XCTAssertEqual(entryTwo?.environment(forIndex: 1), "Env2")
@@ -104,7 +104,7 @@ class CSVTests: XCTestCase {
         let em = try? Builder().add(csvString).build()
         
         XCTAssertEqual(em?.apiNames().count, 3)
-        XCTAssertEqual(em?.entry(forService: "Service1")?.environmentNames().count, 3)
+        XCTAssertEqual(em?.entry(for: "Service1")?.environmentNames().count, 3)
     }
 }
 

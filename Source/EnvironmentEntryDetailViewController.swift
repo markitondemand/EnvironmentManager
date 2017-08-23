@@ -118,7 +118,7 @@ class EnvironmentEntryDetailViewController: UITableViewController {
     }
     
     private var currentEntry: Entry {
-        return EnvironmentManagerViewcontroller.sharedEnvironmentManager.entry(forService: entryName)!
+        return EnvironmentManagerViewcontroller.sharedEnvironmentManager.entry(for: entryName)!
     }
 }
 

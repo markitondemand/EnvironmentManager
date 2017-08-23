@@ -26,7 +26,7 @@ class BuilderTests: XCTestCase {
         let b = Builder()
         let em = try! b.add(entry: "Service1", environments:[("Env1", "http://env1.api.service1.com")]).build()
         
-        XCTAssertEqual(em.entry(forService: "Service1"), Entry(name: "Service1", initialEnvironment: ("Env1", URL(string: "http://env1.api.service1.com")!)))
+        XCTAssertEqual(em.entry(for: "Service1"), Entry(name: "Service1", initialEnvironment: ("Env1", URL(string: "http://env1.api.service1.com")!)))
     }
     
     func testSettingProductionEntryDefaultsToProduction() {
@@ -38,7 +38,7 @@ class BuilderTests: XCTestCase {
             .production()
             .build()
         
-        XCTAssertEqual(em.entry(forService: "Service1")?.environmentNames().count, 1)
+        XCTAssertEqual(em.entry(for: "Service1")?.environmentNames().count, 1)
     }
     
     func testSettingProductionEntryToFalseDoesNotUseProduction() {
@@ -50,7 +50,7 @@ class BuilderTests: XCTestCase {
             .production(expression: { return false })
             .build()
         
-        XCTAssertEqual(em.entry(forService: "Service1")?.environmentNames().count, 2)
+        XCTAssertEqual(em.entry(for: "Service1")?.environmentNames().count, 2)
     }
     
     func testDefaultSortOrderIsOrderOfItemsAdded() {
