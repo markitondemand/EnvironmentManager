@@ -29,10 +29,10 @@ public enum EnvironmentChangedKeys: String {
 
 /// This is the main class of the EnvironmentManager. To create one please use a Builder() instance.
 public class EnvironmentManager {
-    typealias EntryAsStoreable = [String:[String: String]]
-    public var store: DataStore
-    private var environmentStore: EnvironmentStore
     
+    /// The current backing store this EnvironmentManager is using. Passed in the initializer
+    public var store: DataStore
+
     fileprivate var entries: [Entry] = []
     fileprivate var customEntries: [Entry] {
         return CustomEntryStore(store).allEntries
@@ -42,13 +42,15 @@ public class EnvironmentManager {
         return entries + customEntries
     }
 
+    private var environmentStore: EnvironmentStore
+
     
     /// Createsa a new EnvironmentManager using an array of pre created Entry objects.
     ///
     /// - Parameters:
     ///   - initialEntries: The initial entries to use
     ///   - backingStore: The store to load persisted environment from (if applicable). The user defaults will be used to read and write environment information to by default
-    internal init(_ initialEntries: [Entry] = [], backingStore: DataStore = UserDefaultsStore()) {
+    internal init(_ initialEntries: [Entry] = [], backingStore: DataStore) {
         store = backingStore
         environmentStore = EnvironmentStore(backingStore: backingStore)
         for entry in initialEntries {
@@ -63,8 +65,6 @@ public class EnvironmentManager {
         return self.totalEntries.map({ $0.name })
     }
     
-    // TOOD: move to something that knows sabout current environments.
-    // i.e. selectedEnvironmentStore.
     /// Builds a full URL for a given base API.
     ///
     /// - Parameters:
@@ -162,8 +162,7 @@ extension EnvironmentManager {
     internal func add(apiName: String, environmentUrls:[(environment: String, baseUrl: URL)]) {
         precondition(!environmentUrls.isEmpty, "Error, input URLs for given entry was empty! Plesae provide at least one environment and corresponding url")
         var environmentUrls = environmentUrls
-        
-        // Bad logic
+        // Might be better to have another helper function handle merging of already existing entries, instead of having this logic here
         var entry = self.entry(for: apiName) ?? Entry(name: apiName, initialEnvironment: environmentUrls.removeFirst())
         
         for pair in environmentUrls {

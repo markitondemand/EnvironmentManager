@@ -139,6 +139,8 @@ extension EnvironmentEntryDetailViewController {
 }
 
 
+
+/// Helper VIewModel that handles some of our specific business logic for this view
 class EntryViewModel {
     var baseEntry: Entry
     var customEntryStore: CustomEntryStore
@@ -166,7 +168,7 @@ class EntryViewModel {
     
     // Mutators
     func addEnvironment(_ environment: Entry.Environment) {
-        self.customEntryStore.addEnvironment((environment.environment, environment.baseUrl), to: name)
+        self.customEntryStore.add(pair: (environment.environment, environment.baseUrl), to: name)
     }
     
     func deleteEnvironment(at indexPath: IndexPath) {

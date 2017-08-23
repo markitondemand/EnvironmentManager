@@ -20,12 +20,17 @@ class CustomEntryStore {
         }
     }
     
+    
+    /// Returns a list of all Entry objects currently stored in this CustomEntryStore
     var allEntries: [Entry] {
-        
         let customEntries = entryDictionary
         return customEntries.map{ return Entry(csv: $1 )}.flatMap{$0}
     }
     
+    
+    /// Standard initializer.
+    ///
+    /// - Parameter store: The DataStore to use for reading and writing entries from / to
     init(_ store: DataStore) {
         self.store = store
     }
@@ -132,7 +137,7 @@ extension CustomEntryStore {
 
 // MARK: - Addition operator
 extension CustomEntryStore {
-    // TOOD: determine if we should do that and add a unit test
+    // TOOD: determine if we should do this and add a unit test
     func add(left: CustomEntryStore, right: Entry) -> CustomEntryStore {
         left.addCustomEntry(right)
         return self
@@ -141,12 +146,12 @@ extension CustomEntryStore {
 
 // MARK: - conveinece for Entry
 extension CustomEntryStore {
-    internal func addEnvironment(_ environment: Entry.Pair, to entryName: String) {
+    internal func add(pair: Entry.Pair, to entryName: String) {
         guard var entry = self[entryName] else {
-            self[entryName] = Entry(name: entryName, initialEnvironment: environment)
+            self[entryName] = Entry(name: entryName, initialEnvironment: pair)
             return
         }
-        entry.add(environment)
+        entry.add(pair)
         self[entryName] = entry
     }
 }

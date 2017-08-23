@@ -17,12 +17,12 @@ public struct Entry {
             return (environment, baseUrl)
         }
         
-        public init(environment: String, baseUrl: URL) {
+        init(environment: String, baseUrl: URL) {
             self.environment = environment
             self.baseUrl = baseUrl
         }
         
-        public init(pair: Pair) {
+        init(pair: Pair) {
             self.init(environment: pair.0, baseUrl: pair.1)
         }
         
@@ -32,11 +32,14 @@ public struct Entry {
         }
         
         // Equatabe
-        public static func ==(lhs: Environment, rhs: Environment) -> Bool {
+        static func ==(lhs: Environment, rhs: Environment) -> Bool {
             return lhs.baseUrl == rhs.baseUrl && lhs.environment == rhs.environment
         }
     }
     
+    
+    /// Tuple type that represents an Environment.
+    /// - seealso: Envoroment.asPair
     public typealias Pair = (environment: String, baseUrl: URL)
     
     /// The name of the API (e.g. MDQuoteService)
@@ -58,27 +61,26 @@ public struct Entry {
     /// - Parameters:
     ///   - name: The name of the entry, this should be something like the name of your API, (e.g. "MDQuoteService")
     ///   - initialEnvironment: The initial environment as a tuple. (e.g. acc, prod, acceptance, test, etc.) The URL should be the base URL to your service
-    public init(name: String, initialEnvironment: (String, URL)) {
+    public init(name: String, initialEnvironment: Pair) {
         environments = [Environment(pair: initialEnvironment)]
         self.name = name
     }
-    
-    internal init(name: String, environments: [Environment]) {
-        self.name = name
-        self.environments = environments
-    }
-    
     
     /// Initializes a new Entry with a name and a list of environments and URLs.
     ///
     /// - Parameters:
     ///   - name: The name of the Entry
     ///   - environments: The list of environments and URLs. There must be at least one element in this or an assertion is raised. The first element is used as the initial current environment
-    public init(name: String, environments: [(String, URL)]) {
+    public init(name: String, environments: [Pair]) {
         precondition(environments.count > 0, "You must pass at least one environment pair.")
         var environments = environments
         self.init(name:name, initialEnvironment: environments.removeFirst())
         self.add(environments)
+    }
+    
+    internal init(name: String, environments: [Environment]) {
+        self.name = name
+        self.environments = environments
     }
 }
 
@@ -90,7 +92,6 @@ extension Entry: Equatable {
         return lhs.environments == rhs.environments &&
             lhs.name == rhs.name
     }
-
 }
 
 
@@ -121,13 +122,6 @@ extension Entry {
     public func environmentNames() -> [String] {
         return self.environments.map({ $0.environment })
     }
-    
-    /// Attempts to select a new environment. If the environment is not currently known, or already selected no operation is performed. This does the same as setting the "currentEnvironment" variable directly
-    ///
-    /// - Parameter environment: The environment to try adn aselect
-//    public func select(environment: String) {
-//        self.currentEnvironment = environment
-//    }
 }
 
 
@@ -154,19 +148,8 @@ extension Entry {
         guard let environment = self.environmentNames()[safe: index] else {
             return nil
         }
-        // TOOD: refactor. This is most likely horrendously ineficient. Need to probably support sorting the actual EnvironmentPair objects
         return self.baseUrl(forEnvironment: environment)
     }
-    
-    /// Selects an environment at a given index. This will sort the environment by there name for selecting an index. The default sort is in ascending order
-    ///
-    /// - Parameter index: The index
-//    public func selectEnvironment(forIndex index: Int) {
-//        guard let environment = self.environmentNames()[safe: index] else {
-//            return
-//        }
-//        self.currentEnvironment = environment
-//    }
 }
 
 
@@ -209,7 +192,7 @@ extension Entry {
 
 // MARK: - Storage to DataStore
 extension Entry {
-    func writeToStore(_ store: DataStore) {
+    internal func writeToStore(_ store: DataStore) {
         var store = store
         
         
@@ -234,7 +217,7 @@ extension Entry {
 
 // MARK: - Special support for combining Sequence of `Entry` items
 extension Sequence where Self.Iterator.Element == Entry {
-    static func +(left: Self, right: Self) -> [Entry] {
+    internal static func +(left: Self, right: Self) -> [Entry] {
         // The below logic is a bit scary at first, but basically I am doing the following.
         // Find any overlapping entries that are in both the "CustomEntryStore" store, as well as the ones added at initialization via CSV. Entry is treated as a value object, and thus such is transactional, so modifying, creating, etc. dont really matter. (its all stored underneath, either in the self.entries, created via CSV, or in the CustomEntryStore, created via user and stored as CSV strings)
         // For each in memory entry, we find the entry that also exists in the CustomStore.

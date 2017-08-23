@@ -112,7 +112,7 @@ extension Entry {
     /// Invalid usage that will result in nil:
     /// `Service1|acc|http://acc.api.service.com\n
     ///  OtherService|prod|http://prod.api.service.com`
-    init?(csv: String) {
+    public init?(csv: String) {
         guard let stringData = csv.data(using: .utf8) else {
             return nil
         }
@@ -129,7 +129,7 @@ extension Entry {
                 name = element[safe: 0]
             }
             
-            // Check if we are passing  correct CSV for a single entry. If for some reason additional lines contain a different service name return nil. This is probably unexpected behavior
+            // Check if we are passing  correct CSV for a single entry. If for some reason additional lines contain a different service name return nil. This is unexpected behavior
             guard name == element[safe: 0] else {
                 return nil
             }
@@ -147,7 +147,6 @@ extension Entry {
             environments.count > 0 else {
                 return nil
         }
-        // TOOD: dont pass userdefault store here
         self.init(name: name!, environments: environments)
     }
 }

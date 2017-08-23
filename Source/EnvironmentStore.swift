@@ -8,6 +8,8 @@
 
 import Foundation
 
+
+/// This class manages storing selected environments
 class EnvironmentStore {
     var backingStore: DataStore
     
@@ -15,12 +17,12 @@ class EnvironmentStore {
         self.backingStore = backingStore
     }
     
-    public func currentlySelectedEnvironmentFor(_ entry: Entry) -> String {
+    func currentlySelectedEnvironmentFor(_ entry: Entry) -> String {
         // TOOD: return a different result if the current one does not exist in _entry_
         return backingStore[entry.name] as? String ?? entry.environments.first!.environment
     }
     
-    public func selectEnvironment(_ environment: String, for entry: Entry) {
+    func selectEnvironment(_ environment: String, for entry: Entry) {
         let found = entry.environments.map { $0.environment }.first(where: { $0 == environment })
         let oldEnvironment = self.currentlySelectedEnvironmentFor(entry)
         
@@ -31,13 +33,13 @@ class EnvironmentStore {
         }
     }
     
-    public func buildUrl(for entry: Entry, path: String) -> URL {
+    func buildUrl(for entry: Entry, path: String) -> URL {
         let selectedEnvironment = currentlySelectedEnvironmentFor(entry)
         return entry.baseUrl(forEnvironment: selectedEnvironment)!.appendingPathComponent(path)
     }
     
     // TOOD: unit test
-    public func baseUrl(for entry: Entry) -> URL {
+    func baseUrl(for entry: Entry) -> URL {
         let selectedEnvironment = currentlySelectedEnvironmentFor(entry)
         return entry.baseUrl(forEnvironment: selectedEnvironment)!
     }
