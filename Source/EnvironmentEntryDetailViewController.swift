@@ -161,7 +161,7 @@ class EntryViewModel {
     }
     
     var currentlySelectedEnvironment: String {
-        return EnvironmentManagerViewcontroller.sharedEnvironmentManager.currentEnvironmentFor(apiName: name)!
+        return EnvironmentManagerViewcontroller.sharedEnvironmentManager.currentEnvironment(for: name)!
     }
     
     // Mutators

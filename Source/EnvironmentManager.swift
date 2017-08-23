@@ -52,7 +52,7 @@ public class EnvironmentManager {
         store = backingStore
         environmentStore = EnvironmentStore(backingStore: backingStore)
         for entry in initialEntries {
-            self.add(entry: entry)
+            self.add(entry)
         }
     }
     
@@ -84,7 +84,7 @@ public class EnvironmentManager {
     ///
     /// - Parameter apiName: The name of the API to check what the currently selected environment is
     /// - Returns: The environment name, or nil if that API name is not registered with the manager
-    public func currentEnvironmentFor(apiName: String) -> String? {
+    public func currentEnvironment(for apiName: String) -> String? {
         guard let entry = self.totalEntries.first(where: {$0.name == apiName }) else {
             return nil
         }
@@ -150,11 +150,7 @@ extension EnvironmentManager {
     /// Adds a single Entry to the environment manager. If the entry's selected environment was persisted to the store in the past, it will update the current environment to match what the store has.
     ///
     /// - Parameter entry: The entry to add
-    internal func add(entry: Entry) {
-        // check if the entry was saved previously
-//        if let environment = self.store.environment(forService: entry.name) {
-//            entry.backingCurrentEnvironment = environment
-//        }
+    internal func add(_ entry: Entry) {
         self.entries.append(entry)
     }
     
@@ -173,7 +169,7 @@ extension EnvironmentManager {
         for pair in environmentUrls {
             entry.add(pair)
         }
-        self.add(entry: entry)
+        self.add(entry)
     }
 }
 

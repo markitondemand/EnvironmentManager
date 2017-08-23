@@ -57,7 +57,7 @@ class EnvironmentManagerViewcontroller: UITableViewController {
         
         let apiName = self.environmentManager.apiNames()[indexPath.row]
         cell.textLabel?.text = apiName
-        cell.detailTextLabel?.text = self.environmentManager.currentEnvironmentFor(apiName: apiName)
+        cell.detailTextLabel?.text = self.environmentManager.currentEnvironment(for: apiName)
         cell.accessoryType = .disclosureIndicator
         
         return cell

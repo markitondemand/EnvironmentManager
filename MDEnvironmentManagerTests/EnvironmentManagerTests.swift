@@ -33,7 +33,7 @@ class MDEnvironmentManagerTests: XCTestCase {
         let expectedURL2 = URL(string: "ev2.test.com")!.appendingPathComponent(path)
         
         let em = defaultEnvironmentManager()
-        em.add(entry: generateTestEntry(environmentCount: 2))
+        em.add(generateTestEntry(environmentCount: 2))
 
         let accURL = em.url(for: "Test", path: path)
         
@@ -43,7 +43,7 @@ class MDEnvironmentManagerTests: XCTestCase {
         let URL2 = em.url(for: "Test", path: path)
         
         XCTAssertEqual(URL2, expectedURL2)
-        XCTAssertEqual(em.currentEnvironmentFor(apiName: "Test"), "EV2")
+        XCTAssertEqual(em.currentEnvironment(for: "Test"), "EV2")
         
         XCTAssertNil(em.url(for: "unknown-service", path: path))
     }
@@ -53,7 +53,7 @@ class MDEnvironmentManagerTests: XCTestCase {
         let expectedNewEnv = "EV2"
         
         let em = defaultEnvironmentManager()
-        em.add(entry: generateTestEntry(environmentCount: 2))
+        em.add(generateTestEntry(environmentCount: 2))
         
         let observer = TestEnvironmentNotificationObserver()
         
@@ -67,8 +67,8 @@ class MDEnvironmentManagerTests: XCTestCase {
     
     func testEnvironmentManagerGetters() {
         let en = defaultEnvironmentManager()
-        en.add(entry: generateTestEntry("TestOne", environmentCount:2))
-        en.add(entry: generateTestEntry("TestTwo"))
+        en.add(generateTestEntry("TestOne", environmentCount:2))
+        en.add(generateTestEntry("TestTwo"))
         
         // test return service name + default to using ascending sort
         XCTAssertEqual(en.apiNames(), ["TestOne", "TestTwo"])
