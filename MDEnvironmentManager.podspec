@@ -23,6 +23,6 @@ Pod::Spec.new do |s|
     'MDEnvironmentManager' => ['Resources/*.storyboard']
   }
 
-  s.dependency 'MD-Extensions', '~>1.0`'
+  s.dependency 'MD-Extensions', '~>0'
   s.dependency 'CSV.swift', '~> 2.0'
 end
