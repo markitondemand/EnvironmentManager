@@ -11,6 +11,9 @@ import XCTest
 
 class SelectingEnvironmentTests: XCTestCase {
     
+    var makeMemoryEnvironmentStore: EnvironmentStore {
+        return EnvironmentStore(backingStore: DictionaryStore())
+    }
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -23,21 +26,21 @@ class SelectingEnvironmentTests: XCTestCase {
 
     
     func testNoPreviouslySelectedEnvironment() {
-        let sut = EnvironmentStore()
+        let sut = makeMemoryEnvironmentStore
         let environmentName = sut.currentlySelectedEnvironmentFor(generateTestEntry())
         
         XCTAssertEqual(environmentName, "EV1")
     }
     
     func testNoPreviouslySelectedEnvironmentMultipleEnvironmentsDefaultsToFirst() {
-        let sut = EnvironmentStore()
+        let sut = makeMemoryEnvironmentStore
         let environmentName = sut.currentlySelectedEnvironmentFor(generateTestEntry())
         
         XCTAssertEqual(environmentName, "EV1")
     }
     
     func testSelectingEnvironmentForEntrySetsThatEnvironment() {
-        let sut = EnvironmentStore()
+        let sut = makeMemoryEnvironmentStore
         
         // When
         sut.selectEnvironment("EV2", for: generateTestEntry(environmentCount: 2))
@@ -47,7 +50,7 @@ class SelectingEnvironmentTests: XCTestCase {
     }
     
     func testSelectingNonExistantEnvironmentForEntryDoesNothing() {
-        let sut = EnvironmentStore()
+        let sut = makeMemoryEnvironmentStore
         let testEntry = generateTestEntry(environmentCount:2)
         
         // When
@@ -58,7 +61,7 @@ class SelectingEnvironmentTests: XCTestCase {
     }
     
     func testSelectingEnvironmentOnMultipleEntries() {
-        let sut = EnvironmentStore()
+        let sut = makeMemoryEnvironmentStore
         let testEntry1 = generateTestEntry("API1", environmentCount:2)
         let testEntry2 = generateTestEntry("API2", environmentCount:2)
         
@@ -84,7 +87,7 @@ class SelectingEnvironmentTests: XCTestCase {
     }
     
     func testBuildURLForCurrentEnvironment() {
-        let sut = EnvironmentStore()
+        let sut = makeMemoryEnvironmentStore
         sut.selectEnvironment("EV3", for: generateTestEntry(environmentCount: 3))
         
         // When

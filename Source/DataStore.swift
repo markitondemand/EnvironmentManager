@@ -2,13 +2,10 @@
 //
 
 
-// TOOD: move this to its own common code
+
 import Foundation
 
-public protocol Stringable {
-    var stringValue: String { get }
-}
-
+// TOOD: make "DataStore" internal
 /// The DataStore is an abstract class for storing data in different ways. It separates the "How" and the "What".
 public protocol DataStore {
     
@@ -19,7 +16,7 @@ public protocol DataStore {
 }
 
 /// Simple class that implements the DataStore protocol using an in memory Dictionary
-public class DictionaryStore: DataStore {
+internal class DictionaryStore: DataStore {
     private var backingDictionary: [String:Any] = [:]
     
     public subscript(key: String) -> Any? {
@@ -34,7 +31,7 @@ public class DictionaryStore: DataStore {
 
 
 /// Implements the DataStore protocol using a UserDefaults
-public class UserDefaultsStore: DataStore {
+internal class UserDefaultsStore: DataStore {
     private var backingDefaults: UserDefaults
     init(defaults: UserDefaults = UserDefaults.standard) {
         backingDefaults = defaults
