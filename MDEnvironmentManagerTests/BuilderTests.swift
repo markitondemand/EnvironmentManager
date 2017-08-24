@@ -11,7 +11,7 @@ class BuilderTests: XCTestCase {
         // Use default data store)
         let em = try! b.build()
         
-        let store = DictionaryStore()
+        let store = UserDefaultsStore()
         XCTAssert(type(of:em.store) == type(of:store))
     }
     
