@@ -25,17 +25,18 @@ class ViewController: UIViewController {
         
         let stream = InputStream(url: Bundle.main.url(forResource: "Environments", withExtension: "csv")!)!
         environmentManager = try? Builder()
+            .setStoreType(.userDefaults)
             .add(stream)
             .build()
         
         
         
-        self.serviceOneEnvLabel.text = self.environmentManager.currentEnvironmentFor(apiName: "LoginAPI")
-        self.serviceTwoEnvLabel.text = self.environmentManager.currentEnvironmentFor(apiName: "QuoteAPI")
-        self.serviceThreeEnvLabel.text = self.environmentManager.currentEnvironmentFor(apiName: "NewsAPI")
-        self.serviceOneBaseAPILabel.text = self.environmentManager.baseUrl(apiName: "LoginAPI")?.absoluteString
-        self.serviceTwoBaseAPILabel.text = self.environmentManager.baseUrl(apiName: "QuoteAPI")?.absoluteString
-        self.serviceThreeBaseAPILabel.text = self.environmentManager.baseUrl(apiName: "NewsAPI")?.absoluteString
+        self.serviceOneEnvLabel.text = self.environmentManager.currentEnvironment(for: "LoginAPI")
+        self.serviceTwoEnvLabel.text = self.environmentManager.currentEnvironment(for: "QuoteAPI")
+        self.serviceThreeEnvLabel.text = self.environmentManager.currentEnvironment(for: "NewsAPI")
+        self.serviceOneBaseAPILabel.text = self.environmentManager.baseUrl(for: "LoginAPI")?.absoluteString
+        self.serviceTwoBaseAPILabel.text = self.environmentManager.baseUrl(for: "QuoteAPI")?.absoluteString
+        self.serviceThreeBaseAPILabel.text = self.environmentManager.baseUrl(for: "NewsAPI")?.absoluteString
         
         NotificationCenter.default.addObserver(forName: NSNotification.Name.EnvironmentDidChange, object: nil, queue: nil) { (notif: Notification) in
             let api = notif.userInfo?[EnvironmentChangedKeys.APIName] as! String
@@ -44,13 +45,13 @@ class ViewController: UIViewController {
             switch api {
             case "LoginAPI":
                 self.serviceOneEnvLabel.text = newEnv
-                self.serviceOneBaseAPILabel.text = self.environmentManager.baseUrl(apiName: "LoginAPI")?.absoluteString
+                self.serviceOneBaseAPILabel.text = self.environmentManager.baseUrl(for: "LoginAPI")?.absoluteString
             case "QuoteAPI":
                 self.serviceTwoEnvLabel.text = newEnv
-                self.serviceTwoBaseAPILabel.text = self.environmentManager.baseUrl(apiName: "QuoteAPI")?.absoluteString
+                self.serviceTwoBaseAPILabel.text = self.environmentManager.baseUrl(for: "QuoteAPI")?.absoluteString
             case "NewsAPI":
                 self.serviceThreeEnvLabel.text = newEnv
-                self.serviceThreeBaseAPILabel.text = self.environmentManager.baseUrl(apiName: "NewsAPI")?.absoluteString
+                self.serviceThreeBaseAPILabel.text = self.environmentManager.baseUrl(for: "NewsAPI")?.absoluteString
             default:
                 print("unexpected")
             }
