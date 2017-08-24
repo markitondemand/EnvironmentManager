@@ -95,10 +95,11 @@ public class Builder {
     @discardableResult public func setStoreType(_ type: StoreType) -> Self {
         switch type {
         case .inMemory:
-            return setDataStore(store: DictionaryStore())
+            dataStore = DictionaryStore()
         case .userDefaults:
-            return setDataStore(store: UserDefaultsStore())
+            dataStore = UserDefaultsStore()
         }
+        return self
     }
 }
 
