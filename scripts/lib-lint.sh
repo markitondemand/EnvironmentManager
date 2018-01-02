@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-pod lib lint --verbose --sources=ssh://git@stash.mgmt.local/ioslib/markitpodspecs.git,https://github.com/CocoaPods/Specs.git
+pod lib lint --verbose --sources=https://github.com/markitondemand/MDPodSpecs.git,https://github.com/CocoaPods/Specs.git
