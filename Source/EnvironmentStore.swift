@@ -13,7 +13,7 @@ import Foundation
 class EnvironmentStore {
     var backingStore: DataStore
     
-    init(backingStore: DataStore = DictionaryStore()) {
+    init(backingStore: DataStore) {
         self.backingStore = backingStore
     }
     

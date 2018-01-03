@@ -25,6 +25,7 @@ class ViewController: UIViewController {
         
         let stream = InputStream(url: Bundle.main.url(forResource: "Environments", withExtension: "csv")!)!
         environmentManager = try? Builder()
+            .setStoreType(.userDefaults)
             .add(stream)
             .build()
         

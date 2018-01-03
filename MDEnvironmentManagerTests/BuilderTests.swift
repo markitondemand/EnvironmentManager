@@ -11,13 +11,13 @@ class BuilderTests: XCTestCase {
         // Use default data store)
         let em = try! b.build()
         
-        let store = DictionaryStore()
+        let store = UserDefaultsStore()
         XCTAssert(type(of:em.store) == type(of:store))
     }
     
     func testSettingStoreParameter() {
         let b = Builder()
-        let em = try! b.setDataStore(store: DictionaryStore()).build()
+        let em = try! b.setStoreType(.inMemory).build()
 
         XCTAssert(type(of:em.store) == type(of:DictionaryStore()))
     }
@@ -30,7 +30,7 @@ class BuilderTests: XCTestCase {
     }
     
     func testSettingProductionEntryDefaultsToProduction() {
-        let b = Builder().setDataStore(store: DictionaryStore())
+        let b = Builder().setStoreType(.inMemory)
         let em = try! b
             .add(entry: "Service1", environments:[("Env1", "http://env1.api.service1.com"), ("Env2", "http://env2.api.service1.com")])
             .add(entry: "Service2", environments:[("Acc", "http://acc.api.service2.com"), ("Prod", "http://prod.api.service2.com")])
@@ -42,7 +42,7 @@ class BuilderTests: XCTestCase {
     }
     
     func testSettingProductionEntryToFalseDoesNotUseProduction() {
-        let b = Builder().setDataStore(store: DictionaryStore())
+        let b = Builder().setStoreType(.inMemory)
         let em = try! b
             .add(entry: "Service1", environments:[("Env1", "http://env1.api.service1.com"), ("Env2", "http://env2.api.service1.com")])
             .add(entry: "Service2", environments:[("Acc", "http://acc.api.service2.com"), ("Prod", "http://prod.api.service2.com")])
@@ -55,7 +55,7 @@ class BuilderTests: XCTestCase {
     
     func testDefaultSortOrderIsOrderOfItemsAdded() {
         // Default is order added
-        let b = Builder().setDataStore(store: DictionaryStore())
+        let b = Builder().setStoreType(.inMemory)
         
         let em = try! b
             .add(entry: "ZService", environments:[("BEnv", "http://benv.api.zervice.com"), ("AEnv", "http://aenv.api.zservice.com")])

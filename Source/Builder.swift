@@ -7,6 +7,7 @@ import MD_Extensions
 
 
 /// Use an instance of the Builder to create your EnvironmentManager. This provides reasonable defaults, failsafes, and error handling in the event something is misconfigured on your end. You use this class by chaining calls to a single Builder() and ultimately end with a "build()" call.
+/// There are some default values
 /// ```
 /// Builder()
 /// .setDataStore(store: DictionaryStore())
@@ -21,7 +22,17 @@ import MD_Extensions
 /// .production() // This signifies we are doing a production build. Optionally, pass your own block in to return true or false, you can than inject a #ifdef based off of your configuration
 /// .build()
 public class Builder {
-    internal var dataStore: DataStore = DictionaryStore()
+    
+    /// The type of store that the EnvironmentManager will use. this can either be userDefaults, or in memory
+    ///
+    /// - userDefaults: Uses the userdefaults to store data
+    /// - inMemory: Uses an in memory cache to store data
+    public enum StoreType {
+        case userDefaults
+        case inMemory
+    }
+    
+    internal var dataStore: DataStore = UserDefaultsStore()
     internal var entries: [String:[(String, String)]] = [:]
     internal var productionEnvironmentMap: [String:String] = [:]
     internal var productionEnabled: () -> Bool = { return false }
@@ -64,12 +75,30 @@ public class Builder {
     }
     
     
+    
+    // wIll make this private.
     /// Override the default data store with your own
     ///
     /// - Parameter store: The store to use
     /// - Returns: The current builder
+    @available(*, deprecated, message: "Please use `setStoreType(type:)` instead. This will be removed in a future version")
     @discardableResult public func setDataStore(store: DataStore) -> Self {
         dataStore = store
+        return self
+    }
+    
+    
+    /// Override the default store type. The default is an in memory store
+    ///
+    /// - Parameter type: The type to select
+    /// - Returns: The current builder
+    @discardableResult public func setStoreType(_ type: StoreType) -> Self {
+        switch type {
+        case .inMemory:
+            dataStore = DictionaryStore()
+        case .userDefaults:
+            dataStore = UserDefaultsStore()
+        }
         return self
     }
 }

@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
                      Also has support for production. You can define which environments are your production environments and have only them ship in your binary when doing a release build.
                      Support also exists for adding custom environments that can be persisted, deleted, and used.
                    DESC
-  s.homepage = "https://stash.mgmt.local/projects/IOSLIB/repos/mdenvironmentmanager/"
+  s.homepage = "https://github.com/markitondemand/EnvironmentManager"
   s.license = 'Proprietary'
   
   s.author = { "Michael Leber" => "michael.leber@ihsmarkit.com" }
