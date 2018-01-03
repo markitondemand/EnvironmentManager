@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = "MDEnvironmentManager"
-  s.version = "1.0.0"
+  s.version = "2.0.0"
   s.summary = "Manage multiple environments. Includes the ability to serialize selected environments to the UserDefaults."
   s.description = <<-DESC
                      Represent environments in your app for multiple APIs.
@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.license = 'Proprietary'
   
   s.author = { "Michael Leber" => "michael.leber@ihsmarkit.com" }
-  s.source = { :git => "ssh://git@stash.mgmt.local/ioslib/mdenvironmentmanager.git", :tag => "#{s.version}" }
+  s.source = { :git => "https://github.com/markitondemand/EnvironmentManager.git", :tag => "#{s.version}" }
 
   s.platform = :ios, "9.0"
   s.ios.deployment_target = '9.0'
