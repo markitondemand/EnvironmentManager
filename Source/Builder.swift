@@ -26,9 +26,11 @@ public class Builder {
     /// The type of store that the EnvironmentManager will use. this can either be userDefaults, or in memory
     ///
     /// - userDefaults: Uses the userdefaults to store data
+    /// - userDefaultsSuite: Creates a UserDefaults with a given sutie name. If the suite cannot be made than the standard defaults will be used
     /// - inMemory: Uses an in memory cache to store data
     public enum StoreType {
         case userDefaults
+        case userDefaultsSuite(String)
         case inMemory
     }
     
@@ -98,6 +100,8 @@ public class Builder {
             dataStore = DictionaryStore()
         case .userDefaults:
             dataStore = UserDefaultsStore()
+        case .userDefaultsSuite(let suite):
+            dataStore = UserDefaultsStore(defaults: UserDefaults(suiteName: suite) ?? UserDefaults.standard)
         }
         return self
     }
