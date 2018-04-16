@@ -25,7 +25,7 @@ public class Builder {
     
     /// The type of store that the EnvironmentManager will use. this can either be userDefaults, or in memory
     ///
-    /// - userDefaults: Uses the userdefaults to store data
+    /// - userDefaults: Uses the UserDefaults.standard to store data
     /// - userDefaultsSuite: Creates a UserDefaults with a given sutie name. If the suite cannot be made than the standard defaults will be used
     /// - inMemory: Uses an in memory cache to store data
     public enum StoreType {
