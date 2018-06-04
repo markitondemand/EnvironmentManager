@@ -24,7 +24,7 @@ class CustomEntryStore {
     /// Returns a list of all Entry objects currently stored in this CustomEntryStore
     var allEntries: [Entry] {
         let customEntries = entryDictionary
-        return customEntries.map{ return Entry(csv: $1 )}.flatMap{$0}
+        return customEntries.map{ return Entry(csv: $1 )}.compactMap{$0}
     }
     
     
