@@ -9,11 +9,6 @@
 import XCTest
 @testable import MDEnvironmentManager
 
-// test environments
-extension Environment {
-    static let acc = "acc"
-}
-
 class EntryTests: XCTestCase {
     let defaultAccUrl = URL(string: "http://acc.api.domain.com")!
     let defaultProdUrl = URL(string: "http://prod.api.domain.com")!
@@ -26,20 +21,20 @@ class EntryTests: XCTestCase {
     
     func testEntryGetters() {
         var entry = entryWithName("service", initialEnvironment: ("prod", defaultProdUrl))
-        entry.add(url: defaultAccUrl, forEnvironment: "acc")
+        entry.add(url: defaultAccUrl, forEnvironment: .acc)
         
-        XCTAssertEqual(entry.environment(forIndex: 0), "prod")
+        XCTAssertEqual(entry.environment(forIndex: 0), .prod)
         
         XCTAssertEqual(entry.baseUrl(forIndex: 0), defaultProdUrl)
         XCTAssertEqual(entry.baseUrl(forIndex: 1), defaultAccUrl)
     }
     
     func testEntryEquatable() {
-        let entry1 = entryWithName("Service1", initialEnvironment: ("acc", self.defaultAccUrl))
-        var entry2 = entryWithName("Service1", initialEnvironment: ("acc", self.defaultAccUrl))
+        let entry1 = entryWithName("Service1", initialEnvironment: (.acc, self.defaultAccUrl))
+        var entry2 = entryWithName("Service1", initialEnvironment: (.acc, self.defaultAccUrl))
         
         XCTAssertEqual(entry1, entry2)
-        entry2.add(("prod", self.defaultProdUrl))
+        entry2.add((.prod, self.defaultProdUrl))
         XCTAssertNotEqual(entry1, entry2)
     }
     
@@ -51,7 +46,7 @@ class EntryTests: XCTestCase {
     
     func testMultipleEnvironemntsToCSV() {
         var entry = testEntry
-        entry.add(Entry.Pair("prod", defaultProdUrl))
+        entry.add(Entry.Pair(.prod, defaultProdUrl))
         
         // When
         let csv = entry.asCSV

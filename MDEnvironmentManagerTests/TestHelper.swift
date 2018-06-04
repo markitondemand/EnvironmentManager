@@ -24,3 +24,12 @@ extension URL {
         return URL(string: "http://test.api.com")!
     }
 }
+
+
+// MARK: - Test environments
+extension Environment {
+    static let acc = "acc"
+    static let env1 = "Env1"
+    static let env2 = "Env2"
+    static let prod = "Prod"
+}

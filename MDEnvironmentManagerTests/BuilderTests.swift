@@ -4,11 +4,8 @@
 import XCTest
 @testable import MDEnvironmentManager
 
-extension Environment {
-    static let env1 = "Env1"
-    static let env2 = "Env2"
-    static let prod = "Prod"
-}
+
+
 
 class BuilderTests: XCTestCase {
     func testDefaultBuildParameters() {
@@ -49,9 +46,9 @@ class BuilderTests: XCTestCase {
     func testSettingProductionEntryToFalseDoesNotUseProduction() {
         let b = Builder().setStoreType(.inMemory)
         let em = try! b
-            .add(entry: "Service1", environments:[("Env1", "http://env1.api.service1.com"), ("Env2", "http://env2.api.service1.com")])
-            .add(entry: "Service2", environments:[("Acc", "http://acc.api.service2.com"), ("Prod", "http://prod.api.service2.com")])
-            .productionEnvironments(map: ["Service1":"Env1", "Service2":"Prod"])
+            .add(entry: "Service1", environments:[(.env1, "http://env1.api.service1.com"), (.env2, "http://env2.api.service1.com")])
+            .add(entry: "Service2", environments:[(.acc, "http://acc.api.service2.com"), (.prod, "http://prod.api.service2.com")])
+            .productionEnvironments(map: ["Service1":.env1, "Service2":.prod])
             .production(expression: { return false })
             .build()
         
@@ -63,12 +60,12 @@ class BuilderTests: XCTestCase {
         let b = Builder().setStoreType(.inMemory)
         
         let em = try! b
-            .add(entry: "ZService", environments:[("BEnv", "http://benv.api.zervice.com"), ("AEnv", "http://aenv.api.zservice.com")])
-            .add(entry: "AService", environments:[("BEnv", "http://benv.api.aservice.com"), ("AEnv", "http://aenv.api.aservice.com")])
+            .add(entry: "ZService", environments:[(.env1, "http://benv.api.zervice.com"), (.env2, "http://aenv.api.zservice.com")])
+            .add(entry: "AService", environments:[(.env1, "http://benv.api.aservice.com"), (.env2, "http://aenv.api.aservice.com")])
             .build()
         
         XCTAssertEqual(em.entry(forIndex: 0)?.name, "ZService")
-        XCTAssertEqual(em.entry(forIndex: 0)?.environment(forIndex: 0), "BEnv")
+        XCTAssertEqual(em.entry(forIndex: 0)?.environment(forIndex: 0), .env1)
     }
     
     
@@ -106,7 +103,7 @@ extension BuilderTests {
     // Commenting out for now. For some reason XCTAssertThrowsError is not passing even tho I verified an error is thrown from b.build(). (by trying try!, it crashes)
     func testInvalidURLThrowsError() {
         // URL Error
-        let b = Builder().add(entry: "Service1", environments:[("Env1", "ht tp://env1.api.service1.com")])
+        let b = Builder().add(entry: "Service1", environments:[(.env1, "ht tp://env1.api.service1.com")])
         XCTAssertThrowsError(try b.build()) { (e) in
             guard let error = e as? Builder.BuildError else {
                 XCTFail()
@@ -123,7 +120,7 @@ extension BuilderTests {
     }
     
     func testBuilderEnabledForProductionRequiresFullMapping() {
-        let b = Builder().add(entry: "Service1", environments:[("Env1", "http://env1.api.service1.com")])
+        let b = Builder().add(entry: "Service1", environments:[(.env1, "http://env1.api.service1.com")])
             .production()
         XCTAssertThrowsError(try b.build()) { (e) in
             guard let error = e as? Builder.BuildError else {
@@ -151,7 +148,7 @@ extension BuilderTests {
             switch error {
             case .EnvironmentCouldNotBeFound(let service, let name):
                 XCTAssertEqual(service, "Service1")
-                XCTAssertEqual(name, "Env2")
+                XCTAssertEqual(name, .env2)
             default:
                 XCTFail()
             }
