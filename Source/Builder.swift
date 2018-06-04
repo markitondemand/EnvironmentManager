@@ -143,19 +143,21 @@ public class Builder {
 // MARK: - Add optional data
 extension Builder {
     @discardableResult
-    public func associateData<T: Codable>(closure: (ServiceEnvironmentPair) -> T?) -> Self {
-        self.entries.forEach {
-            let service = $0.key
-            $0.value.forEach{ (environment, _) in
-                let pair = ServiceEnvironmentPair(service: service, environment: environment)
-                
-                guard let object = closure(pair),
-                    let data = try? DataConverter.convert(object: object) else {
-                    return
-                }
-                self.additionalDataMap[pair] = data
-            }
+    
+    /// Associates an optional Codable data type to a given service + environment pair
+    ///
+    /// - Parameter closure: The closure passes every service and environment in, you return a Codable object for the speicifc service and environments
+    /// - Returns: The builder
+    public func associateData<T: Codable>(map: [ServiceEnvironmentPair:T]) -> Self {
+        // TOOD: we may want to error out of the builder if we cant convert one of the objects
+        guard let mapped: [ServiceEnvironmentPair: Data] = try? map.mapValues({ (pair) -> Data in
+            let data = try DataConverter.convert(object: pair)
+            return data
+        }) else {
+            return self
         }
+        
+        self.additionalDataMap = mapped
         
         return self
     }
