@@ -6,29 +6,7 @@ import CSV
 import MD_Extensions
 
 
-
-fileprivate struct AdditionalData<T: Codable>: Hashable {
-    let service: String
-    let environment: Environment
-    let object: T
-    
-    var asData: Data? {
-        return try? DataConverter.convert(object: self.object)
-    }
-    
-    
-    var hashValue: Int {
-        // TOOD: fix this
-        return (environment+service).hashValue
-    }
-}
-
-extension AdditionalData: Equatable {
-    static func == (lhs: AdditionalData<T>, rhs: AdditionalData<T>) -> Bool {
-        return (lhs.environment == rhs.environment && lhs.service == rhs.service)
-    }
-}
-
+/// Helper class for converting data safely to something that can be json encoded
 internal class DataConverter {
     // This is a simple struct that ends up letting us form proper json for encoding
     private struct Box<T: Codable>: Codable {
@@ -77,9 +55,7 @@ public class Builder {
     }
     
     
-    /// <#Description#>
-    ///
-    /// - map: <#map description#>
+    // TOOD: future feature, support some alternative mapping types to simplify boiler plate
 //    public enum EnvironmentMapType {
 //        case key(Environment)
 //        case map([String:Environment])

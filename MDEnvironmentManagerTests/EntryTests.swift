@@ -20,7 +20,7 @@ class EntryTests: XCTestCase {
     }
     
     func testEntryGetters() {
-        var entry = entryWithName("service", initialEnvironment: ("prod", defaultProdUrl))
+        var entry = entryWithName("service", initialEnvironment: (.prod, defaultProdUrl))
         entry.add(url: defaultAccUrl, forEnvironment: .acc)
         
         XCTAssertEqual(entry.environment(forIndex: 0), .prod)
@@ -51,7 +51,7 @@ class EntryTests: XCTestCase {
         // When
         let csv = entry.asCSV
         
-        XCTAssertEqual(csv, "Service|acc|http://acc.api.domain.com\nService|prod|http://prod.api.domain.com")
+        XCTAssertEqual(csv, "Service|Acc|http://acc.api.domain.com\nService|Prod|http://prod.api.domain.com")
     }
     
     func testCreatesFromCSVRow() {
