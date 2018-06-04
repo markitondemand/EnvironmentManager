@@ -79,7 +79,7 @@ class EnvironmentManagerViewcontroller: UITableViewController {
             }
             
             let index = self.tableView.indexPath(for: cell)!.row
-            controller.entryName = self.environmentManager.entry(forIndex: index)?.name
+            controller.entryName = self.environmentManager.entry(for: index)?.name
         case .Exit:
             return
 //            self.environmentManager.save()

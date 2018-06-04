@@ -258,7 +258,7 @@ extension Builder {
         
         additionalDataMap.forEach { (key, value) in
             guard var entry = product.entry(for: key.service) else { return }
-            entry.store(data: value, forEnvironment: key.environment)
+            entry.store(data: value, for: key.environment)
             product.replace(with: entry)
         }
 

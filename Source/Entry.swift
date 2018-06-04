@@ -111,15 +111,15 @@ extension Entry {
     ///
     /// - Parameter path: The path to append
     /// - Returns: The new URL or nil if the URL could not be formed
-    public func buildURLForEnvironment(_ environment: Environment, path: String) -> URL? {
-        return baseUrl(forEnvironment: environment)?.appendingPathComponent(path)
+    public func buildURL(for env: Environment, path: String) -> URL? {
+        return baseUrl(for: env)?.appendingPathComponent(path)
     }
     
     /// Returns the base URL for a given environment, or nil if the environment does not exist for this entry
     ///
     /// - Parameter environment: The environment name
     /// - Returns: The base URL for that environment, or nil
-    public func baseUrl(forEnvironment env: Environment) -> URL? {
+    public func baseUrl(for env: Environment) -> URL? {
         guard let index = index(for: env) else {
             return nil
         }
@@ -135,28 +135,28 @@ extension Entry {
     
     // TODO: rename to match a standard
     /// Returns the base API for a given environment
-    public func currentBaseUrlForEnvironment(_ env: Environment) -> URL? {
+    public func currentBaseUrl(for env: Environment) -> URL? {
         guard let found = environments.first(where: { $0.environment == env }) else {
             return nil
         }
         return found.baseUrl
     }
     
-    public func additionalDataFor<T: Codable>(environment: Environment) -> T? {
-        guard let data = environments.find(environment)?.associatedData else {
+    public func additionalData<T: Codable>(for env: Environment) -> T? {
+        guard let data = environments.find(env)?.associatedData else {
             return nil
         }
         let decoded: T? = DataConverter.decode(data: data)
         return decoded
     }
     
-    internal mutating func store(data: Data, forEnvironment env: Environment) {
+    internal mutating func store(data: Data, for env: Environment) {
         guard var found = environments.find(env) else { return }
         found.storeObject(data)
         environments.replace(found)
     }
     
-    internal mutating func store<T: Codable>(object: T, forEnvironment env: Environment) {
+    internal mutating func store<T: Codable>(object: T, for env: Environment) {
         guard var found = environments.find(env),
             let data = try? DataConverter.convert(object: object) else { return }
         found.storeObject(data)
@@ -212,7 +212,7 @@ extension Entry {
         guard let environment = environmentNames()[safe: index] else {
             return nil
         }
-        return baseUrl(forEnvironment: environment)
+        return baseUrl(for: environment)
     }
 }
 

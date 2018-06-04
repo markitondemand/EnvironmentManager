@@ -64,8 +64,8 @@ class BuilderTests: XCTestCase {
             .add(entry: "AService", environments:[(.env1, "http://benv.api.aservice.com"), (.env2, "http://aenv.api.aservice.com")])
             .build()
         
-        XCTAssertEqual(em.entry(forIndex: 0)?.name, "ZService")
-        XCTAssertEqual(em.entry(forIndex: 0)?.environment(forIndex: 0), .env1)
+        XCTAssertEqual(em.entry(for: 0)?.name, "ZService")
+        XCTAssertEqual(em.entry(for: 0)?.environment(forIndex: 0), .env1)
     }
     
     
@@ -79,7 +79,7 @@ class BuilderTests: XCTestCase {
         }
         
         let em = try! b.build()
-        XCTAssertEqual(em.entry(for: "Service1")?.additionalDataFor(environment: .acc), "my-token")
+        XCTAssertEqual(em.entry(for: "Service1")?.additionalData(for: .acc), "my-token")
     }
     
     func testBuilderAddsComplexDataObject() {
@@ -92,7 +92,7 @@ class BuilderTests: XCTestCase {
         }
         
         let em = try! b.build()
-        XCTAssertEqual(em.entry(for: "Service1")?.additionalDataFor(environment: .acc), ["complex": ["data"]])
+        XCTAssertEqual(em.entry(for: "Service1")?.additionalData(for: .acc), ["complex": ["data"]])
     }
 }
 

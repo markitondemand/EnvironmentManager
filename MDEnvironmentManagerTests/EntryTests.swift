@@ -90,19 +90,19 @@ class EntryTests: XCTestCase {
         var entry = testEntry
         
         // When
-        entry.store(object: "Test-Token", forEnvironment: .acc)
+        entry.store(object: "Test-Token", for: .acc)
         
         // Then
-        XCTAssertEqual(entry.additionalDataFor(environment: .acc), "Test-Token")
+        XCTAssertEqual(entry.additionalData(for: .acc), "Test-Token")
     }
     
     func testUpdatingData() {
         var entry = testEntry
         
-        entry.store(object: "Test-Token", forEnvironment: .acc)
-        entry.store(object: "Test-Token-2", forEnvironment: .acc)
+        entry.store(object: "Test-Token", for: .acc)
+        entry.store(object: "Test-Token-2", for: .acc)
         
-        XCTAssertEqual(entry.additionalDataFor(environment: .acc), "Test-Token-2")
+        XCTAssertEqual(entry.additionalData(for: .acc), "Test-Token-2")
     }
     
 }

@@ -111,7 +111,7 @@ public class EnvironmentManager {
     /// - Parameters:
     ///   - environment: The environment to select
     ///   - apiName: The API to select the environment for
-    public func select(environment: String, forAPI apiName: String) {
+    public func select(environment: Environment, forAPI apiName: String) {
         guard let entry = self.totalEntries.first(where: { $0.name == apiName }) else {
             return
         }
@@ -133,7 +133,7 @@ public class EnvironmentManager {
 extension EnvironmentManager {
     
     /// Returns an entry from a given index. this only cares about entries passed on creation from the Builder or the .csv file
-    public func entry(forIndex index: Int) -> Entry? {
+    public func entry(for index: Int) -> Entry? {
         return self.entries[safe: index]
     }
     
@@ -183,7 +183,7 @@ internal extension DataStore {
          return "com.markit.EnvironmentMenanager"
     }
 
-    func environment(forService service: String) -> String? {
+    func environment(for service: String) -> String? {
         return self.readEnvironments()[service]
     }
     
