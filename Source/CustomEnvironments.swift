@@ -88,7 +88,7 @@ class CustomEntryStore {
     /// - Parameters:
     ///   - environments: The environments to remove
     ///   - name: The name of the entry to remove from
-    func removeEnvironments(_ environments: [Entry.Environment], forEntryNamed name: String) {
+    func removeEnvironments(_ environments: [Entry.EnvironmentDetail], forEntryNamed name: String) {
         self.removeEnvironments(environments.map{$0.environment}, forEntryNamed: name)
     }
     
