@@ -83,9 +83,9 @@ public class Builder {
         case CSVParsingError(error: CSVError)
     }
     
-    
-//    public init() { }
-//
+    // needed, otherwise the initializer is internal
+    public init() { }
+
     
     /// Adds a new entry, or updates an existing entry (if already added) with environments
     ///

@@ -51,7 +51,7 @@ class EntryTests: XCTestCase {
         // When
         let csv = entry.asCSV
         
-        XCTAssertEqual(csv, "Service|Acc|http://acc.api.domain.com\nService|Prod|http://prod.api.domain.com")
+        XCTAssertEqual(csv, "Service|acc|http://acc.api.domain.com\nService|prod|http://prod.api.domain.com")
     }
     
     func testCreatesFromCSVRow() {
