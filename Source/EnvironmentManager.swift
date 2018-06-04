@@ -56,10 +56,6 @@ public class EnvironmentManager {
         for entry in initialEntries {
             self.add(entry)
         }
-        
-        let string: String? = ""
-        
-         print("Edit \(string ?? "Watchlist")")
     }
     
     /// Returns an ordered list of all of the API names currently managed. By default the list will be returned in ascending order but you can optionally sort them in another way (i.e. descending)
@@ -173,6 +169,10 @@ extension EnvironmentManager {
             entry.add(pair)
         }
         self.add(entry)
+    }
+    
+    internal func replace(with entry: Entry) {
+        self.entries.replace(entry)
     }
 }
 
