@@ -72,7 +72,7 @@ class BuilderTests: XCTestCase {
     }
     
     
-    func testBuilderAddsOptionalData() {
+    func testBuilderAddsOptionalStringData() {
         let b = Builder().add(entry: "Service1", environments:[(.acc, "http://env1.api.service1.com")])
             .associateData { pair -> String? in
                 guard pair.environment == .acc else {
@@ -83,6 +83,19 @@ class BuilderTests: XCTestCase {
         
         let em = try! b.build()
         XCTAssertEqual(em.entry(for: "Service1")?.additionalDataFor(environment: .acc), "my-token")
+    }
+    
+    func testBuilderAddsComplexDataObject() {
+        let b = Builder().add(entry: "Service1", environments:[(.acc, "http://env1.api.service1.com")])
+            .associateData { pair -> [String:[String]]? in
+                guard pair.environment == .acc else {
+                    return nil
+                }
+                return ["complex": ["data"]]
+        }
+        
+        let em = try! b.build()
+        XCTAssertEqual(em.entry(for: "Service1")?.additionalDataFor(environment: .acc), ["complex": ["data"]])
     }
 }
 
