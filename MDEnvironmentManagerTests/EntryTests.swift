@@ -18,7 +18,7 @@ class EntryTests: XCTestCase {
     let defaultAccUrl = URL(string: "http://acc.api.domain.com")!
     let defaultProdUrl = URL(string: "http://prod.api.domain.com")!
     
-    var testEntry: Entry { return Entry(name: "Service", initialEnvironment: ("acc", defaultAccUrl)) }
+    var testEntry: Entry { return Entry(name: "Service", initialEnvironment: (.acc, defaultAccUrl)) }
     
     func entryWithName(_ name: Environment, initialEnvironment: (String, URL)) -> Entry {
         return Entry(name: name, initialEnvironment: initialEnvironment)
@@ -90,4 +90,24 @@ class EntryTests: XCTestCase {
         XCTAssertNil(entry)
     }
 
+    func testStoringData() {
+        // Given
+        var entry = testEntry
+        
+        // When
+        entry.store(object: "Test-Token", forEnvironment: .acc)
+        
+        // Then
+        XCTAssertEqual(entry.additionalDataFor(environment: .acc), "Test-Token")
+    }
+    
+    func testUpdatingData() {
+        var entry = testEntry
+        
+        entry.store(object: "Test-Token", forEnvironment: .acc)
+        entry.store(object: "Test-Token-2", forEnvironment: .acc)
+        
+        XCTAssertEqual(entry.additionalDataFor(environment: .acc), "Test-Token-2")
+    }
+    
 }

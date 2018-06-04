@@ -15,21 +15,27 @@ public typealias Environment = String
 public struct Entry: Codable {
     
     /// Represents an environment, matched to a URL
-    internal struct EnvironmentDetail: Equatable, Hashable, Codable {
+    internal struct EnvironmentDetail: Equatable, Hashable, Codable {        
         let environment: String
         let baseUrl: URL
+        private(set) var associatedData: Data?
         
         var asPair: Pair {
             return (environment, baseUrl)
         }
         
-        init(environment: String, baseUrl: URL) {
+        init(environment: String, baseUrl: URL, data: Data? = nil) {
             self.environment = environment
             self.baseUrl = baseUrl
+            self.associatedData = data
         }
         
         init(pair: Pair) {
             self.init(environment: pair.0, baseUrl: pair.1)
+        }
+        
+        internal mutating func storeObject(_ data: Data) {
+            self.associatedData = data
         }
         
         // Hashable
@@ -42,6 +48,7 @@ public struct Entry: Codable {
         static func ==(lhs: EnvironmentDetail, rhs: EnvironmentDetail) -> Bool {
             return lhs.baseUrl == rhs.baseUrl && lhs.environment == rhs.environment
         }
+    
     }
     
     
@@ -97,14 +104,14 @@ extension Entry: Equatable {
 
 // MARK: - Operations
 extension Entry {
-    private func index(for env: String) -> Int? {
+    private func index(for env: Environment) -> Int? {
         return environments.index(where: { $0.environment == env })
     }
     /// Builds a URL by appending a path to the currently selected environment's baseURL
     ///
     /// - Parameter path: The path to append
     /// - Returns: The new URL or nil if the URL could not be formed
-    public func buildURLForEnvironment(_ environment: String, path: String) -> URL? {
+    public func buildURLForEnvironment(_ environment: Environment, path: String) -> URL? {
         return baseUrl(forEnvironment: environment)?.appendingPathComponent(path)
     }
     
@@ -112,7 +119,7 @@ extension Entry {
     ///
     /// - Parameter environment: The environment name
     /// - Returns: The base URL for that environment, or nil
-    public func baseUrl(forEnvironment env: String) -> URL? {
+    public func baseUrl(forEnvironment env: Environment) -> URL? {
         guard let index = index(for: env) else {
             return nil
         }
@@ -128,11 +135,56 @@ extension Entry {
     
     // TODO: rename to match a standard
     /// Returns the base API for a given environment
-    public func currentBaseUrlForEnvironment(_ env: String) -> URL? {
+    public func currentBaseUrlForEnvironment(_ env: Environment) -> URL? {
         guard let found = environments.first(where: { $0.environment == env }) else {
             return nil
         }
         return found.baseUrl
+    }
+    
+    public func additionalDataFor<T: Codable>(environment: Environment) -> T? {
+        guard let data = environments.find(environment)?.associatedData else {
+            return nil
+        }
+        let decoded: T? = DataConverter.decode(data: data)
+        return decoded
+    }
+    
+    internal mutating func store(data: Data, forEnvironment env: Environment) {
+        guard var found = environments.find(env) else { return }
+        found.storeObject(data)
+        environments.replace(found)
+    }
+    
+    internal mutating func store<T: Codable>(object: T, forEnvironment env: Environment) {
+        guard var found = environments.find(env),
+            let data = try? DataConverter.convert(object: object) else { return }
+        found.storeObject(data)
+        environments.replace(found)
+    }
+}
+
+
+// MARK: - Convenience collection helpers
+extension Sequence where Element == Entry.EnvironmentDetail {
+    func find(_ env: Environment) -> Element? {
+        return first { $0.environment == env }
+    }
+}
+
+// TOOD: might be useful in common code
+extension Array where Element: Equatable {
+    /// In the event an element may be mutated but still be equatable with another one, this function will replace it.
+    ///
+    /// - Parameter element: The element to replace. It must already exist in the array
+    mutating func replace(_ element: Element) {
+        for (i, e) in enumerated() {
+            if e == element {
+                self.remove(at: i)
+                self.insert(element, at: i)
+                break
+            }
+        }
     }
 }
 
@@ -193,7 +245,8 @@ extension Entry {
     }
     
     // TOOD: unit test
-    @discardableResult internal mutating func removeEnvironment(_ name: String) -> Bool {
+    @discardableResult
+    internal mutating func removeEnvironment(_ name: String) -> Bool {
         guard let index = environments.index(where:{ $0.environment == name }) else {
             return false
         }
