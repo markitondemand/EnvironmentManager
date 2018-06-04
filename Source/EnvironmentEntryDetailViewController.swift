@@ -60,7 +60,7 @@ class EnvironmentEntryDetailViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifiers.EnvironmentCellIdentifier)!
 
-        let environment: Entry.Environment
+        let environment: Entry.EnvironmentDetail
         if indexPath.section == 0 {
             environment = viewModel.baseEnviromnments[indexPath.row]
         }
@@ -68,7 +68,7 @@ class EnvironmentEntryDetailViewController: UITableViewController {
             environment = viewModel.customEnvironments[indexPath.row]
         }
         
-        let sortedEnvironmentNames: [Int: [Entry.Environment]] = [0: self.viewModel.baseEnviromnments, 1: self.viewModel.customEnvironments]
+        let sortedEnvironmentNames: [Int: [Entry.EnvironmentDetail]] = [0: self.viewModel.baseEnviromnments, 1: self.viewModel.customEnvironments]
         cell.textLabel?.text = environment.environment
         cell.detailTextLabel?.text = environment.baseUrl.absoluteString
         cell.accessoryType = self.viewModel.currentlySelectedEnvironment == sortedEnvironmentNames[indexPath.section]?[indexPath.row].environment ? .checkmark : .none
@@ -133,7 +133,7 @@ extension EnvironmentEntryDetailViewController {
         guard let newEnvironment = source .newEnvironment else {
             return
         }
-        self.viewModel.addEnvironment(Entry.Environment(pair: newEnvironment))
+        self.viewModel.addEnvironment(Entry.EnvironmentDetail(pair: newEnvironment))
         self.tableView.reloadData()
     }
 }
@@ -149,11 +149,11 @@ class EntryViewModel {
         return baseEntry.name
     }
     
-    var baseEnviromnments: [Entry.Environment] {
+    var baseEnviromnments: [Entry.EnvironmentDetail] {
         return baseEntry.environments
     }
     
-    var customEnvironments: [Entry.Environment] {
+    var customEnvironments: [Entry.EnvironmentDetail] {
         return self.customEntryStore[name]?.environments ?? []
     }
     
@@ -167,7 +167,7 @@ class EntryViewModel {
     }
     
     // Mutators
-    func addEnvironment(_ environment: Entry.Environment) {
+    func addEnvironment(_ environment: Entry.EnvironmentDetail) {
         self.customEntryStore.add(pair: (environment.environment, environment.baseUrl), to: name)
     }
     
@@ -184,7 +184,7 @@ class EntryViewModel {
     }
     
     func selectEnvironment(_ indexPath: IndexPath) {
-        let environment: Entry.Environment?
+        let environment: Entry.EnvironmentDetail?
         if indexPath.section == 0 {
             environment = baseEntry.environments[indexPath.row]
         }
@@ -194,7 +194,7 @@ class EntryViewModel {
         EnvironmentManagerViewcontroller.sharedEnvironmentManager.select(environment: environment?.environment ?? "", forAPI: name)
     }
     
-    private func environmentFor(_ indexPath: IndexPath) -> Entry.Environment?  {
+    private func environmentFor(_ indexPath: IndexPath) -> Entry.EnvironmentDetail?  {
         switch indexPath.section {
         case 0:
             return baseEntry.environments[indexPath.row]

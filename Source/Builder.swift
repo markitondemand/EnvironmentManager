@@ -6,6 +6,45 @@ import CSV
 import MD_Extensions
 
 
+
+fileprivate struct AdditionalData<T: Codable>: Hashable {
+    let service: String
+    let environment: Environment
+    let object: T
+    
+    var asData: Data? {
+        return try? DataConverter.convert(object: self.object)
+    }
+    
+    
+    var hashValue: Int {
+        // TOOD: fix this
+        return (environment+service).hashValue
+    }
+}
+
+extension AdditionalData: Equatable {
+    static func == (lhs: AdditionalData<T>, rhs: AdditionalData<T>) -> Bool {
+        return (lhs.environment == rhs.environment && lhs.service == rhs.service)
+    }
+}
+
+internal class DataConverter {
+    // This is a simple struct that ends up letting us form proper json for encoding
+    private struct Box<T: Codable>: Codable {
+        var wrapped: T
+    }
+
+    static func convert<T: Codable>(object: T) throws -> Data {
+        let box = Box(wrapped: object)
+        return try JSONEncoder().encode(box)
+    }
+    
+    static func decode<T: Codable>(data: Data) -> T? {
+        return try? JSONDecoder().decode(Box.self, from: data).wrapped
+    }
+}
+
 /// Use an instance of the Builder to create your EnvironmentManager. This provides reasonable defaults, failsafes, and error handling in the event something is misconfigured on your end. You use this class by chaining calls to a single Builder() and ultimately end with a "build()" call.
 /// There are some default values
 /// ```
@@ -22,7 +61,10 @@ import MD_Extensions
 /// .production() // This signifies we are doing a production build. Optionally, pass your own block in to return true or false, you can than inject a #ifdef based off of your configuration
 /// .build()
 public class Builder {
-    
+    public struct ServiceEnvironmentPair: Hashable {
+        let service: String
+        let environment: Environment
+    }
     /// The type of store that the EnvironmentManager will use. this can either be userDefaults, or in memory
     ///
     /// - userDefaults: Uses the UserDefaults.standard to store data
@@ -34,11 +76,22 @@ public class Builder {
         case inMemory
     }
     
+    
+    /// <#Description#>
+    ///
+    /// - map: <#map description#>
+//    public enum EnvironmentMapType {
+//        case key(Environment)
+//        case map([String:Environment])
+//    }
+    
     internal var dataStore: DataStore = UserDefaultsStore()
-    internal var entries: [String:[(String, String)]] = [:]
-    internal var productionEnvironmentMap: [String:String] = [:]
+    internal var entries: [String:[(Environment, String)]] = [:]
+    internal var entriesTwo: [Entry] = []
+    internal var productionEnvironmentMap: [String:Environment] = [:]
     internal var productionEnabled: () -> Bool = { return false }
     internal var sortOption: SortType = .added
+    internal var additionalDataMap = [ServiceEnvironmentPair:Data]()
     
     
     /// List of erors that may occur when building the EnvironmentManager
@@ -55,8 +108,8 @@ public class Builder {
     }
     
     
-    public init() { }
-    
+//    public init() { }
+//
     
     /// Adds a new entry, or updates an existing entry (if already added) with environments
     ///
@@ -65,7 +118,8 @@ public class Builder {
     ///   - name: The name of the entry, this would be the API or service name
     ///   - environments: The tuple of envirnments to URL Strings
     /// - Returns: The current builder
-    @discardableResult public func add(entry name: String, environments:[(String, String)]) -> Self {
+    @discardableResult
+    public func add(entry name: String, environments:[(Environment, String)]) -> Self {
         precondition(environments.count > 0, "Must pass at least one environment")
         guard var currentEnvironments = entries[name] else {
             entries[name] = environments
@@ -84,7 +138,8 @@ public class Builder {
     /// - Parameter store: The store to use
     /// - Returns: The current builder
     @available(*, deprecated, message: "Please use `setStoreType(type:)` instead. This will be removed in a future version")
-    @discardableResult public func setDataStore(store: DataStore) -> Self {
+    @discardableResult
+    public func setDataStore(store: DataStore) -> Self {
         dataStore = store
         return self
     }
@@ -94,7 +149,8 @@ public class Builder {
     ///
     /// - Parameter type: The type to select
     /// - Returns: The current builder
-    @discardableResult public func setStoreType(_ type: StoreType) -> Self {
+    @discardableResult
+    public func setStoreType(_ type: StoreType) -> Self {
         switch type {
         case .inMemory:
             dataStore = DictionaryStore()
@@ -108,6 +164,28 @@ public class Builder {
 }
 
 
+// MARK: - Add optional data
+extension Builder {
+    @discardableResult
+    public func associateData<T: Codable>(closure: (ServiceEnvironmentPair) -> T?) -> Self {
+        self.entries.forEach {
+            let service = $0.key
+            $0.value.forEach{ (environment, _) in
+                let pair = ServiceEnvironmentPair(service: service, environment: environment)
+                
+                guard let object = closure(pair),
+                    let data = try? DataConverter.convert(object: object) else {
+                    return
+                }
+                self.additionalDataMap[pair] = data
+            }
+        }
+        
+        return self
+    }
+}
+
+
 // MARK: - Production support
 extension Builder {
     
@@ -116,7 +194,8 @@ extension Builder {
     ///
     /// - Parameter map: The map of API Entry names to envirnments.
     /// - Returns: The current builder
-    @discardableResult public func productionEnvironments(map: [String: String]) -> Self {
+    @discardableResult
+    public func productionEnvironments(map: [String: Environment]) -> Self {
         productionEnvironmentMap += map
         return self
     }
@@ -136,10 +215,13 @@ extension Builder {
     ///
     /// - Parameter expression: The block that will be evaluated to determine if the builder should build for production or not. The default for this will return true
     /// - Returns: The current builder
-    @discardableResult public func production(expression: @escaping() -> Bool = { return true }) -> Self {
+    @discardableResult
+    public func production(expression: @escaping() -> Bool = { return true }) -> Self {
         self.productionEnabled = expression
         return self
     }
+    
+    // TOOD: add a way to specify a single matching prod string that generates its own map internally
 }
 
 
@@ -188,7 +270,7 @@ extension Builder {
         }
         
         let product = EnvironmentManager(backingStore: dataStore)
-        for (name, environments) in localEntries {
+        try localEntries.forEach { (name, environments) in
             let environmentPair = try environments.map({ (environment, urlString) -> (String, URL) in
                 guard let url = URL(string: urlString) else {
                     throw BuildError.UnableToConstructBaseUrl(service: name, urlString: urlString)
@@ -197,6 +279,14 @@ extension Builder {
             })
             product.add(apiName: name, environmentUrls:environmentPair)
         }
+        
+        additionalDataMap.forEach { (key, value) in
+            guard var entry = product.entry(for: key.service) else { return }
+            entry.store(data: value, forEnvironment: key.environment)
+            product.replace(with: entry)
+        }
+
+        
         return product
     }
 }

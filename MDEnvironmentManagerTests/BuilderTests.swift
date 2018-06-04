@@ -4,8 +4,13 @@
 import XCTest
 @testable import MDEnvironmentManager
 
+extension Environment {
+    static let env1 = "Env1"
+    static let env2 = "Env2"
+    static let prod = "Prod"
+}
+
 class BuilderTests: XCTestCase {
-    
     func testDefaultBuildParameters() {
         let b = Builder()
         // Use default data store)
@@ -24,17 +29,17 @@ class BuilderTests: XCTestCase {
     
     func testAddingEntry() {
         let b = Builder()
-        let em = try! b.add(entry: "Service1", environments:[("Env1", "http://env1.api.service1.com")]).build()
+        let em = try! b.add(entry: "Service1", environments:[(.env1, "http://env1.api.service1.com")]).build()
         
-        XCTAssertEqual(em.entry(for: "Service1"), Entry(name: "Service1", initialEnvironment: ("Env1", URL(string: "http://env1.api.service1.com")!)))
+        XCTAssertEqual(em.entry(for: "Service1"), Entry(name: "Service1", initialEnvironment: (.env1, URL(string: "http://env1.api.service1.com")!)))
     }
     
     func testSettingProductionEntryDefaultsToProduction() {
         let b = Builder().setStoreType(.inMemory)
         let em = try! b
-            .add(entry: "Service1", environments:[("Env1", "http://env1.api.service1.com"), ("Env2", "http://env2.api.service1.com")])
-            .add(entry: "Service2", environments:[("Acc", "http://acc.api.service2.com"), ("Prod", "http://prod.api.service2.com")])
-            .productionEnvironments(map: ["Service1":"Env1", "Service2":"Prod"])
+            .add(entry: "Service1", environments:[(.env1, "http://env1.api.service1.com"), (.env2, "http://env2.api.service1.com")])
+            .add(entry: "Service2", environments:[(.acc, "http://acc.api.service2.com"), (.prod, "http://prod.api.service2.com")])
+            .productionEnvironments(map: ["Service1":.env1, "Service2":.prod])
             .production()
             .build()
         
@@ -66,7 +71,32 @@ class BuilderTests: XCTestCase {
         XCTAssertEqual(em.entry(forIndex: 0)?.environment(forIndex: 0), "BEnv")
     }
     
-
+    
+    func testBuilderAddsOptionalStringData() {
+        let b = Builder().add(entry: "Service1", environments:[(.acc, "http://env1.api.service1.com")])
+            .associateData { pair -> String? in
+                guard pair.environment == .acc else {
+                    return nil
+                }
+                return "my-token"
+        }
+        
+        let em = try! b.build()
+        XCTAssertEqual(em.entry(for: "Service1")?.additionalDataFor(environment: .acc), "my-token")
+    }
+    
+    func testBuilderAddsComplexDataObject() {
+        let b = Builder().add(entry: "Service1", environments:[(.acc, "http://env1.api.service1.com")])
+            .associateData { pair -> [String:[String]]? in
+                guard pair.environment == .acc else {
+                    return nil
+                }
+                return ["complex": ["data"]]
+        }
+        
+        let em = try! b.build()
+        XCTAssertEqual(em.entry(for: "Service1")?.additionalDataFor(environment: .acc), ["complex": ["data"]])
+    }
 }
 
 
@@ -110,8 +140,8 @@ extension BuilderTests {
     }
     
     func testBuilderEnabledForProductionRequiresValidMapping() {
-        let b = Builder().add(entry: "Service1", environments:[("Env1", "http://env1.api.service1.com")])
-            .productionEnvironments(map: ["Service1":"Env2"])
+        let b = Builder().add(entry: "Service1", environments:[(.env1, "http://env1.api.service1.com")])
+            .productionEnvironments(map: ["Service1":.env2])
             .production()
         XCTAssertThrowsError(try b.build()) { (e) in
             guard let error = e as? Builder.BuildError else {
