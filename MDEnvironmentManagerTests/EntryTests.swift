@@ -51,7 +51,7 @@ class EntryTests: XCTestCase {
         // When
         let csv = entry.asCSV
         
-        XCTAssertEqual(csv, "Service|Acc|http://acc.api.domain.com\nService|Prod|http://prod.api.domain.com")
+        XCTAssertEqual(csv, "Service|acc|http://acc.api.domain.com\nService|prod|http://prod.api.domain.com")
     }
     
     func testCreatesFromCSVRow() {
@@ -90,19 +90,19 @@ class EntryTests: XCTestCase {
         var entry = testEntry
         
         // When
-        entry.store(object: "Test-Token", forEnvironment: .acc)
+        entry.store(object: "Test-Token", for: .acc)
         
         // Then
-        XCTAssertEqual(entry.additionalDataFor(environment: .acc), "Test-Token")
+        XCTAssertEqual(entry.additionalData(for: .acc), "Test-Token")
     }
     
     func testUpdatingData() {
         var entry = testEntry
         
-        entry.store(object: "Test-Token", forEnvironment: .acc)
-        entry.store(object: "Test-Token-2", forEnvironment: .acc)
+        entry.store(object: "Test-Token", for: .acc)
+        entry.store(object: "Test-Token-2", for: .acc)
         
-        XCTAssertEqual(entry.additionalDataFor(environment: .acc), "Test-Token-2")
+        XCTAssertEqual(entry.additionalData(for: .acc), "Test-Token-2")
     }
     
 }

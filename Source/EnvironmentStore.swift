@@ -35,13 +35,13 @@ class EnvironmentStore {
     
     func buildUrl(for entry: Entry, path: String) -> URL {
         let selectedEnvironment = currentlySelectedEnvironmentFor(entry)
-        return entry.baseUrl(forEnvironment: selectedEnvironment)!.appendingPathComponent(path)
+        return entry.baseUrl(for: selectedEnvironment)!.appendingPathComponent(path)
     }
     
     // TOOD: unit test
     func baseUrl(for entry: Entry) -> URL {
         let selectedEnvironment = currentlySelectedEnvironmentFor(entry)
-        return entry.baseUrl(forEnvironment: selectedEnvironment)!
+        return entry.baseUrl(for: selectedEnvironment)!
     }
     
     

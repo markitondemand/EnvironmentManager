@@ -64,35 +64,25 @@ class BuilderTests: XCTestCase {
             .add(entry: "AService", environments:[(.env1, "http://benv.api.aservice.com"), (.env2, "http://aenv.api.aservice.com")])
             .build()
         
-        XCTAssertEqual(em.entry(forIndex: 0)?.name, "ZService")
-        XCTAssertEqual(em.entry(forIndex: 0)?.environment(forIndex: 0), .env1)
+        XCTAssertEqual(em.entry(for: 0)?.name, "ZService")
+        XCTAssertEqual(em.entry(for: 0)?.environment(forIndex: 0), .env1)
     }
     
     
     func testBuilderAddsOptionalStringData() {
         let b = Builder().add(entry: "Service1", environments:[(.acc, "http://env1.api.service1.com")])
-            .associateData { pair -> String? in
-                guard pair.environment == .acc else {
-                    return nil
-                }
-                return "my-token"
-        }
+            .associateData(map: [Builder.ServiceEnvironmentPair(service: "Service1", environment: .acc): "my-token"])
         
         let em = try! b.build()
-        XCTAssertEqual(em.entry(for: "Service1")?.additionalDataFor(environment: .acc), "my-token")
+        XCTAssertEqual(em.entry(for: "Service1")?.additionalData(for: .acc), "my-token")
     }
     
     func testBuilderAddsComplexDataObject() {
         let b = Builder().add(entry: "Service1", environments:[(.acc, "http://env1.api.service1.com")])
-            .associateData { pair -> [String:[String]]? in
-                guard pair.environment == .acc else {
-                    return nil
-                }
-                return ["complex": ["data"]]
-        }
+            .associateData(map: [Builder.ServiceEnvironmentPair(service: "Service1", environment: .acc): ["complex": ["data"]]])
         
         let em = try! b.build()
-        XCTAssertEqual(em.entry(for: "Service1")?.additionalDataFor(environment: .acc), ["complex": ["data"]])
+        XCTAssertEqual(em.entry(for: "Service1")?.additionalData(for: .acc), ["complex": ["data"]])
     }
 }
 
