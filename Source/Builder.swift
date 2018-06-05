@@ -39,9 +39,16 @@ internal class DataConverter {
 /// .production() // This signifies we are doing a production build. Optionally, pass your own block in to return true or false, you can than inject a #ifdef based off of your configuration
 /// .build()
 public class Builder {
+    
+    /// Helper class used to in associating optional data with an service environment pair
     public struct ServiceEnvironmentPair: Hashable {
-        let service: String
-        let environment: Environment
+        public init(service: String, environment: Environment) {
+            self.service = service
+            self.environment = environment
+        }
+        
+        public let service: String
+        public let environment: Environment
     }
     /// The type of store that the EnvironmentManager will use. this can either be userDefaults, or in memory
     ///
