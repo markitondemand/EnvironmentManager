@@ -1,6 +1,7 @@
 Pod::Spec.new do |s|
   s.name = "MDEnvironmentManager"
   s.version = "3.0.2"
+  s.swift_version = "4.1"
   s.summary = "Manage multiple environments. Includes the ability to serialize selected environments to the UserDefaults."
   s.description = <<-DESC
                      Represent environments in your app for multiple APIs.
