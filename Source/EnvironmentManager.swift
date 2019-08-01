@@ -33,14 +33,7 @@ public class EnvironmentManager {
     /// The current backing store this EnvironmentManager is using. Passed in the initializer
     internal var store: DataStore
 
-    fileprivate var entries: [Entry] = []
-    fileprivate var customEntries: [Entry] {
-        return CustomEntryStore(store).allEntries
-    }
-    fileprivate var totalEntries: [Entry] {
-        // elements that include a custom entry
-        return entries + customEntries
-    }
+    var entries: [Entry] = []
 
     private var environmentStore: EnvironmentStore
 
@@ -62,7 +55,7 @@ public class EnvironmentManager {
     ///
     /// - Returns: The names of all APIs currently managed
     public func apiNames() -> [String] {
-        return self.totalEntries.map({ $0.name })
+        return self.entries.map({ $0.name })
     }
     
     /// Builds a full URL for a given base API.
@@ -85,7 +78,7 @@ public class EnvironmentManager {
     /// - Parameter apiName: The name of the API to check what the currently selected environment is
     /// - Returns: The environment name, or nil if that API name is not registered with the manager
     public func currentEnvironment(for apiName: String) -> String? {
-        guard let entry = self.totalEntries.first(where: {$0.name == apiName }) else {
+        guard let entry = self.entries.first(where: {$0.name == apiName }) else {
             return nil
         }
         
@@ -98,7 +91,7 @@ public class EnvironmentManager {
     /// - Parameter apiName: The name of the API
     /// - Returns: A base URL or nil if that API name cannot be found
     public func baseUrl(for apiName: String) -> URL? {
-        guard let entry = self.totalEntries.first(where: { $0.name == apiName }) else {
+        guard let entry = self.entries.first(where: { $0.name == apiName }) else {
             return nil
         }
         
@@ -112,7 +105,7 @@ public class EnvironmentManager {
     ///   - environment: The environment to select
     ///   - apiName: The API to select the environment for
     public func select(environment: Environment, forAPI apiName: String) {
-        guard let entry = self.totalEntries.first(where: { $0.name == apiName }) else {
+        guard let entry = self.entries.first(where: { $0.name == apiName }) else {
             return
         }
         
