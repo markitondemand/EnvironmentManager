@@ -49,13 +49,13 @@ class EnvironmentManagerViewcontroller: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.environmentManager.apiNames().count
+        return self.environmentManager.entries.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifiers.APICellIdentifier)!
         
-        let apiName = self.environmentManager.apiNames()[indexPath.row]
+        let apiName = self.environmentManager.entries[indexPath.row].name
         cell.textLabel?.text = apiName
         cell.detailTextLabel?.text = self.environmentManager.currentEnvironment(for: apiName)
         cell.accessoryType = .disclosureIndicator

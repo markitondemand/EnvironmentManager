@@ -44,10 +44,6 @@ class EnvironmentEntryDetailViewController: UITableViewController {
         }
     }
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return viewModel.customEnvironments.count > 0 ? 2 : 1
-    }
-    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             return viewModel.baseEnviromnments.count
