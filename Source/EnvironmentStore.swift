@@ -18,8 +18,13 @@ class EnvironmentStore {
     }
     
     func currentlySelectedEnvironmentFor(_ entry: Entry) -> String {
-        // TOOD: return a different result if the current one does not exist in _entry_
-        return backingStore[entry.name] as? String ?? entry.environments.first!.environment
+        guard let stored = backingStore[entry.name] as? String,
+            // verify the environment in the store is also still in the entry
+            entry.environmentNames().contains(stored) else {
+                // TODO: safely return the 0th (force unwrap should probably be removed but we guarantee this at construction, but possible refactor might be to change the dataStore for environments to a new array type that can only be created with 1 or more items)
+                return entry.environments.first!.environment
+        }
+        return stored
     }
     
     func selectEnvironment(_ environment: String, for entry: Entry) {
@@ -35,13 +40,14 @@ class EnvironmentStore {
     
     func buildUrl(for entry: Entry, path: String) -> URL {
         let selectedEnvironment = currentlySelectedEnvironmentFor(entry)
-        return entry.baseUrl(forEnvironment: selectedEnvironment)!.appendingPathComponent(path)
+        return entry.baseUrl(for: selectedEnvironment)!.appendingPathComponent(path)
     }
     
     // TOOD: unit test
     func baseUrl(for entry: Entry) -> URL {
         let selectedEnvironment = currentlySelectedEnvironmentFor(entry)
-        return entry.baseUrl(forEnvironment: selectedEnvironment)!
+        // TOOD: not a big fan of this force unwrap. Its kind of all built around an assumption that an Entry cannot be created with 0 environments (you will always have at least one, or the item doesnt get made)
+        return entry.baseUrl(for: selectedEnvironment)!
     }
     
     

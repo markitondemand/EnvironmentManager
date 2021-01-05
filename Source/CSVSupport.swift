@@ -27,7 +27,7 @@ extension Builder {
     /// - Throws: If there is a parse error, the error will be wrapped in BuildError.CSVParsingError()
     @discardableResult public func add(_ csv: String) throws -> Self {
         do {
-            let parsed = try CSV(string: csv, hasHeaderRow: true, trimFields: true, delimiter: Token.Delimiter)
+            let parsed = try CSVReader(string: csv, hasHeaderRow: true, trimFields: true, delimiter: Token.Delimiter)
             return add(parsed)
         } catch let csvError as CSVError {
             throw BuildError.CSVParsingError(error: csvError)
@@ -48,7 +48,7 @@ extension Builder {
     /// - Throws: If there is a parse error, the error will be wrapped in BuildError.CSVParsingError()
     @discardableResult public func add(_ csvStream: InputStream) throws -> Self {
         do {
-            let parsed = try CSV(stream: csvStream, hasHeaderRow: true, trimFields: true, delimiter: Token.Delimiter)
+            let parsed = try CSVReader(stream: csvStream, hasHeaderRow: true, trimFields: true, delimiter: Token.Delimiter)
             return add(parsed)
         } catch let csvError as CSVError {
             throw BuildError.CSVParsingError(error: csvError)
@@ -56,7 +56,7 @@ extension Builder {
     }
     
     // Helper method that coalesces the above two methods
-    private func add(_ csv:CSV) -> Self {
+    private func add(_ csv: CSVReader) -> Self {
         while let _ = csv.next() {
             guard let serviceName = csv[Token.Name],
                 let environment = csv[Token.Environment],

@@ -85,6 +85,22 @@ class MDEnvironmentManagerTests: XCTestCase {
         
         XCTAssertEqual(entry.environmentNames(), ["acc", "prod"])
     }
+    
+    func testSelectingEnvironemtn_removingThatEnvironment_returnsZerothENvironment() {
+        // Given
+        let en = defaultEnvironmentManager()
+        let testEntry = generateTestEntry("TestOne", environmentCount:2)
+        en.add(testEntry)
+        
+        // When
+        en.select(environment: "EV2", forAPI: "TestOne")
+        let en2 = EnvironmentManager(backingStore: en.store)
+        en2.add(generateTestEntry("TestOne", environmentCount:1))
+        
+        // Then
+        let expectedBaseUrl = testEntry.baseUrl(for: "EV1")
+        XCTAssertEqual(en2.baseUrl(for: "TestOne"), expectedBaseUrl)
+    }
 
     // helper
     class TestEnvironmentNotificationObserver {
