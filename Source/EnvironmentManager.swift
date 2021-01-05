@@ -33,14 +33,7 @@ public class EnvironmentManager {
     /// The current backing store this EnvironmentManager is using. Passed in the initializer
     internal var store: DataStore
 
-    fileprivate var entries: [Entry] = []
-    fileprivate var customEntries: [Entry] {
-        return CustomEntryStore(store).allEntries
-    }
-    fileprivate var totalEntries: [Entry] {
-        // elements that include a custom entry
-        return entries + customEntries
-    }
+    var entries: [Entry] = []
 
     private var environmentStore: EnvironmentStore
 
@@ -56,17 +49,13 @@ public class EnvironmentManager {
         for entry in initialEntries {
             self.add(entry)
         }
-        
-        let string: String? = ""
-        
-         print("Edit \(string ?? "Watchlist")")
     }
     
     /// Returns an ordered list of all of the API names currently managed. By default the list will be returned in ascending order but you can optionally sort them in another way (i.e. descending)
     ///
     /// - Returns: The names of all APIs currently managed
     public func apiNames() -> [String] {
-        return self.totalEntries.map({ $0.name })
+        return self.entries.map({ $0.name })
     }
     
     /// Builds a full URL for a given base API.
@@ -89,7 +78,7 @@ public class EnvironmentManager {
     /// - Parameter apiName: The name of the API to check what the currently selected environment is
     /// - Returns: The environment name, or nil if that API name is not registered with the manager
     public func currentEnvironment(for apiName: String) -> String? {
-        guard let entry = self.totalEntries.first(where: {$0.name == apiName }) else {
+        guard let entry = self.entries.first(where: {$0.name == apiName }) else {
             return nil
         }
         
@@ -102,7 +91,7 @@ public class EnvironmentManager {
     /// - Parameter apiName: The name of the API
     /// - Returns: A base URL or nil if that API name cannot be found
     public func baseUrl(for apiName: String) -> URL? {
-        guard let entry = self.totalEntries.first(where: { $0.name == apiName }) else {
+        guard let entry = self.entries.first(where: { $0.name == apiName }) else {
             return nil
         }
         
@@ -115,8 +104,8 @@ public class EnvironmentManager {
     /// - Parameters:
     ///   - environment: The environment to select
     ///   - apiName: The API to select the environment for
-    public func select(environment: String, forAPI apiName: String) {
-        guard let entry = self.totalEntries.first(where: { $0.name == apiName }) else {
+    public func select(environment: Environment, forAPI apiName: String) {
+        guard let entry = self.entries.first(where: { $0.name == apiName }) else {
             return
         }
         
@@ -137,7 +126,7 @@ public class EnvironmentManager {
 extension EnvironmentManager {
     
     /// Returns an entry from a given index. this only cares about entries passed on creation from the Builder or the .csv file
-    public func entry(forIndex index: Int) -> Entry? {
+    public func entry(for index: Int) -> Entry? {
         return self.entries[safe: index]
     }
     
@@ -174,6 +163,10 @@ extension EnvironmentManager {
         }
         self.add(entry)
     }
+    
+    internal func replace(with entry: Entry) {
+        self.entries.replace(entry)
+    }
 }
 
 
@@ -183,7 +176,7 @@ internal extension DataStore {
          return "com.markit.EnvironmentMenanager"
     }
 
-    func environment(forService service: String) -> String? {
+    func environment(for service: String) -> String? {
         return self.readEnvironments()[service]
     }
     

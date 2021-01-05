@@ -6,55 +6,62 @@ import CSV
 import MD_Extensions
 
 
+
+
+/// Represents an app environmnt, you can create your own extension on this type and define static variables which can then be used in the following way `.myEnvironment`
+public typealias Environment = String
+
 /// Simple datastructure represneting an API and its associated enviroments, as not all APIs will have the same number of enviromments (e.g. some may have a dev, where others wont, like client APIs)
-public struct Entry {
-    // TOOD: fix naming
-    internal struct Environment: Equatable, Hashable {
+public struct Entry: Codable {
+    
+    /// Represents an environment, matched to a URL
+    internal struct EnvironmentDetail: Equatable, Hashable, Codable {        
         let environment: String
         let baseUrl: URL
+        private(set) var associatedData: Data?
         
         var asPair: Pair {
             return (environment, baseUrl)
         }
         
-        init(environment: String, baseUrl: URL) {
+        init(environment: String, baseUrl: URL, data: Data? = nil) {
             self.environment = environment
             self.baseUrl = baseUrl
+            self.associatedData = data
         }
         
         init(pair: Pair) {
             self.init(environment: pair.0, baseUrl: pair.1)
         }
         
-        // Hashable
-        var hashValue: Int {
-            return "\(environment),\(baseUrl)".hashValue
+        internal mutating func storeObject(_ data: Data) {
+            self.associatedData = data
         }
         
+        // Hashable
+        func hash(into hasher: inout Hasher) {
+            hasher.combine("\(environment),\(baseUrl)")
+        }
+        
+        
         // Equatabe
-        static func ==(lhs: Environment, rhs: Environment) -> Bool {
+        static func ==(lhs: EnvironmentDetail, rhs: EnvironmentDetail) -> Bool {
             return lhs.baseUrl == rhs.baseUrl && lhs.environment == rhs.environment
         }
+    
     }
     
     
     /// Tuple type that represents an Environment.
     /// - seealso: Envoroment.asPair
-    public typealias Pair = (environment: String, baseUrl: URL)
+    public typealias Pair = (environment: Environment, baseUrl: URL)
     
     /// The name of the API (e.g. MDQuoteService)
     public let name: String
     
-    // Data structure to hold the environments for this Entry
-    internal fileprivate(set) var environments: [Environment]
     
-    /// Returns the base API for a given environment
-    public func currentBaseUrlForEnvironment(_ environment: String) -> URL? {
-        guard let found = self.environments.first(where: { $0.environment == environment }) else {
-            return nil
-        }
-        return found.baseUrl
-    }
+    // Data structure to hold the environments for this Entry
+    internal fileprivate(set) var environments: [EnvironmentDetail]
     
     /// The standard initializer for an Entry
     ///
@@ -62,7 +69,7 @@ public struct Entry {
     ///   - name: The name of the entry, this should be something like the name of your API, (e.g. "MDQuoteService")
     ///   - initialEnvironment: The initial environment as a tuple. (e.g. acc, prod, acceptance, test, etc.) The URL should be the base URL to your service
     public init(name: String, initialEnvironment: Pair) {
-        environments = [Environment(pair: initialEnvironment)]
+        environments = [EnvironmentDetail(environment: initialEnvironment.environment, baseUrl: initialEnvironment.baseUrl)]
         self.name = name
     }
     
@@ -75,10 +82,10 @@ public struct Entry {
         precondition(environments.count > 0, "You must pass at least one environment pair.")
         var environments = environments
         self.init(name:name, initialEnvironment: environments.removeFirst())
-        self.add(environments)
+        add(environments)
     }
     
-    internal init(name: String, environments: [Environment]) {
+    internal init(name: String, environments: [EnvironmentDetail]) {
         self.name = name
         self.environments = environments
     }
@@ -97,30 +104,87 @@ extension Entry: Equatable {
 
 // MARK: - Operations
 extension Entry {
+    private func index(for env: Environment) -> Int? {
+        return environments.index(where: { $0.environment == env })
+    }
     /// Builds a URL by appending a path to the currently selected environment's baseURL
     ///
     /// - Parameter path: The path to append
     /// - Returns: The new URL or nil if the URL could not be formed
-    public func buildURLForEnvironment(_ environment: String, path: String) -> URL? {
-        return self.baseUrl(forEnvironment: environment)?.appendingPathComponent(path)
+    public func buildURL(for env: Environment, path: String) -> URL? {
+        return baseUrl(for: env)?.appendingPathComponent(path)
     }
     
     /// Returns the base URL for a given environment, or nil if the environment does not exist for this entry
     ///
     /// - Parameter environment: The environment name
     /// - Returns: The base URL for that environment, or nil
-    public func baseUrl(forEnvironment env: String) -> URL? {
-        guard let index = self.environments.index(where: { $0.environment == env }) else {
+    public func baseUrl(for env: Environment) -> URL? {
+        guard let index = index(for: env) else {
             return nil
         }
-        return self.environments[index].baseUrl
+        return environments[index].baseUrl
     }
     
     /// Returns an array of all of the current environments this manager is managing
     ///
     /// - Returns: An array of environment names.
     public func environmentNames() -> [String] {
-        return self.environments.map({ $0.environment })
+        return environments.map({ $0.environment })
+    }
+    
+    // TODO: rename to match a standard
+    /// Returns the base API for a given environment
+    public func currentBaseUrl(for env: Environment) -> URL? {
+        guard let found = environments.first(where: { $0.environment == env }) else {
+            return nil
+        }
+        return found.baseUrl
+    }
+    
+    public func additionalData<T: Codable>(for env: Environment) -> T? {
+        guard let data = environments.find(env)?.associatedData else {
+            return nil
+        }
+        let decoded: T? = DataConverter.decode(data: data)
+        return decoded
+    }
+    
+    internal mutating func store(data: Data, for env: Environment) {
+        guard var found = environments.find(env) else { return }
+        found.storeObject(data)
+        environments.replace(found)
+    }
+    
+    internal mutating func store<T: Codable>(object: T, for env: Environment) {
+        guard var found = environments.find(env),
+            let data = try? DataConverter.convert(object: object) else { return }
+        found.storeObject(data)
+        environments.replace(found)
+    }
+}
+
+
+// MARK: - Convenience collection helpers
+extension Sequence where Element == Entry.EnvironmentDetail {
+    func find(_ env: Environment) -> Element? {
+        return first { $0.environment == env }
+    }
+}
+
+// TOOD: might be useful in common code
+extension Array where Element: Equatable {
+    /// In the event an element may be mutated but still be equatable with another one, this function will replace it.
+    ///
+    /// - Parameter element: The element to replace. It must already exist in the array
+    mutating func replace(_ element: Element) {
+        for (i, e) in enumerated() {
+            if e == element {
+                self.remove(at: i)
+                self.insert(element, at: i)
+                break
+            }
+        }
     }
 }
 
@@ -135,7 +199,7 @@ extension Entry {
     ///   - function: Optional paramter to override the default sort. The default is ascending
     /// - Returns: The environment as a string or nil if the index was out of bounds
     public func environment(forIndex index: Int) -> String? {
-        return self.environmentNames()[safe: index]
+        return environmentNames()[safe: index]
     }
     
     /// Returns the baseURL for a given index. The baseURLs are put into a sorted order using a function. The default function is ascending.
@@ -145,10 +209,10 @@ extension Entry {
     ///   - function: Optional paramter to override the default sort. The default is ascending
     /// - Returns: The base URL as a URL or nil if the index was out of bounds
     public func baseUrl(forIndex index: Int) -> URL? {
-        guard let environment = self.environmentNames()[safe: index] else {
+        guard let environment = environmentNames()[safe: index] else {
             return nil
         }
-        return self.baseUrl(forEnvironment: environment)
+        return baseUrl(for: environment)
     }
 }
 
@@ -161,14 +225,14 @@ extension Entry {
     ///   - url: The base URL
     ///   - environment: The environment it belongs to
     internal mutating func add(url: URL, forEnvironment environment:String) {
-        self.environments.append(Environment(environment: environment, baseUrl: url))
+        environments.append(EnvironmentDetail(environment: environment, baseUrl: url))
     }
     
     /// Adds a new envvironemt and base URL to this entry
     ///
     /// - Parameter pair: The tuple representing the environment and baseUR:
     internal mutating func add(_ pair: Pair) {
-        self.add(url: pair.baseUrl, forEnvironment: pair.environment)
+        add(url: pair.baseUrl, forEnvironment: pair.environment)
     }
     
     
@@ -181,7 +245,8 @@ extension Entry {
     }
     
     // TOOD: unit test
-    @discardableResult internal mutating func removeEnvironment(_ name: String) -> Bool {
+    @discardableResult
+    internal mutating func removeEnvironment(_ name: String) -> Bool {
         guard let index = environments.index(where:{ $0.environment == name }) else {
             return false
         }
@@ -192,23 +257,24 @@ extension Entry {
 
 // MARK: - Storage to DataStore
 extension Entry {
+    private static let storageEntryKey = "CustomEntryStorage"
     internal func writeToStore(_ store: DataStore) {
         var store = store
         
         
-        if store["CustomEntryStorage"] == nil {
-            store["CustomEntryStorage"] = [[String: Any]]()
+        if store[Entry.storageEntryKey] == nil {
+            store[Entry.storageEntryKey] = [[String: Any]]()
         }
         
-        var array = store["CustomEntryStorage"] as! [[String: Any]]
-        array.append(self.serialize())
-        store["CustomEntryStorage"] = array
+        var array = store[Entry.storageEntryKey] as! [[String: Any]]
+        array.append(serialize())
+        store[Entry.storageEntryKey] = array
     }
     
     // TOOD: port Entry to `Codeable` in swift 4
     private func serialize() -> [String: [[String: String]]] {
         let name = self.name
-        let pairs = self.environments
+        let pairs = environments
         return [name: pairs.map { [$0.environment: $0.baseUrl.absoluteString] }]
     }
 }

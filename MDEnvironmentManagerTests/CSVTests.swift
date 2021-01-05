@@ -53,7 +53,7 @@ class CSVTests: XCTestCase {
         
         let entry = em?.entry(for: "Service1")
         XCTAssertEqual(entry?.name, "Service1")
-        XCTAssertEqual(entry?.currentBaseUrlForEnvironment("Env1"), URL(string: "http://env1.api.service1.com")!)
+        XCTAssertEqual(entry?.currentBaseUrl(for: "Env1"), URL(string: "http://env1.api.service1.com")!)
         
     }
     
@@ -75,7 +75,7 @@ class CSVTests: XCTestCase {
         let em = try? Builder().add(self.createCSV(rows: csvItems)).build()
         let entryTwo = em?.entry(for: "Service2")
         
-        XCTAssertEqual(entryTwo?.currentBaseUrlForEnvironment("Env1")?.absoluteString, "http://env1.api.service2.com")
+        XCTAssertEqual(entryTwo?.currentBaseUrl(for: "Env1")?.absoluteString, "http://env1.api.service2.com")
     }
     
     func testCreateMultiServiceMultiEnvironmentsFromCSV() {
@@ -88,7 +88,7 @@ class CSVTests: XCTestCase {
         let em = try? Builder().add(csv).build()
         let entryTwo = em?.entry(for: "Service2")
         
-        XCTAssertEqual(entryTwo?.currentBaseUrlForEnvironment("Env1")?.absoluteString, "http://env1.api.service2.com")
+        XCTAssertEqual(entryTwo?.currentBaseUrl(for: "Env1")?.absoluteString, "http://env1.api.service2.com")
         XCTAssertEqual(entryTwo?.environment(forIndex: 1), "Env2")
     }
     

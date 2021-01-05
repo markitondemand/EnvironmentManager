@@ -12,29 +12,29 @@ import XCTest
 class EntryTests: XCTestCase {
     let defaultAccUrl = URL(string: "http://acc.api.domain.com")!
     let defaultProdUrl = URL(string: "http://prod.api.domain.com")!
-
-    var testEntry: Entry { return Entry(name: "Service", initialEnvironment: ("acc", defaultAccUrl)) }
     
-    func entryWithName(_ name: String, initialEnvironment: (String, URL)) -> Entry {
+    var testEntry: Entry { return Entry(name: "Service", initialEnvironment: (.acc, defaultAccUrl)) }
+    
+    func entryWithName(_ name: Environment, initialEnvironment: (String, URL)) -> Entry {
         return Entry(name: name, initialEnvironment: initialEnvironment)
     }
     
     func testEntryGetters() {
-        var entry = entryWithName("service", initialEnvironment: ("prod", defaultProdUrl))
-        entry.add(url: defaultAccUrl, forEnvironment: "acc")
+        var entry = entryWithName("service", initialEnvironment: (.prod, defaultProdUrl))
+        entry.add(url: defaultAccUrl, forEnvironment: .acc)
         
-        XCTAssertEqual(entry.environment(forIndex: 0), "prod")
+        XCTAssertEqual(entry.environment(forIndex: 0), .prod)
         
         XCTAssertEqual(entry.baseUrl(forIndex: 0), defaultProdUrl)
         XCTAssertEqual(entry.baseUrl(forIndex: 1), defaultAccUrl)
     }
     
     func testEntryEquatable() {
-        let entry1 = entryWithName("Service1", initialEnvironment: ("acc", self.defaultAccUrl))
-        var entry2 = entryWithName("Service1", initialEnvironment: ("acc", self.defaultAccUrl))
+        let entry1 = entryWithName("Service1", initialEnvironment: (.acc, self.defaultAccUrl))
+        var entry2 = entryWithName("Service1", initialEnvironment: (.acc, self.defaultAccUrl))
         
         XCTAssertEqual(entry1, entry2)
-        entry2.add(("prod", self.defaultProdUrl))
+        entry2.add((.prod, self.defaultProdUrl))
         XCTAssertNotEqual(entry1, entry2)
     }
     
@@ -46,7 +46,7 @@ class EntryTests: XCTestCase {
     
     func testMultipleEnvironemntsToCSV() {
         var entry = testEntry
-        entry.add(Entry.Pair("prod", defaultProdUrl))
+        entry.add(Entry.Pair(.prod, defaultProdUrl))
         
         // When
         let csv = entry.asCSV
@@ -85,4 +85,24 @@ class EntryTests: XCTestCase {
         XCTAssertNil(entry)
     }
 
+    func testStoringData() {
+        // Given
+        var entry = testEntry
+        
+        // When
+        entry.store(object: "Test-Token", for: .acc)
+        
+        // Then
+        XCTAssertEqual(entry.additionalData(for: .acc), "Test-Token")
+    }
+    
+    func testUpdatingData() {
+        var entry = testEntry
+        
+        entry.store(object: "Test-Token", for: .acc)
+        entry.store(object: "Test-Token-2", for: .acc)
+        
+        XCTAssertEqual(entry.additionalData(for: .acc), "Test-Token-2")
+    }
+    
 }
