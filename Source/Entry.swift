@@ -39,8 +39,8 @@ public struct Entry: Codable {
         }
         
         // Hashable
-        var hashValue: Int {
-            return "\(environment),\(baseUrl)".hashValue
+        func hash(into hasher: inout Hasher) {
+            hasher.combine("\(environment),\(baseUrl)")
         }
         
         

@@ -1,7 +1,7 @@
 PODS:
   - CSV.swift (2.4.3)
   - MD-Extensions (0.9)
-  - MDEnvironmentManager (3.0.3):
+  - MDEnvironmentManager (4.0.0):
     - CSV.swift (~> 2.0)
     - MD-Extensions (~> 0)
 
@@ -21,7 +21,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   CSV.swift: d38741b349c067b4a6db42237cb0e2974d21ccac
   MD-Extensions: 8de3d2a989f48a56244c6ae3c7362a70bd21ce60
-  MDEnvironmentManager: 4d1f50bdd4f5a2306914e48074d1c6aec2fa8932
+  MDEnvironmentManager: 3ad1f76b5742f9a727f0fd7c81c15aa00e46a66b
 
 PODFILE CHECKSUM: f51045d763cf837d5dddb1ebe55508db392c3673
 
