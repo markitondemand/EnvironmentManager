@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = "MDEnvironmentManager"
-  s.version = "3.0.3"
+  s.version = "4.0.0"
   s.swift_version = "4.1"
   s.summary = "Manage multiple environments. Includes the ability to serialize selected environments to the UserDefaults."
   s.description = <<-DESC
@@ -11,9 +11,9 @@ Pod::Spec.new do |s|
                      Support also exists for adding custom environments that can be persisted, deleted.
                    DESC
   s.homepage = "https://github.com/markitondemand/iOS-EnvironmentManager"
-  s.license = 'Proprietary'
+  s.license = 'MIT'
   
-  s.author = { "Michael Leber" => "michael.leber@ihsmarkit.com" }
+  s.author = { "Elle Leber" => "elle.skye117@gmail.com" }
   s.source = { :git => "https://github.com/markitondemand/iOS-EnvironmentManager.git", :tag => "#{s.version}" }
 
   s.platform = :ios, "9.0"
