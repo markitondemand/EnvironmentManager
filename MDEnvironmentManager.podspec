@@ -14,16 +14,16 @@ Pod::Spec.new do |s|
   s.license = 'MIT'
   
   s.author = { "Elle Leber" => "elle.skye117@gmail.com" }
-  s.source = { :git => "https://github.com/markitondemand/iOS-EnvironmentManager.git", :tag => "#{s.version}" }
+  s.source = { :git => "https://github.com/ElleSkye117/iOS-EnvironmentManager.git", :tag => "#{s.version}" }
 
-  s.platform = :ios, "9.0"
-  s.ios.deployment_target = '9.0'
+  s.platform = :ios, "12.0"
+  s.ios.deployment_target = '12.0'
   
   s.source_files  = "Source/**.{swift}"
   s.resource_bundles = {
     'MDEnvironmentManager' => ['Resources/*.storyboard']
   }
 
-  s.dependency 'MD-Extensions', '~>0'
+  s.dependency 'MD-Extensions', '~> 1.0'
   s.dependency 'CSV.swift', '~> 2.0'
 end

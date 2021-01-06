@@ -105,7 +105,7 @@ extension Entry: Equatable {
 // MARK: - Operations
 extension Entry {
     private func index(for env: Environment) -> Int? {
-        return environments.index(where: { $0.environment == env })
+        return environments.firstIndex(where: { $0.environment == env })
     }
     /// Builds a URL by appending a path to the currently selected environment's baseURL
     ///
@@ -247,7 +247,7 @@ extension Entry {
     // TOOD: unit test
     @discardableResult
     internal mutating func removeEnvironment(_ name: String) -> Bool {
-        guard let index = environments.index(where:{ $0.environment == name }) else {
+        guard let index = environments.firstIndex(where:{ $0.environment == name }) else {
             return false
         }
         environments.remove(at: index)
